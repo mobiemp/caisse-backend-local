@@ -1,0 +1,1 @@
+"C:\wamp\bin\php\php5.4.12\php.exe" -f "C:\wamp\www\website\my_process.php"

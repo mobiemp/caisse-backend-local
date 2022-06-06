@@ -1,0 +1,35 @@
+
+        *********************
+         *** MAGASIN TEST ***
+        *********************
+         48 rue de martinique 
+         97490 SAINT CLOTILDE
+
+      Téléphone: 0262 88 31 61
+       SIRET: 43941320400017
+
+ Qte*PU   Designation       Mttc  TVA
+--------------------------------------
+                                    
+  1*400.00 Travel Berky    400.00 € 8%
+
+                           --------
+       TOTAL A PAYER TTC    400.00 €
+                                   
+                TOTAL HT    366.00 €
+               TVA 8.5 %     34.00 €
+       TAXES (CUMUL TVA)     34.00 €
+--------------------------------------
+
+   Details du paiement:
+    > 400.00 € EN ESPECES        
+
+
+        MERCI DE VOTRE VISITE
+          ET A TRES BIENTOT
+------------------------------------------
+
+ECHANGE OU AVOIR SOUS 72H
+MARCHANDISE AVEC EMBALLAGE D'ORIGINE 
+INTACT ET TICKET DE CAISSE
+

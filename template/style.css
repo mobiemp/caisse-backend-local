@@ -1,0 +1,72 @@
+.hide-replaced.ws-inputreplace {
+    display: none !important;
+}
+
+.form-row {
+    padding: 5px 10px;
+    margin: 5px 0;
+}
+.form-row input {
+    width: 220px;
+    padding: 3px 1px;
+    border: 1px solid #ccc;
+    box-shadow: none;
+}
+
+.euro{
+    font-size:20px;
+    font-weight: 600;
+    margin-left: 10px;
+}
+th,td {
+    text-align: center;
+}
+
+/*Etiquette style*/
+.etiquette {
+    display: none;
+    /*text-align: center;*/
+}
+
+@media print {
+    .content-wrapper,footer{
+        display: none;
+    }
+    @page { size: auto;  margin: 0mm; }
+    .etiquette {
+        display: block;
+        text-align: center;
+    }
+    svg{
+        position: absolute;
+        top: 32%;
+        left:1%;
+    }
+    .title{
+        position: absolute;
+        top: 0px;
+        left: 5px;
+        margin-top:1px;
+        font-weight: 800;
+        font-size: 22px;
+        text-transform: uppercase;
+        font-family: 'Tahoma';
+        letter-spacing: 0;
+    }
+    .price{
+        position: absolute;
+        top: 20px;
+        left: 20%;
+        margin-top: 0px;
+        margin-left: 0px;
+        font-weight: 800;
+        font-size: 60px;
+    }
+    .price span{
+        font-size: 22px;
+        font-weight: 600;
+    }
+
+
+}
+/*Fin etiquette style*/

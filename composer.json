@@ -1,0 +1,11 @@
+{
+    "require": {
+        "mike42/escpos-php": "^3.0",
+        "almasaeed2010/adminlte": "~3.1"
+    },
+    "autoload": {
+        "psr-4": {
+          "Admin\\": "vendor/almasaeed2010"
+        }
+     }
+}
