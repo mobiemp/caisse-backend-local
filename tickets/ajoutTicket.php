@@ -48,13 +48,21 @@ if (isset($postdata)) {
         $ticket_ligne .= setStringLen($qte."*".$pu_euro,$qte_prix_limit) . setStringLen($titre,$designiation_limit) . setStringLen($prix_total_ticket,$mttc_limit) . setStringLen($taux_tva_ticket,$tva_limit) . "\n";
 //		$ticket_ligne .= sprintf($ticket_layout, strval($qte) . "*" . strval($pu_euro), $titreTicket, strval($pu_euro) . "€", strval($taux_tva_rounded) . "%") . "\n";
 
-        $sql = "SELECT choix_mode_prix FROM table_client_catalogue WHERE id = '$idproduit' ";
+        $sql = "SELECT choix_mode_prix,stock,stock_alerte,num FROM table_client_catalogue WHERE id = '$idproduit' ";
         $query_res = $conn->query($sql);
         $res = $query_res->fetch_row();
         $mode = $res[0];
+		$stock = $res[1];
+		$stock_alerte = $res[2];
+		$num = $res[3];
 
         $total_euro_du += ($mode == 3 ? $pu_euro * $qte : ($mode == 2 ? ( $pu_euro + ($pu_euro * $taux_tva / 100 )) : $pu_euro * $qte ));
 
+		// MISE A JOUR DU STOCK
+		if($stock_alerte < 0 && $stock > 0 ){
+			$sql = "UPDATE table_client_catalogue SET stock = stock - $stock , stock_alerte = stock_alerte + $stock_alerte WHERE num = $num";
+			$updateCatalogue = $conn->query($sql);
+		}
 
 	}
 	$ticket .= $ticket_entete . $ticket_corps . $ticket_ligne ."\n" . $ttc . $ticket_pied;

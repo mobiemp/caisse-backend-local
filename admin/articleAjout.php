@@ -213,10 +213,10 @@ $barcode = $_GET['gencode'];
 												</div>
 												<div class="col-lg-6">
 													<select class="form-control" id="unite" name="unite">
-														<option value="null">Désactivé</option>
-														<option value="0">Kg</option>
-														<option value="1">Litre</option>
-														<option value="2">Mètre</option>
+														<option value="0">Désactivé</option>
+														<option value="1">Kg</option>
+														<option value="2">Litre</option>
+														<option value="3">Mètre</option>
 													</select>
 												</div>
 											</div>
@@ -322,7 +322,7 @@ $barcode = $_GET['gencode'];
 
 									<div class="card card-primary"">
 										<div class="card-header">
-											<h3 class="mb-0">FICHIE PRIX PROMO (FALCULTATIF)</h3><br>
+											<h3 class="mb-0">FICHE PRIX PROMO (FALCULTATIF)</h3><br>
 											<p style="color:#ffffff">Remplissez ce formulaire si vous souhaitez programmer un prix promo.<br>Laisser le montant à 0€ pour ne pas programmer de promotion</p>
 										</div>
 										<div class="card-body">
@@ -434,6 +434,7 @@ $barcode = $_GET['gencode'];
 					#familleBlock {
 						display:none;
 					}
+				}
 				</style>
 				<script type="text/javascript">
 

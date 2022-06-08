@@ -13,7 +13,7 @@ $usebdd = "mobipos";
 
 
 $mode_serveur = 0;
-$ip_serveur = '192.168.1.86';
+$ip_serveur = '192.168.1.19';
 $id_caisse = 1;
 // Choisir le type de caisse -- 1 => caisse avec codebarre / 2 => caisse avec produits & categorie sans codebarre
 $type_caisse = 1;
