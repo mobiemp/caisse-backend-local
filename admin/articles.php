@@ -13,7 +13,7 @@ if (isset($_POST['entrerBarcode'])) {
 }
 $title = 'Gestions des articles';
 $page = 'Gestion des articles';
-$accueil = '../index.php';
+$accueil = 'index.php';
 include('../template/header.php');
 include('../codebarre/barcode.php');
 

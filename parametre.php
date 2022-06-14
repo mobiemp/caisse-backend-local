@@ -13,8 +13,9 @@ $usebdd = "mobipos";
 
 
 $mode_serveur = 0;
-$ip_serveur = '192.168.1.86';
+$ip_serveur = '192.168.1.15';
 $id_caisse = 1;
+$ip_caisse = array('15');
 // Choisir le type de caisse -- 1 => caisse avec codebarre / 2 => caisse avec produits & categorie sans codebarre
 $type_caisse = 1;
 $magasin = "C'IDEAL Magasin Art Discount";

@@ -1,7 +1,7 @@
 <?php
 $title = 'Administration';
 $page = '';
-$accueil='/admin';
+$accueil='/admin/';
 include('../template/header.php');  ?>
 
 <div class="content-wrapper" style="min-height: 823px;">

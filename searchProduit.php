@@ -15,12 +15,26 @@ $postdata = file_get_contents('php://input');
 if (isset($postdata)) {
 	$request = json_decode($postdata);
 	$search = $request->search;
+	$check = explode('*',$search);
+	if(count($check) == 1 ){
+	    $qte = 1;
+    }
+	else{
+        $re = '/[^\*]*/';
+        preg_match($re,$search,$matches);
+        if(preg_match($re,$search,$matches)){
+            if(strlen($matches[0]) > 5){
+                echo json_encode(response("",2));
+                exit;
+            }
+        }
+        $qte = $matches[0] == "" ? 1 : $matches[0];
+        $search = explode('*',$search)[1];
+    }
 	if (validate_EAN13Barcode($search)) {
 
-
-		$ref = htmlspecialchars(trim($request->search));
+		$ref = htmlspecialchars(trim($search));
 		$sql = "SELECT * FROM table_client_catalogue WHERE ref = '$ref'";
-
 		// Vérifie l'article scanner existe dans la table catalogue
 		if($conn->query($sql)->num_rows > 0){
 			$catalogue = $conn->query($sql)->fetch_assoc();
@@ -38,7 +52,7 @@ if (isset($postdata)) {
 			$tva = $catalogue['code_tva'];
 			$taux_tva = ($tva == 8 ? 8.5 : ($tva == 2 ? 2.1 : ($tva == 1 ? 1.05 : 0)));
 			$remise = 0;
-			$qte = 1;
+//			$qte = 1;
 			$titre = $catalogue['titre'];
 			$date = time();
 			$id_produit = $catalogue['id'];
@@ -47,7 +61,7 @@ if (isset($postdata)) {
 					$ajout = $conn->query($sql);
 				} else {
 					if($session == $checkIfInPanier['session']){
-						$sql = "UPDATE table_client_panier SET qte = qte + 1 WHERE ref=" . $ref;
+						$sql = "UPDATE table_client_panier SET qte = qte + $qte WHERE ref=" . $ref;
 						$update = $conn->query($sql);
 					}
 					else{
@@ -88,7 +102,9 @@ if (isset($postdata)) {
 				fclose($fp);
 			}
 			// Fin vérification article dans table catalogue
-		} else if(preg_match("/^\d+$/", $search)) {
+		}
+
+	    else if(preg_match("/^\d+$/", $search)) {
 
 			$ref = htmlspecialchars(trim($request->search));
 			$sql = "SELECT * FROM table_client_catalogue WHERE ref = '$ref'";
@@ -155,18 +171,21 @@ if (isset($postdata)) {
 					fclose($fp);
 				}
 			}
-			else{
-				$sql = "SELECT * FROM table_client_catalogue WHERE titre LIKE '%$search%' ";
-				$result = $conn->query($sql);
-				if($result->num_rows > 0){
-					while($row[] = $result->fetch_assoc()){
-						$item = $row;
-						$json = $item;
-					}
-					echo json_encode($json);
-				}
-				else{
-					echo 0;
-				}
-			}
+	    else{
+	        echo json_encode(response("",2));
+        }
+//			else{
+//				$sql = "SELECT * FROM table_client_catalogue WHERE titre LIKE '%$search%' ";
+//				$result = $conn->query($sql);
+//				if($result->num_rows > 0){
+//					while($row[] = $result->fetch_assoc()){
+//						$item = $row;
+//						$json = $item;
+//					}
+//					echo json_encode($json);
+//				}
+//				else{
+//					echo 0;
+//				}
+//			}
 		}
