@@ -35,7 +35,7 @@ $current_year_CA = $conn->query($sql);
                                     <span class="text-bold text-lg"><?php echo $current_year_CA->fetch_row()[0]; ?> € </span>
                                     <span>CA par mois</span>
                                 </p>
-<!--                                <p class="ml-auto d-flex flex-column text-right">-->
+<!--                               <p class="ml-auto d-flex flex-column text-right">-->
 <!--                                    <span class="text-success">-->
 <!--                                    <i class="fas fa-arrow-up"></i> 33.1%-->
 <!--                                    </span>-->
