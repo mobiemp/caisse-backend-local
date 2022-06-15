@@ -1,13 +1,13 @@
 <?php
-$HostName = '192.168.1.19';
-$DatabaseName = "mobipos";
-$HostUser = "root";
-$HostPass = "";
-$conn = new mysqli($HostName, $HostUser, $HostPass, $DatabaseName);
+//$HostName = '192.168.1.19';
+//$DatabaseName = "mobipos";
+//$HostUser = "root";
+//$HostPass = "";
+//$conn = new mysqli($HostName, $HostUser, $HostPass, $DatabaseName);
+//
+//$catalogue = $conn->query('SELECT * from table_client_catalogue');
 
-$catalogue = $conn->query('SELECT * from table_client_catalogue');
-
-var_dump($catalogue->fetch_assoc());
+//var_dump($catalogue->fetch_assoc());
 
 //function ticketFormatString($str,$limit){
 //    $row1 = $lastrow = str_repeat("*",$limit);
@@ -39,9 +39,12 @@ var_dump($catalogue->fetch_assoc());
 //
 //$test = ticketFormatString("974 EMBALLAGES",26);
 //file_put_contents('test.txt', $test);
-require('functions.php');
-$prix_total_ticket = number_format((float) 6.50, 2, '.','') . "€"  ;
-echo strlen($prix_total_ticket);
-var_dump(setStringLen($prix_total_ticket,8));
+//require('functions.php');
+//$prix_total_ticket = number_format((float) 6.50, 2, '.','') . "€"  ;
+//echo strlen($prix_total_ticket);
+//var_dump(setStringLen($prix_total_ticket,8));
+
+//exec("git pull origin main",$output);
+/*highlight_string("<?php\n\$data =\n" . var_export($output, true) . ";\n?>");*/
 
 ?>
