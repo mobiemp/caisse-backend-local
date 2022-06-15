@@ -3,7 +3,7 @@ include('../DBConfig.php');
 include('../functions.php');
 if (isset($_POST['entrerBarcode'])) {
 	$codebarre = $_POST['entrerBarcode'];
-	$check = checkIfBarcodeExist($codebarre, $conn,'entrer');
+	$check = checkIfBarcodeExist($codebarre, $conn, 'entrer');
 	if ($check === 'false') {
 		echo $check;
 	} else {
@@ -11,6 +11,9 @@ if (isset($_POST['entrerBarcode'])) {
 	}
 	exit;
 }
+
+
+
 $title = 'Gestions des articles';
 $page = 'Gestion des articles';
 $accueil = 'index.php';
@@ -22,13 +25,11 @@ include('../codebarre/barcode.php');
 
 <!--Etiquette template-->
 <div class="etiquette" style="width: 500px;height: 300px;margin: auto">
-    <div>
-        <p id="titleEtiquette" class="title"></p>
-        <p id="prixEntier" class="price"><span id="prixDecimal"></span></p>
-        <svg id="barcode2"
-             jsbarcode-textmargin="1"
-        ></svg>
-    </div>
+	<div>
+		<p id="titleEtiquette" class="title"></p>
+		<p id="prixEntier" class="price"><span id="prixDecimal"></span></p>
+		<svg id="barcode2" jsbarcode-textmargin="1"></svg>
+	</div>
 
 </div>
 <!--Fin etiquette template -->
@@ -36,15 +37,25 @@ include('../codebarre/barcode.php');
 <div class="content-wrapper" style="min-height: 823px;">
 	<?php include('../template/info-page.php') ?>
 	<div class="content">
-		<div class="container-fluid">
+		<div class="container">
 			<div class="row ">
-				<div class="col-sm-12 mx-auto ">
-
-
-					<!-- <a class="btn btn-app float-right" href="" >
+				<!-- <a class="btn btn-app float-right" href="" >
 						<i class="fas fa-barcode"></i>
 						ENTRER CODE FOURNISSEUR
 					</a> -->
+				<div class="col-md-6">
+					<form action="searchArticle.php">
+						<div class="input-group">
+							<input type="search" class="form-control form-control-lg" id="searchArticle" placeholder="Rechercher un article">
+							<div class="input-group-append">
+								<button type="submit" class="btn btn-lg btn-default">
+									<i class="fa fa-search"></i>
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-md-3 offset-3">
 					<a class="btn btn-app float-right" href="" data-toggle="modal" data-target="#entrerGencodeModal">
 						<i class="fas fa-barcode"></i>
 						ENTRER GENCODE
@@ -119,7 +130,9 @@ include('../codebarre/barcode.php');
 														<a>
 															<th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending">Promo € TTC</th>
 														</a>
-                                                        <a><th rowspan="1" colspan="1" st>Étiquettes</th></a>
+														<a>
+															<th rowspan="1" colspan="1" st>Étiquettes</th>
+														</a>
 												</tr>
 											</thead>
 											<?php
@@ -130,17 +143,17 @@ include('../codebarre/barcode.php');
 											?>
 													<tr class="odd">
 														<td class="dtr-control sorting_1" tabindex="0"><?php echo $row['ref'] ?></td>
-														<td><?php echo $row['titre'] ?></td>
+														<td><a href="article.php?gencode=<?php echo $row['ref'] ?>"><?php echo $row['titre'] ?></a></td>
 														<td><?php echo $row['stock'] ?></td>
 														<td><?php echo round($row['prixttc_euro'] - ($row['prixttc_euro'] * ($tva / 100)), 2) ?></td>
 														<td><?php echo $row['prixttc_euro'] ?></td>
 														<td><?php echo $row['prixttc_promo_euro'] ?></td>
-                                                        <td style="text-align: center;">
-                                                            <a href="#" onclick="imprimeEtiquettes('<?php echo $row['ref'] ?>','<?php echo $row['titre'] ?>',<?php echo $row['prixttc_euro'] ?>);return false;">
-                                                                <i class="fa fa-print"></i>
-                                                            </a>
+														<td style="text-align: center;">
+															<a href="#" onclick="imprimeEtiquettes('<?php echo $row['ref'] ?>','<?php echo $row['titre'] ?>',<?php echo $row['prixttc_euro'] ?>);return false;">
+																<i class="fa fa-print"></i>
+															</a>
 
-                                                        </td>
+														</td>
 													</tr>
 											<?php
 												}
@@ -227,7 +240,7 @@ include('../codebarre/barcode.php');
 											?>
 													<tr class="odd">
 														<td class="dtr-control sorting_1" tabindex="0"><?php echo $row['ref'] ?></td>
-														<td><?php echo $row['titre'] ?></td>
+														<td><a href="article.php?gencode=<?php echo $row['ref'] ?>"><?php echo $row['titre'] ?></a></td>
 														<td><?php echo $row['stock'] ?></td>
 														<td><?php echo round($row['prixttc_euro'] - ($row['prixttc_euro'] * ($tva / 100)), 2) ?></td>
 														<td><?php echo $row['prixttc_euro'] ?></td>
@@ -317,7 +330,7 @@ include('../codebarre/barcode.php');
 											?>
 													<tr class="odd">
 														<td class="dtr-control sorting_1" tabindex="0"><?php echo $row['ref'] ?></td>
-														<td><?php echo $row['titre'] ?></td>
+														<td><a href="article.php?gencode=<?php echo $row['ref'] ?>"><?php echo $row['titre'] ?></a></td>
 														<td><?php echo $row['stock'] ?></td>
 														<td><?php echo round($row['prixttc_euro'] - ($row['prixttc_euro'] * ($tva / 100)), 2) ?></td>
 														<td><?php echo $row['prixttc_euro'] ?></td>
@@ -386,7 +399,7 @@ include('../codebarre/barcode.php');
 		if (action === 'creer') {
 			<?php
 			$barcode = EAN13::create();
-			$existGencode = checkIfBarcodeExist($barcode, $conn,'creer');
+			$existGencode = checkIfBarcodeExist($barcode, $conn, 'creer');
 			?>
 			let valid = '<?php echo $existGencode; ?>';
 			let barcode = '<?php echo $barcode;	?>';
@@ -400,7 +413,9 @@ include('../codebarre/barcode.php');
 			var barcode = $('#entrerBarcode').val();
 			$.ajax({
 				type: 'POST',
-				data: {entrerBarcode:barcode},
+				data: {
+					entrerBarcode: barcode
+				},
 				success: function(res) {
 					console.log(res)
 					if (res === 'false') {
@@ -414,6 +429,29 @@ include('../codebarre/barcode.php');
 
 		}
 	}
+	// var searchRequest = null;
+	// var minlength = 4;
+	// $('#searchArticle').keyup(function() {
+	// 	var that = this,
+	// 		value = $(this).val();
+	// 	if (value.length >= minlength) {
+	// 		if (searchRequest != null)
+	// 			searchRequest.abort();
+	// 		searchRequest = $.ajax({
+	// 			type: "POST",
+	// 			data: {
+	// 				'search_keyword': value
+	// 			},
+	// 			dataType: "json",
+	// 			success: function(response) {
+	// 				console.log(response)
+	// 				if (value == $(that).val()) {
+	// 					$('.search-title').append(response.titre)
+	// 				}
+	// 			}
+	// 		});
+	// 	}
+	// })
 </script>
 </body>
 

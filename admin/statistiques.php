@@ -14,7 +14,7 @@ else{
 
 $title = 'Statistiques';
 $page = 'Statistiques';
-$accueil = '../index.php';
+$accueil = 'index.php';
 
 
 
@@ -27,7 +27,7 @@ $sql = "SELECT * FROM table_client_ticket WHERE date LIKE '$dateFormated%' ";
 $query = $conn->query($sql);
 
 
-$mois_fr = Array("", "janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", 
+$mois_fr = Array("", "janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août",
 	"septembre", "octobre", "novembre", "décembre");
 list( $annee, $mois, $jour) = explode('-', $date );
 
@@ -66,7 +66,7 @@ while($ticket = $query->fetch_assoc()){
 					<p style="font-size:18px;text-align: center;text-decoration:underline" ><a href=""  >Toutes les caisses</a></p>
 					<p style="font-size:18px;text-align: center;text-decoration:underline">Caisse n° <a href="">1</a> <a href="">2</a> <a href="">3</a> </p>
 					<div class="mb-5"></div>
-					<p style="font-size:24px;text-align: center;text-decoration:underline;font-weight: 600;"><a href="cloture-caisse.php?date=<?php echo $dateFormated; ?>" target="_blank" >Faire la cloture de caisse du <?php 	echo $dateFormated ?></a></p> 
+					<p style="font-size:24px;text-align: center;text-decoration:underline;font-weight: 600;"><a href="cloture-caisse.php?date=<?php echo $dateFormated; ?>" target="_blank" >Faire la cloture de caisse du <?php 	echo $dateFormated ?></a></p>
 					</div>
 					<div class="col-md-6 col-sm-6 offset-md-1">
 						<div class="card card-warning" id="stats">
@@ -81,7 +81,7 @@ while($ticket = $query->fetch_assoc()){
 										<p class="stats-info">Espèces euro</p>
 									</div>
 
-									<div class="col-md-4">	
+									<div class="col-md-4">
 										<p class="stats-montant"><?php echo $p_espece_euro == "" ? "0.00" : $p_espece_euro ?> €</p>
 									</div>
 								</div>
@@ -90,7 +90,7 @@ while($ticket = $query->fetch_assoc()){
 										<p class="stats-info">Chèques € vers.norm</p>
 									</div>
 
-									<div class="col-md-4">	
+									<div class="col-md-4">
 										<p class="stats-montant">0.00€</p>
 									</div>
 								</div>
@@ -99,7 +99,7 @@ while($ticket = $query->fetch_assoc()){
 										<p class="stats-info">Chèques € vers.+tard</p>
 									</div>
 
-									<div class="col-md-4">	
+									<div class="col-md-4">
 										<p class="stats-montant">0.00€</p>
 									</div>
 								</div>
@@ -108,7 +108,7 @@ while($ticket = $query->fetch_assoc()){
 										<p class="stats-info">Chèques euro total</p>
 									</div>
 
-									<div class="col-md-4">	
+									<div class="col-md-4">
 										<p class="stats-montant"><?php echo $p_cheque_euro == "" ? "0.00" : $p_cheque_euro ?> €</p>
 									</div>
 								</div>
@@ -117,7 +117,7 @@ while($ticket = $query->fetch_assoc()){
 										<p class="stats-info">Carte bancaire CB-CA</p>
 									</div>
 
-									<div class="col-md-4">	
+									<div class="col-md-4">
 										<p class="stats-montant"><?php echo $p_cb == "" ? "0.00" : $p_cb ?> €</p>
 									</div>
 								</div>
@@ -126,7 +126,7 @@ while($ticket = $query->fetch_assoc()){
 										<p class="stats-info">Carte bancaire CB-BR</p>
 									</div>
 
-									<div class="col-md-4">	
+									<div class="col-md-4">
 										<p class="stats-montant">3.90 €</p>
 									</div>
 								</div>
@@ -135,7 +135,7 @@ while($ticket = $query->fetch_assoc()){
 										<p class="stats-info">Carte fidélité</p>
 									</div>
 
-									<div class="col-md-4">	
+									<div class="col-md-4">
 										<p class="stats-montant">3.90 €</p>
 									</div>
 								</div>
@@ -144,7 +144,7 @@ while($ticket = $query->fetch_assoc()){
 									<p class="stats-info">A crédit</p>
 								</div>
 
-								<div class="col-md-4">	
+								<div class="col-md-4">
 									<p class="stats-montant">0.00 €</p>
 								</div>
 							</div>
@@ -153,7 +153,7 @@ while($ticket = $query->fetch_assoc()){
 									<p class="stats-info">Chèque déjeuner</p>
 								</div>
 
-								<div class="col-md-4 ">	
+								<div class="col-md-4 ">
 									<p class="stats-montant">0.00 €</p>
 								</div>
 							</div>
@@ -162,7 +162,7 @@ while($ticket = $query->fetch_assoc()){
 									<p class="stats-info">Frais généraux</p>
 								</div>
 
-								<div class="col-md-4 ">	
+								<div class="col-md-4 ">
 									<p class="stats-montant">0.00 €</p>
 								</div>
 							</div>
@@ -171,7 +171,7 @@ while($ticket = $query->fetch_assoc()){
 									<p class="stats-info">Reg fournisseurs</p>
 								</div>
 
-								<div class="col-md-4 ">	
+								<div class="col-md-4 ">
 									<p class="stats-montant">0.00 €</p>
 								</div>
 							</div>
@@ -180,7 +180,7 @@ while($ticket = $query->fetch_assoc()){
 									<p class="stats-info">Avance sur salaire</p>
 								</div>
 
-								<div class="col-md-4 ">	
+								<div class="col-md-4 ">
 									<p class="stats-montant">0.00 €</p>
 								</div>
 							</div> -->
@@ -189,7 +189,7 @@ while($ticket = $query->fetch_assoc()){
 									<p class="stats-info text-danger">Déconsigne</p>
 								</div>
 
-								<div class="col-md-4 ">	
+								<div class="col-md-4 ">
 									<p class="stats-montant text-danger">0.00 €</p>
 								</div>
 							</div>
@@ -198,7 +198,7 @@ while($ticket = $query->fetch_assoc()){
 									<p class="stats-info text-danger">Remise bon client</p>
 								</div>
 
-								<div class="col-md-4 ">	
+								<div class="col-md-4 ">
 									<p class="stats-montant text-danger">0.00 €</p>
 								</div>
 							</div>
@@ -207,7 +207,7 @@ while($ticket = $query->fetch_assoc()){
 									<p class="stats-info text-danger">Retour article</p>
 								</div>
 
-								<div class="col-md-4 ">	
+								<div class="col-md-4 ">
 									<p class="stats-montant text-danger"><?php echo $ra == "" ? "0.00" : $ra ?> €</p>
 								</div>
 							</div>
@@ -216,7 +216,7 @@ while($ticket = $query->fetch_assoc()){
 									<p class="stats-info text-danger">Démarque</p>
 								</div>
 
-								<div class="col-md-4 ">	
+								<div class="col-md-4 ">
 									<p class="stats-montant text-danger">0.00 €</p>
 								</div>
 							</div>
@@ -225,7 +225,7 @@ while($ticket = $query->fetch_assoc()){
 									<p class="stats-info text-danger">Chargement carte fidélité</p>
 								</div>
 
-								<div class="col-md-4 ">	
+								<div class="col-md-4 ">
 									<p class="stats-montant text-danger">0.00 €</p>
 								</div>
 							</div>
@@ -235,7 +235,7 @@ while($ticket = $query->fetch_assoc()){
 									<p class="font-weight-bold m-0" style="font-family: 'Tahoma';font-size: 20px;">Chiffre d'affaire*</p>
 								</div>
 
-								<div class="col-md-4 ">	
+								<div class="col-md-4 ">
 									<p class="text-danger m-0" style="font-family: 'Tahoma';font-size: 24px;font-weight: 800;text-align: right;">  € <span style="font-weight: normal;">TTC</span></p>
 								</div>
 							</div>
@@ -248,7 +248,7 @@ while($ticket = $query->fetch_assoc()){
 								<div class="col-md-8">
 									<p class="stats-info">C.A HT</p>
 								</div>
-								<div class="col-md-4">	
+								<div class="col-md-4">
 									<p class="stats-montant ">0.00 €</p>
 								</div>
 							</div>
@@ -256,7 +256,7 @@ while($ticket = $query->fetch_assoc()){
 								<div class="col-md-8">
 									<p class="stats-info">Total TVA 0%</p>
 								</div>
-								<div class="col-md-4">	
+								<div class="col-md-4">
 									<p class="stats-montant ">0 €</p>
 								</div>
 							</div>
@@ -264,7 +264,7 @@ while($ticket = $query->fetch_assoc()){
 								<div class="col-md-8">
 									<p class="stats-info">Total TVA 1.05%</p>
 								</div>
-								<div class="col-md-4">	
+								<div class="col-md-4">
 									<p class="stats-montant ">0 €</p>
 								</div>
 							</div>
@@ -272,7 +272,7 @@ while($ticket = $query->fetch_assoc()){
 								<div class="col-md-8">
 									<p class="stats-info">Total TVA 2.1%</p>
 								</div>
-								<div class="col-md-4">	
+								<div class="col-md-4">
 									<p class="stats-montant ">0 €</p>
 								</div>
 							</div>
@@ -280,7 +280,7 @@ while($ticket = $query->fetch_assoc()){
 								<div class="col-md-8">
 									<p class="stats-info">Total TVA 8.5%</p>
 								</div>
-								<div class="col-md-4">	
+								<div class="col-md-4">
 									<p class="stats-montant ">0 €</p>
 								</div>
 							</div>
@@ -288,7 +288,7 @@ while($ticket = $query->fetch_assoc()){
 								<div class="col-md-8">
 									<p class="stats-info font-weight-bold">CUMUL TVA</p>
 								</div>
-								<div class="col-md-4">	
+								<div class="col-md-4">
 									<p class="stats-montant ">3.10 €</p>
 								</div>
 							</div>
@@ -325,11 +325,11 @@ while($ticket = $query->fetch_assoc()){
 	body > div > div.content-wrapper > div.content > div > div > div.col-md-3.offset-md-1 > div > input.ws-date.ws-inputreplace.hide-replaced.hide-inputbtns.wsshadow-1649417515035.user-success{
 		visibility: hidden;
 	}
-	
+
 </style>
 <script src="../js-webshim/minified/polyfiller.js"></script>
 <script type="text/javascript">
-	
+
 
 	webshim.setOptions('forms-ext', {
 		replaceUI: 'auto',
@@ -358,7 +358,7 @@ $(function () {
 				url:'statistiques.php',
 				type:'POST',
 				data: {
-					changeDate: date					
+					changeDate: date
 				},
 				success: function(result){
 					$('#stats').html('');

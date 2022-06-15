@@ -114,6 +114,12 @@ if (isset($postdata)) {
 		$sql = "UPDATE table_client_panier SET remise = $remise WHERE ref = $ref";
 		$conn->query($sql);
 	}
+	else if(isset($request->updateQTE)){
+		$qte = $request->updateQTE;
+		$ref = $request->ref;
+		$sql = "UPDATE table_client_panier SET qte = $qte WHERE ref = $ref";
+		$conn->query($sql);
+	}
 	
 
 	$sql = "SELECT * FROM table_client_panier";

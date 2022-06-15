@@ -1,13 +1,13 @@
 <?php
-//$HostName = '192.168.1.86';
-//$DatabaseName = "mobipos";
-//$HostUser = "root";
-//$HostPass = "";
-//$conn = new mysqli($HostName, $HostUser, $HostPass, $DatabaseName);
-//
-//$catalogue = $conn->query('SELECT * from table_client_catalogue');
-//
-//var_dump($catalogue->fetch_assoc());
+$HostName = '192.168.1.19';
+$DatabaseName = "mobipos";
+$HostUser = "root";
+$HostPass = "";
+$conn = new mysqli($HostName, $HostUser, $HostPass, $DatabaseName);
+
+$catalogue = $conn->query('SELECT * from table_client_catalogue');
+
+var_dump($catalogue->fetch_assoc());
 
 //function ticketFormatString($str,$limit){
 //    $row1 = $lastrow = str_repeat("*",$limit);
