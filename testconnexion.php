@@ -44,7 +44,7 @@
 //echo strlen($prix_total_ticket);
 //var_dump(setStringLen($prix_total_ticket,8));
 
-//exec("git pull origin main",$output);
-/*highlight_string("<?php\n\$data =\n" . var_export($output, true) . ";\n?>");*/
+exec("git pull origin main",$output);
+highlight_string("<?php\n\$data =\n" . var_export($output, true) . ";\n?>");
 
 ?>
