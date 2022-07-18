@@ -127,7 +127,7 @@ function checkIfBarcodeExist($barcode,$conn,$action)
     
 }
 
-function remoteConnexion($HostName, $HostUser, $HostPass, $DatabaseName)
+function connexionDb($HostName, $HostUser, $HostPass, $DatabaseName)
 {
 
     return new mysqli($HostName, $HostUser, $HostPass, $DatabaseName);
