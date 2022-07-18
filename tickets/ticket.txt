@@ -7,18 +7,29 @@
 Chemin LEFAGUYES La Cocoteraie BAT 3
         97440 SAINT ANDRE
 
-       Téléphone: 0262 50 18 18
+       Telephone: 0262 50 18 18
        SIRET: 49205116400019
 
  Qte*PU   Designation     Mttc   TVA
 --------------------------------------
-1*29.90   OUTDOOR LASER LI29.90€8.5%
-1*17.90   LA TOUPIE SFF17017.90€8.5%
-1*43.90   PETARD REF-SFA 843.90€8.5%
+150*8.50 SHAMPOOING CRI 1275.00€  8.5%
+1*7.60   SHAMPOOING MOE 7.60€     8.5%
+1*7.60   SHAMPOOING KAR 7.60€     0%  
+1*7.10   REFLET ARGENT  7.10€     0%  
+5*11.90  HUILE POLYVEGE 59.50€    8.5%
+110*7.50 POMMADE COIFFA 825.00€   0%  
+1*6.20   ACTIVI CREME M 6.20€     0%  
+1*6.20   ACTIVILONG ROM 6.20€     0%  
+1*6.20   ACTIVILONG TRT 6.20€     0%  
+1*6.20   CREME JOJOBA   6.20€     0%  
+1*9.00   LIPOSERUM      9.00€     0%  
+1*10.50  REFLET 30 KERA 10.50€    0%  
+1*10.50  REFLET 31 KERA 10.50€    0%  
+1*10.50  REFLET 32 KERA 10.50€    0%  
 
-                    TOTAL A PAYER TTC     43.9€
- 	     MERCI DE VOTRE VISITE
-          ET A TRES BIENTOT
+          TOTAL A PAYER TTC    2247.1€
+      MERCI DE VOTRE VISITE
+        ET A TRES BIENTOT
 ------------------------------------------
 
 ECHANGE OU AVOIR SOUS 72H

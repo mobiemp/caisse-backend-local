@@ -3,16 +3,15 @@
 include('../DBConfig.php');
 include('../functions.php');
 
-if (isset($_POST['search_keyword'])) {
-    $search = $_POST['search_keyword'];
-    $sql = "SELECT num,titre FROM table_client_catalogue WHERE titre like '%$search%'";
+if (isset($_POST['searchArticle'])) {
+    $search = $_POST['searchArticle'];
+    $sql = "SELECT * FROM table_client_catalogue WHERE titre like '%$search%' OR ref like '%$search%'";
     $query = $conn->query($sql);
     $nbarticle = $query->num_rows;
-    exit;
 }
 
 $title = $page = 'Rechercher un article';
-$accueil = '../index.php';
+$accueil = 'index.php';
 include('../template/header.php');
 
 
@@ -23,11 +22,30 @@ include('../template/header.php');
         <div class="container">
 
             <div class="row">
+                <div class="col-md-6">
+                    <form action="" method="POST">
+                        <div class="input-group">
+                            <input type="search" class="form-control form-control-lg" id="searchArticle" name="searchArticle" placeholder="Rechercher un article">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-lg btn-default">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-2 ml-auto">
+                    <button type="button" class="btn btn-block btn-dark" onclick="window.location.href='articles.php' ">Retour</button>
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="col-md-12">
+
                     <div class="card">
                         <div class="card-header">
                             <?php if (isset($nbarticle) && $nbarticle > 0) { ?>
-                                <h3 class="card-title" style="font-weight: 600;">Voici les <span style="font-weight: 600;"><?php echo $nbarticle ?> résultats de votre recherche.</span></h3>
+                                <h3 class="card-title" style="font-weight: 600;"><span style="font-weight: 600;"><?php echo $nbarticle ?> résultats trouvés.</span></h3>
                             <?php    } else { ?>
                                 <h3 class="card-title" style="font-weight: 600;">Aucun articles trouvé.</h3>
                             <?php    } ?>
@@ -83,32 +101,32 @@ include('../template/header.php');
                                                         <a>
                                                             <th rowspan="1" colspan="1" st>Étiquettes</th>
                                                         </a>
-                                                </tr>
-                                            </thead>
-                                            <?php
-
-                                            if (isset($nbarticle) && $nbarticle > 0) {
-                                                while ($row = $query->fetch_assoc()) {
-                                                    $tva = ($row['code_tva'] == 8 ? 8.5 : ($row['code_tva'] == 2  ? 2.1 : ($row['code_tva'] == 1 ? 1.05 : 0)));
-                                            ?>
-                                                    <tr class="odd">
-                                                        <td class="dtr-control sorting_1" tabindex="0"><?php echo $row['ref'] ?></td>
-                                                        <td><a href="article.php?gencode=<?php echo $row['ref'] ?>"><?php echo $row['titre'] ?></a></td>
-                                                        <td><?php echo $row['stock'] ?></td>
-                                                        <td><?php echo round($row['prixttc_euro'] - ($row['prixttc_euro'] * ($tva / 100)), 2) ?></td>
-                                                        <td><?php echo $row['prixttc_euro'] ?></td>
-                                                        <td><?php echo $row['prixttc_promo_euro'] ?></td>
-                                                        <td style="text-align: center;">
-                                                            <a href="#" onclick="imprimeEtiquettes('<?php echo $row['ref'] ?>','<?php echo $row['titre'] ?>',<?php echo $row['prixttc_euro'] ?>);return false;">
-                                                                <i class="fa fa-print"></i>
-                                                            </a>
-
-                                                        </td>
                                                     </tr>
-                                            <?php
+                                                </thead>
+                                                <?php
+
+                                                if (isset($nbarticle) && $nbarticle > 0) {
+                                                    while ($row = $query->fetch_assoc()) {
+                                                        $tva = ($row['code_tva'] == 8 ? 8.5 : ($row['code_tva'] == 2  ? 2.1 : ($row['code_tva'] == 1 ? 1.05 : 0)));
+                                                        ?>
+                                                        <tr class="odd">
+                                                            <td class="dtr-control sorting_1" tabindex="0"><?php echo $row['ref'] ?></td>
+                                                            <td><a href="article.php?gencode=<?php echo $row['ref'] ?>"><?php echo $row['titre'] ?></a></td>
+                                                            <td><?php echo $row['stock'] ?></td>
+                                                            <td><?php echo round($row['prixttc_euro'] - ($row['prixttc_euro'] * ($tva / 100)), 2) ?></td>
+                                                            <td><?php echo $row['prixttc_euro'] ?></td>
+                                                            <td><?php echo $row['prixttc_promo_euro'] ?></td>
+                                                            <td style="text-align: center;">
+                                                                <a href="#" onclick="imprimeEtiquettes('<?php echo $row['ref'] ?>','<?php echo $row['titre'] ?>',<?php echo $row['prixttc_euro'] ?>);return false;">
+                                                                    <i class="fa fa-print"></i>
+                                                                </a>
+
+                                                            </td>
+                                                        </tr>
+                                                        <?php
+                                                    }
                                                 }
-                                            }
-                                            ?>
+                                                ?>
                                             </tbody>
                                             <tfoot>
                                                 <tr>
@@ -128,6 +146,7 @@ include('../template/header.php');
                         </div>
 
                     </div>
+                    
                 </div>
             </div>
 
@@ -136,3 +155,9 @@ include('../template/header.php');
         </div>
     </div>
 </div>
+
+<?php include('../template/footer.php') ?>
+
+
+
+<?php include('../template/script.php') ?>

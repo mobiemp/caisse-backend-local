@@ -44,9 +44,9 @@ include('../codebarre/barcode.php');
 						ENTRER CODE FOURNISSEUR
 					</a> -->
 				<div class="col-md-6">
-					<form action="searchArticle.php">
+					<form action="searchArticle.php" method="POST">
 						<div class="input-group">
-							<input type="search" class="form-control form-control-lg" id="searchArticle" placeholder="Rechercher un article">
+							<input type="search" class="form-control form-control-lg" id="searchArticle" name="searchArticle" placeholder="Rechercher un article">
 							<div class="input-group-append">
 								<button type="submit" class="btn btn-lg btn-default">
 									<i class="fa fa-search"></i>
@@ -433,11 +433,13 @@ include('../codebarre/barcode.php');
 	// var minlength = 4;
 	// $('#searchArticle').keyup(function() {
 	// 	var that = this,
-	// 		value = $(this).val();
+	//     var value = $(this).val();
+	//     console.log(value)
 	// 	if (value.length >= minlength) {
 	// 		if (searchRequest != null)
 	// 			searchRequest.abort();
 	// 		searchRequest = $.ajax({
+	// 			url: ""
 	// 			type: "POST",
 	// 			data: {
 	// 				'search_keyword': value

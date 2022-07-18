@@ -1,29 +1,26 @@
 <?php
-if(isset($_POST['changeDate']) == ""){
-	$date = date('d/m/Y');
-	$dateFormated = $date;
-	$date = str_replace('/', '-', $date);
-	$date = date('Y-m-d', strtotime($date));
-
-}
-else{
+if(isset($_POST['changeDate'])){
 	$date = $_POST['changeDate'];
 	$dateFormated = strtotime(str_replace('-', '/', $date));
-	$dateFormated = date('d/m/Y',$dateFormated);
 }
+else{
+	$dateFormated = date('d/m/Y');
+	$date = date('Y-m-d');
+}
+
+
+
 
 $title = 'Statistiques';
 $page = 'Statistiques';
 $accueil = 'index.php';
 
 
-
-
 include('../template/header.php');
 include('../DBConfig.php');
 
-
-$sql = "SELECT * FROM table_client_ticket WHERE date LIKE '$dateFormated%' ";
+$sql = "SELECT * FROM table_client_ticket WHERE date LIKE '$date%' ";
+// echo '<p style="text-align:center;">'.$sql.'</p>';
 $query = $conn->query($sql);
 
 
@@ -32,7 +29,7 @@ $mois_fr = Array("", "janvier", "février", "mars", "avril", "mai", "juin", "jui
 list( $annee, $mois, $jour) = explode('-', $date );
 
 $mois = $mois[0] == 0 ? $mois[1] : $mois;
-$nameOfDay = date('D', strtotime($date));
+$nameOfDay = date('D', strtotime($dateFormated));
 $jours = array('Mon'=>'Lundi','Tue'=>'Mardi','Wed'=>'Mercredi','Thu'=>'Jeudi','Fri'=>'Vendredi','Sat'=>'Samedi','Sun'=>'Dimanche');
 $fulldate = $jours[$nameOfDay]. " " . $jour . " ". $mois_fr[$mois] . " " . $annee;
 
@@ -40,14 +37,39 @@ $p_espece_euro = 0;
 $p_cb = 0;
 $p_cheque_euro = 0;
 $ra = 0;
+$ca = 0;
+$ca_ht = 0;
+$total_tva8 = 0; 
+$total_tva2 = 0;
+$total_tva1 = 0;
+$cumul_tva = 0;
+
 while($ticket = $query->fetch_assoc()){
 	$total_euro_du = $ticket['total_euro_du'];
 	$p_espece_euro += $ticket['p_espece_euro'] > $total_euro_du ? $ticket['p_espece_euro'] - $total_euro_du : $ticket['p_espece_euro'];
 	$p_cb += $ticket['p_cb'];
 	$p_cheque_euro += $ticket['p_cheque_euro'];
 	$ra += $ticket['retourarticle'];
+	$ca += $total_euro_du;
+
 }
 
+$commandes = $conn->query("SELECT * FROM table_client_commandes WHERE  date LIKE '$date%' ");
+while($commande = $commandes->fetch_assoc()){
+	$ca_ht += $commande['taux_tva'] != 0.00 ? $commande['pu_euro'] / (1 + $commande['taux_tva'] /100) : $commande['pu_euro'];
+	if($commande['taux_tva'] == 8.50){
+		$total_tva8 += $commande['pu_euro'] - ($commande['pu_euro'] / (1+8.5 / 100 ));
+	}
+	else if($commande['taux_tva'] == 2.10){
+		$total_tva2 += $commande['pu_euro'] -  ($commande['pu_euro'] / ( 1+ 2.10 / 100 ));
+	}
+	else if($commande['taux_tva'] == 1.05){
+		$total_tva1 += $commande['pu_euro'] - ($commande['pu_euro'] / ( 1+1.05 / 100 ));
+	}
+	
+}
+
+$cumul_tva = $total_tva8 + $total_tva2 + $total_tva1 
 
 // $CA_TTC = $p 
 ?>
@@ -66,7 +88,7 @@ while($ticket = $query->fetch_assoc()){
 					<p style="font-size:18px;text-align: center;text-decoration:underline" ><a href=""  >Toutes les caisses</a></p>
 					<p style="font-size:18px;text-align: center;text-decoration:underline">Caisse n° <a href="">1</a> <a href="">2</a> <a href="">3</a> </p>
 					<div class="mb-5"></div>
-					<p style="font-size:24px;text-align: center;text-decoration:underline;font-weight: 600;"><a href="cloture-caisse.php?date=<?php echo $dateFormated; ?>" target="_blank" >Faire la cloture de caisse du <?php 	echo $dateFormated ?></a></p>
+					<p style="font-size:24px;text-align: center;text-decoration:underline;font-weight: 600;"><a href="cloture-caisse.php?date=<?php echo $dateFormated; ?>" target="_blank" >Faire la cloture de caisse du <?php echo $dateFormated ?></a></p>
 					</div>
 					<div class="col-md-6 col-sm-6 offset-md-1">
 						<div class="card card-warning" id="stats">
@@ -127,7 +149,7 @@ while($ticket = $query->fetch_assoc()){
 									</div>
 
 									<div class="col-md-4">
-										<p class="stats-montant">3.90 €</p>
+										<p class="stats-montant">0.00 €</p>
 									</div>
 								</div>
 								<div class="row border-bottom mb-3">
@@ -136,7 +158,7 @@ while($ticket = $query->fetch_assoc()){
 									</div>
 
 									<div class="col-md-4">
-										<p class="stats-montant">3.90 €</p>
+										<p class="stats-montant">0.00 €</p>
 									</div>
 								</div>
 							<!-- <div class="row">
@@ -231,12 +253,12 @@ while($ticket = $query->fetch_assoc()){
 							</div>
 
 							<div class="row bg-warning border-bottom mb-3 align-middle pt-2 pb-2">
-								<div class="col-md-8 ">
+								<div class="col-md-6 ">
 									<p class="font-weight-bold m-0" style="font-family: 'Tahoma';font-size: 20px;">Chiffre d'affaire*</p>
 								</div>
 
-								<div class="col-md-4 ">
-									<p class="text-danger m-0" style="font-family: 'Tahoma';font-size: 24px;font-weight: 800;text-align: right;">  € <span style="font-weight: normal;">TTC</span></p>
+								<div class="col-md-6 ">
+									<p class="text-danger m-0" style="font-family: 'Tahoma';font-size: 24px;font-weight: 800;text-align: right;"><?php echo $ca; ?>  € <span style="font-weight: normal;">TTC</span></p>
 								</div>
 							</div>
 							<div class="row mt-3">
@@ -249,23 +271,23 @@ while($ticket = $query->fetch_assoc()){
 									<p class="stats-info">C.A HT</p>
 								</div>
 								<div class="col-md-4">
-									<p class="stats-montant ">0.00 €</p>
+									<p class="stats-montant "><?php echo number_format((float)$ca_ht, 2, '.', ''); ?> €</p>
 								</div>
 							</div>
-							<div class="row">
+							<!-- <div class="row">
 								<div class="col-md-8">
 									<p class="stats-info">Total TVA 0%</p>
 								</div>
 								<div class="col-md-4">
-									<p class="stats-montant ">0 €</p>
+									<p class="stats-montant "><?php echo number_format((float)$total_tva0,2,'.',''); ?> €</p>
 								</div>
-							</div>
+							</div> -->
 							<div class="row">
 								<div class="col-md-8">
 									<p class="stats-info">Total TVA 1.05%</p>
 								</div>
 								<div class="col-md-4">
-									<p class="stats-montant ">0 €</p>
+									<p class="stats-montant "><?php echo number_format((float)$total_tva1, 2, '.', ''); ?> €</p>
 								</div>
 							</div>
 							<div class="row">
@@ -273,7 +295,7 @@ while($ticket = $query->fetch_assoc()){
 									<p class="stats-info">Total TVA 2.1%</p>
 								</div>
 								<div class="col-md-4">
-									<p class="stats-montant ">0 €</p>
+									<p class="stats-montant "><?php echo number_format((float)$total_tva2, 2, '.', ''); ?> €</p>
 								</div>
 							</div>
 							<div class="row">
@@ -281,7 +303,7 @@ while($ticket = $query->fetch_assoc()){
 									<p class="stats-info">Total TVA 8.5%</p>
 								</div>
 								<div class="col-md-4">
-									<p class="stats-montant ">0 €</p>
+									<p class="stats-montant "><?php echo number_format((float)$total_tva8, 2, '.', ''); ?> €</p>
 								</div>
 							</div>
 							<div class="row">
@@ -289,7 +311,7 @@ while($ticket = $query->fetch_assoc()){
 									<p class="stats-info font-weight-bold">CUMUL TVA</p>
 								</div>
 								<div class="col-md-4">
-									<p class="stats-montant ">3.10 €</p>
+									<p class="stats-montant "><?php echo number_format((float)$cumul_tva,2,'.',''); ?> €</p>
 								</div>
 							</div>
 
@@ -354,8 +376,8 @@ $(function () {
 		$('#date').on('change', function (e) {
 			// e.preventDefault();
 			var date = $(this).val();
+			console.log(date)
 			$.ajax({
-				url:'statistiques.php',
 				type:'POST',
 				data: {
 					changeDate: date

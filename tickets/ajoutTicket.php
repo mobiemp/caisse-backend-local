@@ -23,7 +23,7 @@ if (isset($postdata)) {
 	$total_remise = 0;
 	$total_euro_du = 0;
 	include('print-ticket.php');
-    include '../DBConfig.php';
+	include '../DBConfig.php';
 	foreach ($panierData as $data) {
 
 		$total_remise += $data->remise;
@@ -31,32 +31,39 @@ if (isset($postdata)) {
 		$deconsigne = 0;
 		$qte_total += $data->qte;
 		$qte = $data->qte;
-		$totalTTC = $qte * $data->pu_euro;
+		$totalTTC += $qte * $data->pu_euro;
 		$titre = $data->titre;
 		$pu_euro = $data->pu_euro;
 		$taux_tva = (float) $data->taux_tva;
 //		$taux_tva = ($codetva == 8 ? 8.5 : ($codetva == 2 ? 2.1 : ($codetva == 1 ? 1.05 : 0 ))) ;
 		$taux_tva_ticket = $taux_tva . "%";
 		$remise = $data->remise;
-        $idproduit = $data->id_produit;
+		$idproduit = $data->id_produit;
 
 		$commandes[]=$data;
 //		$titreTicket = strlen($titre) > 10 ? substr($titre, 0, 7) : $titre;
 		$prix_total = $qte * $pu_euro;
-        $prix_total_ticket = number_format((float)$prix_total, 2, '.','') . "\xE2\x82\xAc";
-        $ttc = $total_a_payer . $totalTTC . "€";
-        $ticket_ligne .= setStringLen($qte."*".$pu_euro,$qte_prix_limit) . setStringLen($titre,$designiation_limit) . setStringLen($prix_total_ticket,$mttc_limit) . setStringLen($taux_tva_ticket,$tva_limit) . "\n";
+		$prix_total_ticket = number_format((float)$prix_total, 2, '.','') ;
+        	// $prix_total_ticket = number_format((float)$prix_total, 2, '.','') . "\xE2\x82\xAc";
+		$ttc = $total_a_payer . $totalTTC  . "€";
+
+		$ticket_ligne .= setStringLen($qte."*".$pu_euro,$qte_prix_limit) . 
+		setStringLen($titre,$designiation_limit) . 
+		setStringLen($prix_total_ticket,$mttc_limit,true) . " " .
+		setStringLen($taux_tva_ticket,$tva_limit) . "\n";
+
+
 //		$ticket_ligne .= sprintf($ticket_layout, strval($qte) . "*" . strval($pu_euro), $titreTicket, strval($pu_euro) . "€", strval($taux_tva_rounded) . "%") . "\n";
 
-        $sql = "SELECT choix_mode_prix,stock,stock_alerte,num FROM table_client_catalogue WHERE id = '$idproduit' ";
-        $query_res = $conn->query($sql);
-        $res = $query_res->fetch_row();
-        $mode = $res[0];
+		$sql = "SELECT choix_mode_prix,stock,stock_alerte,num FROM table_client_catalogue WHERE id = '$idproduit' ";
+		$query_res = $conn->query($sql);
+		$res = $query_res->fetch_row();
+		$mode = $res[0];
 		$stock = $res[1];
 		$stock_alerte = $res[2];
 		$num = $res[3];
 
-        $total_euro_du += ($mode == 3 ? $pu_euro * $qte : ($mode == 2 ? ( $pu_euro + ($pu_euro * $taux_tva / 100 )) : $pu_euro * $qte ));
+		$total_euro_du += ($mode == 3 ? $pu_euro * $qte : ($mode == 2 ? ( $pu_euro + ($pu_euro * $taux_tva / 100 )) : $pu_euro * $qte ));
 
 		// MISE A JOUR DU STOCK
 		if($stock_alerte < 0 && $stock > 0 ){

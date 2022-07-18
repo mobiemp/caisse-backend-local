@@ -41,8 +41,11 @@ function ticketFormatString($str,$limit){
     }
 }
 
-function setStringLen($str,$limit){
-    return strlen($str) <= $limit ? $str.str_repeat(" ", $limit - strlen($str)) : substr($str,0,$limit);
+function setStringLen($str,$limit,$eur = false){
+    if($eur){
+        return strlen($str) <= $limit ? $str . "€" . str_repeat(" ", $limit - strlen($str)) : substr($str,0,$limit-1)."€" ;
+    }
+    return strlen($str) <= $limit ? $str . str_repeat(" ", $limit - strlen($str)) : substr($str,0,$limit-1) . str_repeat(" ",1);
 }
 
 function validate_EAN13Barcode($barcode)
