@@ -120,9 +120,13 @@ if (isset($postdata)) {
 	}
 	else if(isset($request->updateQTE)){
 		$qte = $request->updateQTE;
-		$ref = $request->ref;
+		$ref = $request->refQte;
 		$sql = "UPDATE table_client_panier SET qte = $qte WHERE ref = $ref";
-		$conn->query($sql);
+		$updateQte = $conn->query($sql);
+		if($updateQte){
+			echo $qte;
+			die();
+		}
 	}
 	
 
