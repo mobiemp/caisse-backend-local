@@ -110,9 +110,13 @@ if (isset($postdata)) {
 	}
 	else if(isset($request->ajoutRemise)){
 		$remise = $request->ajoutRemise;
-		$ref = $request->ref;
+		$ref = $request->refRemise;
 		$sql = "UPDATE table_client_panier SET remise = $remise WHERE ref = $ref";
-		$conn->query($sql);
+		$ajoutRemise = $conn->query($sql);
+		if($ajoutRemise){
+			echo $remise;
+			die();
+		}
 	}
 	else if(isset($request->updateQTE)){
 		$qte = $request->updateQTE;

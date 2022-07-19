@@ -12,22 +12,9 @@ Chemin LEFAGUYES La Cocoteraie BAT 3
 
  Qte*PU   Designation     Mttc   TVA
 --------------------------------------
-150*8.50 SHAMPOOING CRI 1275.00€  8.5%
-1*7.60   SHAMPOOING MOE 7.60€     8.5%
-1*7.60   SHAMPOOING KAR 7.60€     0%  
-1*7.10   REFLET ARGENT  7.10€     0%  
-5*11.90  HUILE POLYVEGE 59.50€    8.5%
-110*7.50 POMMADE COIFFA 825.00€   0%  
-1*6.20   ACTIVI CREME M 6.20€     0%  
-1*6.20   ACTIVILONG ROM 6.20€     0%  
-1*6.20   ACTIVILONG TRT 6.20€     0%  
-1*6.20   CREME JOJOBA   6.20€     0%  
-1*9.00   LIPOSERUM      9.00€     0%  
-1*10.50  REFLET 30 KERA 10.50€    0%  
-1*10.50  REFLET 31 KERA 10.50€    0%  
-1*10.50  REFLET 32 KERA 10.50€    0%  
+1*5.70   baume karit eve5.70€     0%  
 
-          TOTAL A PAYER TTC    2247.1€
+          TOTAL A PAYER TTC    5.7€
       MERCI DE VOTRE VISITE
         ET A TRES BIENTOT
 ------------------------------------------
