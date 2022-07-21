@@ -84,6 +84,17 @@ $cumul_tva = $total_tva8 + $total_tva2 + $total_tva1
 
 						<input type="date" style="width: 94%" class="hide-replaced" id="date" value="<?php echo $date; ?>"/>
 					</div>
+
+                    <div class="form-group">
+                        <label>Choisir une période: </label>
+<!--                        <div class="input-group">-->
+<!--                            <button type="button" class="btn btn-default float-right" id="daterange-btn">-->
+<!--                                <i class="far fa-calendar-alt"></i> Date range picker-->
+<!--                                <i class="fas fa-caret-down"></i>-->
+<!--                            </button>-->
+<!--                        </div>-->
+                    </div>
+
 					<h5 class="bg-info" style="font-weight: 600;text-align: center;">FILTRE D'AFFICHAGE : </h5>
 					<p style="font-size:18px;text-align: center;text-decoration:underline" ><a href=""  >Toutes les caisses</a></p>
 					<p style="font-size:18px;text-align: center;text-decoration:underline">Caisse n° <a href="">1</a> <a href="">2</a> <a href="">3</a> </p>
@@ -282,38 +293,38 @@ $cumul_tva = $total_tva8 + $total_tva2 + $total_tva1
 									<p class="stats-montant "><?php echo number_format((float)$total_tva0,2,'.',''); ?> €</p>
 								</div>
 							</div> -->
-							<div class="row">
-								<div class="col-md-8">
-									<p class="stats-info">Total TVA 1.05%</p>
-								</div>
-								<div class="col-md-4">
-									<p class="stats-montant "><?php echo number_format((float)$total_tva1, 2, '.', ''); ?> €</p>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-8">
-									<p class="stats-info">Total TVA 2.1%</p>
-								</div>
-								<div class="col-md-4">
-									<p class="stats-montant "><?php echo number_format((float)$total_tva2, 2, '.', ''); ?> €</p>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-8">
-									<p class="stats-info">Total TVA 8.5%</p>
-								</div>
-								<div class="col-md-4">
-									<p class="stats-montant "><?php echo number_format((float)$total_tva8, 2, '.', ''); ?> €</p>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-8">
-									<p class="stats-info font-weight-bold">CUMUL TVA</p>
-								</div>
-								<div class="col-md-4">
-									<p class="stats-montant "><?php echo number_format((float)$cumul_tva,2,'.',''); ?> €</p>
-								</div>
-							</div>
+<!--							<div class="row">-->
+<!--								<div class="col-md-8">-->
+<!--									<p class="stats-info">Total TVA 1.05%</p>-->
+<!--								</div>-->
+<!--								<div class="col-md-4">-->
+<!--									<p class="stats-montant ">--><?php //echo number_format((float)$total_tva1, 2, '.', ''); ?><!-- €</p>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--							<div class="row">-->
+<!--								<div class="col-md-8">-->
+<!--									<p class="stats-info">Total TVA 2.1%</p>-->
+<!--								</div>-->
+<!--								<div class="col-md-4">-->
+<!--									<p class="stats-montant ">--><?php //echo number_format((float)$total_tva2, 2, '.', ''); ?><!-- €</p>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--							<div class="row">-->
+<!--								<div class="col-md-8">-->
+<!--									<p class="stats-info">Total TVA 8.5%</p>-->
+<!--								</div>-->
+<!--								<div class="col-md-4">-->
+<!--									<p class="stats-montant ">--><?php //echo number_format((float)$total_tva8, 2, '.', ''); ?><!-- €</p>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--							<div class="row">-->
+<!--								<div class="col-md-8">-->
+<!--									<p class="stats-info font-weight-bold">CUMUL TVA</p>-->
+<!--								</div>-->
+<!--								<div class="col-md-4">-->
+<!--									<p class="stats-montant ">--><?php //echo number_format((float)$cumul_tva,2,'.',''); ?><!-- €</p>-->
+<!--								</div>-->
+<!--							</div>-->
 
 						</div>
 					</div>
@@ -349,6 +360,7 @@ $cumul_tva = $total_tva8 + $total_tva2 + $total_tva1
 	}
 
 </style>
+
 <script src="../js-webshim/minified/polyfiller.js"></script>
 <script type="text/javascript">
 
@@ -395,8 +407,36 @@ $(function () {
 	// });
 });
 
+    //Date range as a button
+    $('#daterange-btn').daterangepicker(
+        {
+            locale:{
+                "customRangeLabel": "Personnalisée",
+            },
+            ranges   : {
+                'Aujourd\'hui'       : [moment(), moment()],
+                'Hier'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Les 7 derniers jours' : [moment().subtract(6, 'days'), moment()],
+                'Les 30 derniers jours': [moment().subtract(29, 'days'), moment()],
+                'Ce mois'  : [moment().startOf('month'), moment().endOf('month')],
+                'Le mois dernier'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            startDate: moment().subtract(29, 'days'),
+            endDate  : moment()
+        },
+        function (start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+        }
+    )
+
+    //Timepicker
+    $('#timepicker').datetimepicker({
+        format: 'LT'
+    })
+
 
 </script>
+
 
 </body>
 

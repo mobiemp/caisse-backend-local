@@ -12,13 +12,8 @@ Chemin LEFAGUYES La Cocoteraie BAT 3
 
  Qte*PU   Designation     Mttc   TVA
 --------------------------------------
-10*5.70  SHAMPOOING KAR 57.00€    0%  
-1*7.10   REFLET ARGENT  7.10€     0%  
-10*12.50 DECOLORANT KER.125.00€   0%  
-2*7.60   SHAMPOOING KAR 15.20€    0%  
-5*7.90   SHAMPOOING CAR 39.50€    0%  
 
-          TOTAL A PAYER TTC    243.8€
+
       MERCI DE VOTRE VISITE
         ET A TRES BIENTOT
 ------------------------------------------

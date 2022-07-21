@@ -85,16 +85,16 @@ include('../template/header.php');  ?>
 							</a>
 							
 						</div>
-                        <div class="col-sm-3" >
-                            <a class="btn btn-app bg-success" href="graphiques.php" style="padding: 50px 0;width: 100%;height: 100%;margin-left: 0;">
-                                <!-- <span class="badge bg-success">300</span> -->
-                                <i class="fas fa-inbox"></i> <p style="font-size:18px">GRAPHIQUES</p>
-                            </a>
-
-                        </div>
+<!--                        <div class="col-sm-3" >-->
+<!--                            <a class="btn btn-app bg-success" href="graphiques.php" style="padding: 50px 0;width: 100%;height: 100%;margin-left: 0;">-->
+<!--                                 <span class="badge bg-success">300</span> -->
+<!--                                <i class="fas fa-inbox"></i> <p style="font-size:18px">GRAPHIQUES</p>-->
+<!--                            </a>-->
+<!---->
+<!--                        </div>-->
 <!--                        <div class="col-sm-3" >-->
 <!--                            <a class="btn btn-app bg-indigo" href="statistique_annuel.php" style="padding: 50px 0;width: 100%;height: 100%;margin-left: 0;">-->
-<!--                                <!-- <span class="badge bg-success">300</span> -->-->
+<!--                                <span class="badge bg-success">300</span> -->
 <!--                                <i class="fas fa-inbox"></i> <p style="font-size:18px">STATISTIQUES ANNUELLE</p>-->
 <!--                            </a>-->
 <!---->

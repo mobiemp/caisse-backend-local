@@ -46,7 +46,7 @@ if (isset($postdata)) {
 	} else if (isset($request->articleDivers)) {
 
 		$ref_inconnu = '164750';
-
+        $session = $request->session;
 		$id_produit = "#DIVERS";
 		$counter = mysqli_query($conn, "SELECT count FROM table_counter WHERE type = 'produit_divers'");
 		$row = $counter->fetch_row();
@@ -62,7 +62,6 @@ if (isset($postdata)) {
 		$titre = $request->articleDivers;
 		$date = time();
 		// $id_caisse = $request->id_caisse;
-		$session = "127.0.0.1/1";
 		$retour = 'false';
 
 		$sql = "INSERT INTO table_client_panier (`session`,`id_produit`, `ref`, `qte`, `credit`, `pu_euro`, `promo`, `retour`, `famille`, `titre`, `taux_tva`,`date`, `remise`) VALUES ('" . $session . "','" . $id_produit . "' ,'" . $ref . "', $qte, 0 , $pu_euro, 0, $retour ,0,'" . $titre . "',$taux_tva,$date, $remise)";
@@ -128,6 +127,33 @@ if (isset($postdata)) {
 			die();
 		}
 	}
+//	else if(isset($request->addPromo)){
+//	    $promo = $request->addPromo;
+//	    $totalPanier = $request->totalPanier;
+//	    $session = $request->session;
+//	    if(!$promo > 100){
+//            $montant_promo = $totalPanier * ($promo/100);
+//            $titre = "Remise Exceptionnelle";
+//            $date = time();
+//            $sql = "INSERT INTO table_client_panier
+//    (`session`,`id_produit`,`ref`, `qte`, `credit`, `pu_euro`, `promo`, `retour`, `famille`, `titre`, `taux_tva`,`date`, `remise`)
+//	VALUES ($session,
+//	        '#promo',
+//	        '',
+//	        1, 0 ,
+//	        $montant_promo, 0, 'false',0,'" . $titre . "',0,$date, 0)";
+//            $ajoutPromo = $conn->query($sql);
+//            if($ajoutPromo){
+//                echo json_encode(array('response' => 1));
+//
+//            }
+//
+//        }
+//	    else{
+//	        echo json_encode(array('response' => 0));
+//        }
+//
+//    }
 	
 
 	$sql = "SELECT * FROM table_client_panier";

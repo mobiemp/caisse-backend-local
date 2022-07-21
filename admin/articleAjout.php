@@ -10,7 +10,12 @@ if (isset($_POST['creerFamille'])) {
 	if ($nbligne == 0) {
 		$insert = $conn->query("INSERT INTO table_client_categorie(nomcategorie,branche,id_parent) VALUES ('$famille',0,0) ");
 		if ($insert) {
-			echo json_encode(array('response' => 1, 'message' => 'La famille '. $famille .' a bien été créer ! '));
+            $last_id = $conn->insert_id;
+            $sql = "UPDATE table_client_categorie SET id_categorie=$last_id WHERE id = $last_id";
+            $setCategorie = $conn->query($sql);
+            if($setCategorie){
+                echo json_encode(array('response' => 1, 'message' => 'La famille '. $famille .' a bien été créer ! '));
+            }
 		}
 	} else {
 		echo json_encode(array('response' => 0, 'message' => 'Cette famille existe déjà !'));

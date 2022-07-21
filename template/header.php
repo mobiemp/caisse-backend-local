@@ -4,6 +4,8 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Administration</title>
+    <link rel="stylesheet" href="../lib/dist/plugins/daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" href="../lib/dist/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
 	<link rel="stylesheet" href="../lib/dist/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css" />
     <link rel="stylesheet" href="../lib/dist/plugins/chart.js/Chart.min.css" />
 	<link rel="stylesheet" href="../lib/dist/css/adminlte.min.css" />

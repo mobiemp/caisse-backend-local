@@ -1,5 +1,26 @@
 <?php
 
+function regenerePanier($conn,$sql,$jsonfile){
+
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+
+        while ($row[] = $result->fetch_assoc()) {
+
+            $tem = $row;
+
+            $json = $tem;
+        }
+        $fp = fopen($jsonfile, 'w');
+        fwrite($fp, json_encode($json));
+        fclose($fp);
+
+        return json_encode($json);
+    }
+
+
+}
+
 function response($json,$res){
     return array('json'=>$json,'result'=>$res);
 }
