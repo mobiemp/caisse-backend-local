@@ -29,7 +29,8 @@ if (isset($postdata)) {
     foreach ($panierData as $data) {
 
         $sessionPanier = $data->session;
-        if ($sessionPanier == $session) {
+        $ref = $data->ref;
+        if ($sessionPanier == $session && $ref != "0007") {
             $total_remise += $data->remise;
             $remise = $data->remise;
             $deconsigne = 0;
@@ -43,6 +44,7 @@ if (isset($postdata)) {
             $taux_tva_ticket = $taux_tva . "%";
             $remise = $data->remise;
             $idproduit = $data->id_produit;
+
 
             $commandes[] = $data;
 //		$titreTicket = strlen($titre) > 10 ? substr($titre, 0, 7) : $titre;
@@ -59,20 +61,26 @@ if (isset($postdata)) {
 
 //		$ticket_ligne .= sprintf($ticket_layout, strval($qte) . "*" . strval($pu_euro), $titreTicket, strval($pu_euro) . "€", strval($taux_tva_rounded) . "%") . "\n";
 
-            $sql = "SELECT choix_mode_prix,stock,stock_alerte,num FROM table_client_catalogue WHERE id = '$idproduit' ";
-            $query_res = $conn->query($sql);
-            $res = $query_res->fetch_row();
-            $mode = $res[0];
-            $stock = $res[1];
-            $stock_alerte = $res[2];
-            $num = $res[3];
 
-            $total_euro_du += ($mode == 3 ? $pu_euro * $qte : ($mode == 2 ? ($pu_euro + ($pu_euro * $taux_tva / 100)) : $pu_euro * $qte));
+            if ($ref !== "0007" && strlen($ref) < 13) {
+                $sql = "SELECT choix_mode_prix,stock,stock_alerte,num FROM table_client_catalogue WHERE ref = '$ref'";
 
-            // MISE A JOUR DU STOCK
-            if ($stock_alerte < 0 && $stock > 0) {
-                $sql = "UPDATE table_client_catalogue SET stock = stock - $stock , stock_alerte = stock_alerte + $stock_alerte WHERE num = $num";
-                $updateCatalogue = $conn->query($sql);
+                $query_res = $conn->query($sql);
+                $res = $query_res->fetch_row();
+
+                $mode = $res[0];
+                $stock = $res[1];
+                $stock_alerte = $res[2];
+                $num = $res[3];
+                $total_euro_du += ($mode == 3 ? $pu_euro * $qte : ($mode == 2 ? ($pu_euro + ($pu_euro * $taux_tva / 100)) : $pu_euro * $qte));
+
+                // MISE A JOUR DU STOCK
+                if ($stock_alerte < 0 && $stock > 0) {
+                    $sql = "UPDATE table_client_catalogue 
+                        SET stock = stock - $qte , stock_alerte = stock_alerte + $qte 
+                        WHERE num = $num";
+                    $updateCatalogue = $conn->query($sql);
+                }
             }
         }
     }

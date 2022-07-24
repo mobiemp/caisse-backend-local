@@ -59,18 +59,24 @@ if (isset($postdata)) {
 		$taux_tva = ($tva == 8 ? 8.5 : ($tva == 2 ? 2.1 : ($tva == 1 ? 1.05 : 0)));
 		$remise = 0;
 		$qte = 1;
-		$titre = $request->articleDivers;
+		$titre = "Divers";
 		$date = time();
 		// $id_caisse = $request->id_caisse;
 		$retour = 'false';
 
-		$sql = "INSERT INTO table_client_panier (`session`,`id_produit`, `ref`, `qte`, `credit`, `pu_euro`, `promo`, `retour`, `famille`, `titre`, `taux_tva`,`date`, `remise`) VALUES ('" . $session . "','" . $id_produit . "' ,'" . $ref . "', $qte, 0 , $pu_euro, 0, $retour ,0,'" . $titre . "',$taux_tva,$date, $remise)";
+		$sql = "INSERT INTO table_client_panier 
+    (`session`,`id_produit`, `ref`, `qte`, `credit`, `pu_euro`, `promo`, `retour`, `famille`, `titre`, `taux_tva`,`date`, `remise`) 
+    VALUES ('" . $session . "','" . $id_produit . "' ,'" . $ref . "', $qte, 0 , $pu_euro, 0, $retour ,0,'" . $titre . "',$taux_tva,$date, $remise)";
 		if ($conn->query($sql) == true) {
 			$conn->query("UPDATE table_counter SET count = count + 1 WHERE type = 'produit_divers'");
+            $json = regenerePanier($conn,"SELECT * FROM table_client_panier",'jsons/panier.json');
+            echo json_encode(array('response' => 1 ,'json' => $json));
+            die();
 		}
 	} else if (isset($request->retourArticle)) {
 		$id_produit = $request->retourArticle->id;;
 		$ref = $request->retourArticle->ref;
+		$id = $request->retourArticle->num;
 		$credit = 0;
 		$pu_euro = $request->retourArticle->prixttc_euro;
 		$tva = $request->retourArticle->code_tva;
@@ -80,10 +86,10 @@ if (isset($postdata)) {
 		$titre = 'RET ART: ' . $request->retourArticle->titre;
 		$date = time();
 		// $id_caisse = $request->id_caisse;
-		$session = "127.0.0.1/1";
+		$session = $request->session;
 		$retour = 'true';
 
-		$sql = "SELECT ref,retour FROM table_client_panier WHERE ref= '$ref' AND retour = $retour ";
+		$sql = "SELECT ref,retour FROM table_client_panier WHERE num= '$id' AND retour = $retour ";
 		$query = mysqli_query($conn, $sql);
 		if ($query->num_rows == 0) {
 			$sql = "INSERT INTO table_client_panier (`session`,`id_produit`, `ref`, `qte`, `credit`, `pu_euro`, `promo`, `retour`, `famille`, `titre`, `taux_tva`,`date`, `remise`) VALUES ('" . $session . "','" . $id_produit . "' ,'" . $ref . "', $qte, 0 , -$pu_euro, 0, $retour ,0,'" . $titre . "',$taux_tva,$date, $remise)";
@@ -127,33 +133,39 @@ if (isset($postdata)) {
 			die();
 		}
 	}
-//	else if(isset($request->addPromo)){
-//	    $promo = $request->addPromo;
-//	    $totalPanier = $request->totalPanier;
-//	    $session = $request->session;
-//	    if(!$promo > 100){
-//            $montant_promo = $totalPanier * ($promo/100);
-//            $titre = "Remise Exceptionnelle";
-//            $date = time();
-//            $sql = "INSERT INTO table_client_panier
-//    (`session`,`id_produit`,`ref`, `qte`, `credit`, `pu_euro`, `promo`, `retour`, `famille`, `titre`, `taux_tva`,`date`, `remise`)
-//	VALUES ($session,
-//	        '#promo',
-//	        '',
-//	        1, 0 ,
-//	        $montant_promo, 0, 'false',0,'" . $titre . "',0,$date, 0)";
-//            $ajoutPromo = $conn->query($sql);
-//            if($ajoutPromo){
-//                echo json_encode(array('response' => 1));
-//
-//            }
-//
-//        }
-//	    else{
-//	        echo json_encode(array('response' => 0));
-//        }
-//
-//    }
+	else if(isset($request->addPromo)){
+	    $promo = $request->addPromo;
+	    $totalPanier = $request->totalPanier;
+	    $session = $request->session;
+	    if($promo < 100){
+            $montant_promo = $totalPanier * ($promo/100);
+            $titre = "Remise Exceptionnelle";
+            $date = time();
+            $sql = "INSERT INTO table_client_panier
+    (`session`,`id_produit`,`ref`, `qte`, `credit`, `pu_euro`, `promo`, `retour`, `famille`, `titre`, `taux_tva`,`date`, `remise`)
+	VALUES ($session,
+	        '#promo',
+	        '0007',
+	        1, 0 ,
+	        $montant_promo, 0, 'false',0,'" . $titre . "',0,'" . $date . "', 0)";
+            $ajoutPromo = $conn->query($sql);
+            if($ajoutPromo){
+                $json = regenerePanier($conn,"SELECT * FROM table_client_panier",'jsons/panier.json');
+                echo json_encode(array('response' => 1 , 'result' => $json ));
+                die();
+
+            }else{
+                echo json_encode(array('response' => 0 , 'result' => null ));
+                die();
+            }
+
+        }
+	    else{
+	        echo json_encode(array('response' => 0 , 'result' => null ));
+	        die();
+        }
+
+    }
 	
 
 	$sql = "SELECT * FROM table_client_panier";

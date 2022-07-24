@@ -16,19 +16,22 @@ if (isset($postdata)) {
     $json = json_decode($jsons_data);
 
     foreach ($json as $row){
+
         if($row->session == $session){
             $id = $row->num;
             $sql = "DELETE FROM table_client_panier WHERE num = $id ";
             $delete = $conn->query($sql);
-            var_dump($sql,$delete);
+//            var_dump($sql,$delete);
+
             if($delete){
+
                 $panier = regenerePanier($conn,"SELECT * FROM table_client_panier",'../jsons/panier.json');
-//                echo json_encode(array('response'=>1,'result'=>$panier));
+                echo json_encode(array('response'=>1,'result'=>$panier));
 //                echo 1;
             }
-//            else{
-//                echo json_encode(array('response'=>0,'result'=>null));
-//            }
+            else{
+                echo json_encode(array('response'=>0,'result'=>null));
+            }
         }
     }
 

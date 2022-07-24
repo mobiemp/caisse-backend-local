@@ -230,6 +230,7 @@ include('../codebarre/barcode.php');
 													<th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending">Achat € HT</th>
 													<th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending">Vente € TTC</th>
 													<th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending">Promo € TTC</th>
+													<th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending">Étiquettes</th>
 												</tr>
 											</thead>
 											<?php
@@ -245,6 +246,12 @@ include('../codebarre/barcode.php');
 														<td><?php echo round($row['prixttc_euro'] - ($row['prixttc_euro'] * ($tva / 100)), 2) ?></td>
 														<td><?php echo $row['prixttc_euro'] ?></td>
 														<td><?php echo $row['prixttc_promo_euro'] ?></td>
+                                                        <td style="text-align: center;">
+                                                            <a href="#" onclick="imprimeEtiquettes('<?php echo $row['ref'] ?>','<?php echo $row['titre'] ?>',<?php echo $row['prixttc_euro'] ?>);return false;">
+                                                                <i class="fa fa-print"></i>
+                                                            </a>
+
+                                                        </td>
 													</tr>
 											<?php
 												}
@@ -259,6 +266,7 @@ include('../codebarre/barcode.php');
 													<th rowspan="1" colspan="1">Achat € HT</th>
 													<th rowspan="1" colspan="1">Vente € TTC</th>
 													<th rowspan="1" colspan="1">Promo € TTC</th>
+                                                    <th rowspan="1" colspan="1">Étiquettes</th>
 												</tr>
 											</tfoot>
 										</table>
@@ -320,6 +328,7 @@ include('../codebarre/barcode.php');
 													<th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending">Achat € HT</th>
 													<th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending">Vente € TTC</th>
 													<th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending">Promo € TTC</th>
+													<th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending">Étiquettes</th>
 												</tr>
 											</thead>
 											<?php
@@ -335,6 +344,12 @@ include('../codebarre/barcode.php');
 														<td><?php echo round($row['prixttc_euro'] - ($row['prixttc_euro'] * ($tva / 100)), 2) ?></td>
 														<td><?php echo $row['prixttc_euro'] ?></td>
 														<td><?php echo $row['prixttc_promo_euro'] ?></td>
+                                                        <td style="text-align: center;">
+                                                            <a href="#" onclick="imprimeEtiquettes('<?php echo $row['ref'] ?>','<?php echo $row['titre'] ?>',<?php echo $row['prixttc_euro'] ?>);return false;">
+                                                                <i class="fa fa-print"></i>
+                                                            </a>
+
+                                                        </td>
 													</tr>
 											<?php
 												}
@@ -349,6 +364,7 @@ include('../codebarre/barcode.php');
 													<th rowspan="1" colspan="1">Achat € HT</th>
 													<th rowspan="1" colspan="1">Vente € TTC</th>
 													<th rowspan="1" colspan="1">Promo € TTC</th>
+													<th rowspan="1" colspan="1">Étiquettes</th>
 												</tr>
 											</tfoot>
 										</table>

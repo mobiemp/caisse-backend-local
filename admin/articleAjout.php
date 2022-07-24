@@ -80,11 +80,11 @@ if(isset($_POST['famille']) && isset($_POST['designation'])){
 	$sql = "INSERT INTO table_client_catalogue(`cath`,`id`,`ref`,`titre`,`prixttc_euro`,`prixttc_promo_euro`,`code_tva`,`promo_debut`,`promo_fin`,`choix_mode_prix`,`mode_prix_1_achat_ht`,`mode_prix_1_marge`,`mode_prix_2_fixe_ht`,`mode_prix_3_fixe_ttc`,`dateajout`,`datemodif`,`accueil`,`stock`,`stock_alerte`,`unite`,`qte_unite`,`package`,`prix_variable`,`img`,`send_web`) 
 	VALUES($famille,'$id_produit','$gencode','$designation',$prix,$promottc,$codetva,'$promo_debut','$promo_fin',$mode,$mode_prix_1_achat,$marge,$mode_prix_2,$mode_prix_3,'$dateajout','1000-01-01 00:00:00',0,$stock_actuel,$stock_alerte,$unite,$quantite,'',$prix_variable,'',1)";
 	if ($conn->query($sql) == TRUE) {
-		echo json_encode(array('response' => 1, 'message' => 'Nouvel article enregistré !' ));
+		echo json_encode(array('response' => 1, 'message' => 'Nouvel article enregistré !' , 'prix' => $prix ));
 		exit;
 	}
 	else{
-		echo json_encode(array('response' => 2, 'message' => 'Une erreur c\'est produite.' , 'error' => $sql ));
+		echo json_encode(array('response' => 2, 'message' => 'Une erreur c\'est produite.' , 'prix' => $sql ));
 		exit;
 	}
 	
@@ -110,6 +110,17 @@ $barcode = $_GET['gencode'];
 
 
 ?>
+
+<!--Etiquette template-->
+<div class="etiquette" style="width: 500px;height: 300px;margin: auto">
+    <div>
+        <p id="titleEtiquette" class="title"></p>
+        <p id="prixEntier" class="price"><span id="prixDecimal"></span></p>
+        <svg id="barcode2" jsbarcode-textmargin="1"></svg>
+    </div>
+
+</div>
+<!--Fin etiquette template -->
 
 <div class="content-wrapper" style="min-height: 823px;">
 	<?php include('../template/info-page.php') ?>
@@ -359,24 +370,24 @@ $barcode = $_GET['gencode'];
 												</div>
 											</div>
 
-											<div class="card card-outline-secondary">
-												<div class="card-body" style="text-align: center;">
-													<div class="row">
-														<div class="col-lg-9">
-															<ul style="list-style:none;">
-																<li><span style="font-weight: 600;font-size: 20px;">Imprimer</span> <input type="number"  style="width:50px" name="exemplare" value="1"> <span style="font-weight: 600;font-size: 20px;"> examplaire(s) </span></li>
-																<li><input type="checkbox"  name="print_prix_normal"  value="0.00"> Imprimer l'étiquette <span style="font-weight: 600;">prix normal</span></li>
-																<li><input type="checkbox" name="print_prix_promo" checked> Imprimer l'étiquette <span style="font-weight: 600;">prix promo</span></li>
-															</ul>
-
-														</div>
-													</div>
-												</div>
-											</div>
+<!--											<div class="card card-outline-secondary">-->
+<!--												<div class="card-body" style="text-align: center;">-->
+<!--													<div class="row">-->
+<!--														<div class="col-lg-9">-->
+<!--															<ul style="list-style:none;">-->
+<!--																<li><span style="font-weight: 600;font-size: 20px;">Imprimer</span> <input type="number"  style="width:50px" name="exemplare" value="1"> <span style="font-weight: 600;font-size: 20px;"> examplaire(s) </span></li>-->
+<!--																<li><input type="checkbox"  name="print_prix_normal"  value="0.00"> Imprimer l'étiquette <span style="font-weight: 600;">prix normal</span></li>-->
+<!--																<li><input type="checkbox" name="print_prix_promo" checked> Imprimer l'étiquette <span style="font-weight: 600;">prix promo</span></li>-->
+<!--															</ul>-->
+<!---->
+<!--														</div>-->
+<!--													</div>-->
+<!--												</div>-->
+<!--											</div>-->
 
 											<div class="form-groupt row" style="padding: 30px 0;justify-content: space-around;">
 												<button type="button" onClick="window.location.href='articles.php';" class="btn btn-danger btn-lg">Annuler</button>
-												<button type="submit" class="btn btn-primary btn-lg" id="submitBtn" name="save">Enregistrer</button>
+												<button type="submit" class="btn btn-primary btn-lg" id="submitBtn" " name="save">Enregistrer</button>
 											</div>
 										</form>
 									</div><!-- /form user info -->
@@ -397,50 +408,50 @@ $barcode = $_GET['gencode'];
 					></svg>
 				</div>
 				<div class="col-md-4">
-					<span><?php echo $integer ?></span>
+					<span></span>
 				</div>
 			</div> -->
 
 			<?php include('../template/footer.php') ?>
 			<?php include('../template/script.php') ?>
 			<script src="../lib/dist/JsBarcode.ean-upc.min.js"></script>
-			<style type="text/css">
-				@media print {
-					@page { size: auto;  margin: 0mm; }
-					.etiquette {
-						display: block;
-						size: 30mm 21mm;
-						margin: auto;
-						padding: 0;
-						text-align: center;
-
-					}
-					svg{
-						position: absolute;
-						top: 25%;
-						left: 17%;
-					}
-					h5{
-						margin-right: 50px;
-						font-weight: 800;
-					}
-					.margin {
-						margin: 50px 0;
-					}
-
-					.optionGroup {
-						font-weight: bold;
-						font-style: italic;
-					}
-
-					.optionChild {
-						padding-left: 15px;
-					}
-					#familleBlock {
-						display:none;
-					}
-				}
-				</style>
+<!--			<style type="text/css">-->
+<!--				@media print {-->
+<!--					@page { size: auto;  margin: 0mm; }-->
+<!--					.etiquette {-->
+<!--						display: block;-->
+<!--						size: 30mm 21mm;-->
+<!--						margin: auto;-->
+<!--						padding: 0;-->
+<!--						text-align: center;-->
+<!---->
+<!--					}-->
+<!--					svg{-->
+<!--						position: absolute;-->
+<!--						top: 25%;-->
+<!--						left: 17%;-->
+<!--					}-->
+<!--					h5{-->
+<!--						margin-right: 50px;-->
+<!--						font-weight: 800;-->
+<!--					}-->
+<!--					.margin {-->
+<!--						margin: 50px 0;-->
+<!--					}-->
+<!---->
+<!--					.optionGroup {-->
+<!--						font-weight: bold;-->
+<!--						font-style: italic;-->
+<!--					}-->
+<!---->
+<!--					.optionChild {-->
+<!--						padding-left: 15px;-->
+<!--					}-->
+<!--					#familleBlock {-->
+<!--						display:none;-->
+<!--					}-->
+<!--				}-->
+<!--				</style>-->
 				<script type="text/javascript">
 
 					$("#submitBtn").click(function(event) {
@@ -490,9 +501,9 @@ $barcode = $_GET['gencode'];
 							type: "POST",
 							data: submitData,
 							success: function(result,statusText,jqXHR) {
-								console.log("RESULT=>",result)
+								// console.log("RESULT=>",result)
 								var response = JSON.parse(result);
-								console.log(response);
+								// console.log(response);
 								if (response.response === 0 && response.element === 'famille') {
 									$('#famille').css('border-color','red');
 									document.getElementById("famille").scrollIntoView(); 
@@ -523,6 +534,8 @@ $barcode = $_GET['gencode'];
 								}
 								else if(response.response === 1){
 								 // $('#'+type).addClass('swalDefaultSuccess');
+
+                                    imprimeEtiquettes(gencode,designation,response.prix)
 								 Toast.fire({
 								 	icon: 'success',
 								 	title: response.message

@@ -35,7 +35,7 @@ if (isset($postdata)) {
 	$request = json_decode($postdata);
 	if (isset($request->retourArticle)) {
 		$ref = $request->retourArticle;
-		$sql = "SELECT * FROM table_client_catalogue WHERE ref = '$ref' ";
+		$sql = "SELECT * FROM table_client_catalogue WHERE ref = '$ref'";
 		$result = $conn->query($sql);
 		if($result->num_rows >0){
 			$article = $result->fetch_assoc();

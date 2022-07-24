@@ -46,7 +46,7 @@ if(isset($_POST['famille']) && isset($_POST['designation'])){
         }
     }
     if ($mode == 1) {
-        if($mode_prix_1 == 0 or $mode_prix_1 == '' ){
+        if($mode_prix_1_achat == 0 or $mode_prix_1_achat == '' ){
             echo json_encode(array('response'=>3,'message' => 'Vous devez indiquer un prix', 'type' => 'mode_prix_1_achat_ht' ));
             exit;
         }
@@ -109,6 +109,17 @@ if (isset($_GET['gencode'])) {
     include('../template/header.php');
 
 ?>
+
+    <!--Etiquette template-->
+    <div class="etiquette" style="width: 500px;height: 300px;margin: auto">
+        <div>
+            <p id="titleEtiquette" class="title"></p>
+            <p id="prixEntier" class="price"><span id="prixDecimal"></span></p>
+            <svg id="barcode2" jsbarcode-textmargin="1"></svg>
+        </div>
+
+    </div>
+    <!--Fin etiquette template -->
 
     <div class="content-wrapper" style="min-height: 823px;">
         <?php include('../template/info-page.php') ?>
@@ -181,13 +192,13 @@ if (isset($_GET['gencode'])) {
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label form-control-label">Stock</label>
                                     <div class="col-lg-2">
-                                        <input class="form-control" type="text" value="0" id="stock_actuel" name="stock_actuel" value="<?php echo $article['stock'] ?>">
+                                        <input class="form-control" type="text"  id="stock_actuel" name="stock_actuel" value="<?php echo $article['stock'] ?>">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label form-control-label">Stock Alerte</label>
                                     <div class="col-lg-2">
-                                        <input class="form-control" type="text" value="-99" name="stock_alerte" id="stock_alerte" value="<?php echo $article['stock_alerte'] ?>">
+                                        <input class="form-control" type="text"  name="stock_alerte" id="stock_alerte" value="<?php echo $article['stock_alerte'] ?>">
                                     </div>
                                 </div>
 
@@ -357,24 +368,30 @@ if (isset($_GET['gencode'])) {
                             </div>
                         </div>
 
-                        <div class="card card-outline-secondary">
-                            <div class="card-body" style="text-align: center;">
-                                <div class="row">
-                                    <div class="col-lg-9">
-                                        <ul style="list-style:none;">
-                                            <li><span style="font-weight: 600;font-size: 20px;">Imprimer</span> <input type="number" style="width:50px" name="exemplare" value="1"> <span style="font-weight: 600;font-size: 20px;"> examplaire(s) </span></li>
-                                            <li><input type="checkbox" name="print_prix_normal" value="0.00"> Imprimer l'étiquette <span style="font-weight: 600;">prix normal</span></li>
-                                            <li><input type="checkbox" name="print_prix_promo" checked> Imprimer l'étiquette <span style="font-weight: 600;">prix promo</span></li>
-                                        </ul>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<!--                        <div class="card card-outline-secondary">-->
+<!--                            <div class="card-body" style="text-align: center;">-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-lg-9">-->
+<!--                                        <ul style="list-style:none;">-->
+<!--                                            <li><span style="font-weight: 600;font-size: 20px;">Imprimer</span> <input type="number" style="width:50px" name="exemplare" value="1"> <span style="font-weight: 600;font-size: 20px;"> examplaire(s) </span></li>-->
+<!--                                            <li><input type="checkbox" name="print_prix_normal" value="0.00"> Imprimer l'étiquette <span style="font-weight: 600;">prix normal</span></li>-->
+<!--                                            <li><input type="checkbox" name="print_prix_promo" checked> Imprimer l'étiquette <span style="font-weight: 600;">prix promo</span></li>-->
+<!--                                        </ul>-->
+<!---->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
 
                         <div class="form-groupt row" style="padding: 30px 0;justify-content: space-around;">
-                            <button type="button" onClick="window.location.href='articles.php';" class="btn btn-danger btn-lg">Annuler</button>
-                            <button type="submit" class="btn btn-primary btn-lg" id="editBtn" name="save">Enregistrer</button>
+<!--                            <div class="col-md-4">-->
+<!--                                    <i class="fas fa-envelope"></i> Imprimer Étiquettes-->
+<!--                                </a>-->
+<!--                            </div>-->
+                            <div class="col-md-4 mx-auto">
+                                <button type="button" onClick="window.location.href='articles.php';" class="btn btn-danger btn-lg">Annuler</button>
+                                <button type="submit" class="btn btn-primary btn-lg" id="editBtn" onclick="imprimeEtiquettes('<?php echo $article['ref'] ?>','<?php echo $article['titre'] ?>',<?php echo $article['prixttc_euro'] ?>);return false;" name="save">Enregistrer</button>
+                            </div>
                         </div>
                     </form>
                 </div><!-- /form user info -->
@@ -391,43 +408,43 @@ if (isset($_GET['gencode'])) {
     <?php include('../template/footer.php') ?>
     <?php include('../template/script.php') ?>
     <script src="../lib/dist/JsBarcode.ean-upc.min.js"></script>
-    <style type="text/css">
-				@media print {
-					@page { size: auto;  margin: 0mm; }
-					.etiquette {
-						display: block;
-						size: 30mm 21mm;
-						margin: auto;
-						padding: 0;
-						text-align: center;
-
-					}
-					svg{
-						position: absolute;
-						top: 25%;
-						left: 17%;
-					}
-					h5{
-						margin-right: 50px;
-						font-weight: 800;
-					}
-					.margin {
-						margin: 50px 0;
-					}
-
-					.optionGroup {
-						font-weight: bold;
-						font-style: italic;
-					}
-
-					.optionChild {
-						padding-left: 15px;
-					}
-					#familleBlock {
-						display:none;
-					}
-                }
-				</style>
+<!--    <style type="text/css">-->
+<!--				@media print {-->
+<!--					@page { size: auto;  margin: 0mm; }-->
+<!--					.etiquette {-->
+<!--						display: block;-->
+<!--						size: 30mm 21mm;-->
+<!--						margin: auto;-->
+<!--						padding: 0;-->
+<!--						text-align: center;-->
+<!---->
+<!--					}-->
+<!--					svg{-->
+<!--						position: absolute;-->
+<!--						top: 25%;-->
+<!--						left: 17%;-->
+<!--					}-->
+<!--					h5{-->
+<!--						margin-right: 50px;-->
+<!--						font-weight: 800;-->
+<!--					}-->
+<!--					.margin {-->
+<!--						margin: 50px 0;-->
+<!--					}-->
+<!---->
+<!--					.optionGroup {-->
+<!--						font-weight: bold;-->
+<!--						font-style: italic;-->
+<!--					}-->
+<!---->
+<!--					.optionChild {-->
+<!--						padding-left: 15px;-->
+<!--					}-->
+<!--					#familleBlock {-->
+<!--						display:none;-->
+<!--					}-->
+<!--                }-->
+<!--				</style>-->
 				<script type="text/javascript">
 
 					$("#editBtn").click(function(event) {
