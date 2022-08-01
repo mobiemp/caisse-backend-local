@@ -12,9 +12,9 @@ Chemin LEFAGUYES La Cocoteraie BAT 3
 
  Qte*PU   Designation     Mttc   TVA
 --------------------------------------
-1*-11.90 RET ART: CARRE -11.90€   8.5%
+1*10.00  TIGE FLEUR  PC 10.00€    8.5%
 
-          TOTAL A PAYER TTC    -11.9€
+          TOTAL A PAYER TTC    10€
       MERCI DE VOTRE VISITE
         ET A TRES BIENTOT
 ------------------------------------------

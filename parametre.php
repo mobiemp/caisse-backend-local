@@ -7,17 +7,17 @@ header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Authorization');
 
 
-$user = "root";
-$password = "";
+$user = "caisse";
+$password = "za2xY+MM1d_5fy#s";
 $usebdd = "mobipos";
 
 
-$mode_serveur = 0;
+$mode_serveur = 1;
 
-$ip_serveur = '192.168.1.17';
+$ip_serveur = '192.168.1.26';
 $id_caisse = 1;
-// $ip_caisse = array('17');
-// Choisir le type de caisse -- 1 => caisse avec codebarre / 2 => caisse avec produits & categorie sans codebarre
+ $ip_caisse = array('36');
+// Choisir le type de caisse -- 1 => caisse avec codebarre / 2 => resto
 $type_caisse = 1;
 $magasin = "C'IDEAL Magasin Art Discount";
 $adresse = "Chemin LEFAGUYES La Cocoteraie BAT 3";
