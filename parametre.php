@@ -6,6 +6,7 @@ header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Authorization');
 
+include 'infos.php';
 
 $user = "caisse";
 $password = "za2xY+MM1d_5fy#s";
@@ -24,7 +25,6 @@ $adresse = "Chemin LEFAGUYES La Cocoteraie BAT 3";
 $adresse2 = "97440 SAINT ANDRE";
 $numero_telephone = "0262 50 18 18";
 $siret = "49205116400019";
-
 if(isset($_GET['action']) && $_GET['action'] == 'info_caisse'){
 	echo json_encode(array(
 		'id_caisse' => $id_caisse,
