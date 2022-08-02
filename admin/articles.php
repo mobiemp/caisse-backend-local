@@ -24,9 +24,10 @@ include('../codebarre/barcode.php');
 ?>
 
 <!--Etiquette template-->
-<div class="etiquette" style="width: 500px;height: 300px;margin: auto">
+<div class="etiquette" style="width: 200px;height: 140px;margin: auto">
 	<div>
 		<p id="titleEtiquette" class="title"></p>
+		<p id="colisage"></p>
 		<p id="prixEntier" class="price"><span id="prixDecimal"></span></p>
 		<svg id="barcode2" jsbarcode-textmargin="1"></svg>
 	</div>
@@ -149,7 +150,7 @@ include('../codebarre/barcode.php');
 														<td><?php echo $row['prixttc_euro'] ?></td>
 														<td><?php echo $row['prixttc_promo_euro'] ?></td>
 														<td style="text-align: center;">
-															<a href="#" onclick="imprimeEtiquettes('<?php echo $row['ref'] ?>','<?php echo $row['titre'] ?>',<?php echo $row['prixttc_euro'] ?>);return false;">
+															<a href="#" onclick="imprimeEtiquettes('<?php echo $row['ref'] ?>','<?php echo $row['titre'] ?>',<?php echo $row['prixttc_euro'] ?>,'<?php echo $row['package'] ?>');return false;">
 																<i class="fa fa-print"></i>
 															</a>
 
@@ -247,7 +248,7 @@ include('../codebarre/barcode.php');
 														<td><?php echo $row['prixttc_euro'] ?></td>
 														<td><?php echo $row['prixttc_promo_euro'] ?></td>
                                                         <td style="text-align: center;">
-                                                            <a href="#" onclick="imprimeEtiquettes('<?php echo $row['ref'] ?>','<?php echo $row['titre'] ?>',<?php echo $row['prixttc_euro'] ?>);return false;">
+                                                            <a href="#" onclick="imprimeEtiquettes('<?php echo $row['ref'] ?>','<?php echo $row['titre'] ?>',<?php echo $row['prixttc_euro'] ?>,'<?php echo $row['package'] ?>');return false;">
                                                                 <i class="fa fa-print"></i>
                                                             </a>
 
@@ -345,7 +346,8 @@ include('../codebarre/barcode.php');
 														<td><?php echo $row['prixttc_euro'] ?></td>
 														<td><?php echo $row['prixttc_promo_euro'] ?></td>
                                                         <td style="text-align: center;">
-                                                            <a href="#" onclick="imprimeEtiquettes('<?php echo $row['ref'] ?>','<?php echo $row['titre'] ?>',<?php echo $row['prixttc_euro'] ?>);return false;">
+                                                            <a href="#" 
+                                                            onclick="imprimeEtiquettes('<?php echo $row['ref'] ?>','<?php echo $row['titre'] ?>',<?php echo $row['prixttc_euro'] ?>,'<?php echo $row['package'] ?>');return false;">
                                                                 <i class="fa fa-print"></i>
                                                             </a>
 

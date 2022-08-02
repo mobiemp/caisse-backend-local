@@ -112,13 +112,12 @@ $barcode = $_GET['gencode'];
 ?>
 
 <!--Etiquette template-->
-<div class="etiquette" style="width: 200px;height: 140px;margin: auto">
-	<div>
-		<p id="titleEtiquette" class="title"></p>
-		<p id="colisage"></p>
-		<p id="prixEntier" class="price"><span id="prixDecimal"></span></p>
-		<svg id="barcode2" jsbarcode-textmargin="1"></svg>
-	</div>
+<div class="etiquette" style="width: 500px;height: 300px;margin: auto">
+    <div>
+        <p id="titleEtiquette" class="title"></p>
+        <p id="prixEntier" class="price"><span id="prixDecimal"></span></p>
+        <svg id="barcode2" jsbarcode-textmargin="1"></svg>
+    </div>
 
 </div>
 <!--Fin etiquette template -->
@@ -337,7 +336,7 @@ $barcode = $_GET['gencode'];
 										</div>
 									</div>
 
-									<div class="card card-primary">
+									<div class="card card-primary"">
 										<div class="card-header">
 											<h3 class="mb-0">FICHE PRIX PROMO (FALCULTATIF)</h3><br>
 											<p style="color:#ffffff">Remplissez ce formulaire si vous souhaitez programmer un prix promo.<br>Laisser le montant à 0€ pour ne pas programmer de promotion</p>
@@ -371,24 +370,24 @@ $barcode = $_GET['gencode'];
 												</div>
 											</div>
 
-											<div class="card card-primary">
-												<div class="card-header" style="text-align: center;">
-													<h3 class="mb-0">IMPRIMER ETIQUETTE</h3>
-												</div>
-													<div class="row" style="padding: 20px 0;margin-left: 20px">
-														<div class="col-lg-6">
-															<input type="checkbox"  name="print_prix_normal" checked value="0.00" id="prixNormal"> Imprimer l'étiquette <span style="font-weight: 600;">prix normal</span>
-															
-														</div>
-														<div class="col-lg-6">
-															<input type="checkbox" name="print_prix_promo" id="prixPromo"> Imprimer l'étiquette <span style="font-weight: 600;">prix promo</span>
-														</div>
-													</div>
-												</div>
+<!--											<div class="card card-outline-secondary">-->
+<!--												<div class="card-body" style="text-align: center;">-->
+<!--													<div class="row">-->
+<!--														<div class="col-lg-9">-->
+<!--															<ul style="list-style:none;">-->
+<!--																<li><span style="font-weight: 600;font-size: 20px;">Imprimer</span> <input type="number"  style="width:50px" name="exemplare" value="1"> <span style="font-weight: 600;font-size: 20px;"> examplaire(s) </span></li>-->
+<!--																<li><input type="checkbox"  name="print_prix_normal"  value="0.00"> Imprimer l'étiquette <span style="font-weight: 600;">prix normal</span></li>-->
+<!--																<li><input type="checkbox" name="print_prix_promo" checked> Imprimer l'étiquette <span style="font-weight: 600;">prix promo</span></li>-->
+<!--															</ul>-->
+<!---->
+<!--														</div>-->
+<!--													</div>-->
+<!--												</div>-->
+<!--											</div>-->
 
 											<div class="form-groupt row" style="padding: 30px 0;justify-content: space-around;">
 												<button type="button" onClick="window.location.href='articles.php';" class="btn btn-danger btn-lg">Annuler</button>
-												<button type="submit" class="btn btn-primary btn-lg" id="submitBtn" name="save">Enregistrer</button>
+												<button type="submit" class="btn btn-primary btn-lg" id="submitBtn" " name="save">Enregistrer</button>
 											</div>
 										</form>
 									</div><!-- /form user info -->
@@ -535,15 +534,8 @@ $barcode = $_GET['gencode'];
 								}
 								else if(response.response === 1){
 								 // $('#'+type).addClass('swalDefaultSuccess');
-								 console.log($('input[name=print_prix_normal]:checked'))
-								 console.log($('input[name=print_prix_promo]:checked'))
-								 if($('#prixNormal').is(':checked')){
-									imprimeEtiquettes(gencode,designation,response.prix) 
-								 }
-                                 else if($('#prixPromo').is(':checked')){
-                                 	promottc = parseFloat(promottc)
-                                 	imprimeEtiquettes(gencode,designation,promottc) 	
-                                 }
+
+                                    imprimeEtiquettes(gencode,designation,response.prix)
 								 Toast.fire({
 								 	icon: 'success',
 								 	title: response.message

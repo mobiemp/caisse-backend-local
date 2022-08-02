@@ -11,10 +11,10 @@
 
 <script src="../lib/dist/JsBarcode.ean-upc.min.js"></script>
 <script type="text/javascript">
-    function imprimeEtiquettes(gencode,titre,prix){
+    function imprimeEtiquettes(gencode,titre,prix,colisage){
         JsBarcode("#barcode2", gencode, {
             format:"EAN13",
-            width:1.6,
+            width:1.5,
             height:18,
             displayValue:true,
             fontSize:18,
@@ -29,6 +29,7 @@
 
         $('#prixEntier').append(prixEntier).append('<span>.'+prixDecimal+'€</span>');
         $('#titleEtiquette').append(titre);
+        $('#colisage').append(colisage)
         window.print();
     }
 

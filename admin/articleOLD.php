@@ -64,8 +64,8 @@ if(isset($_POST['famille']) && isset($_POST['designation'])){
     `prixttc_euro` = $prix,
     `prixttc_promo_euro` = $promottc,
     `code_tva` = $codetva,
-    `promo_debut` = '$promo_debut',
-    `promo_fin` = '$promo_fin',
+    `promo_debut` = $promo_debut,
+    `promo_fin` = $promo_fin,
     `choix_mode_prix` = $mode,
     `mode_prix_1_achat_ht` = $mode_prix_1_achat,
     `mode_prix_1_marge` = $marge,
@@ -81,7 +81,7 @@ if(isset($_POST['famille']) && isset($_POST['designation'])){
     `package`='$colisage',
     `prix_variable`=$prix_variable,
     `img` = NULL,
-    `send_web` = 1 WHERE ref = '$gencode' " ;
+    `send_web` = 1 WHERE ref = $gencode " ;
     if ($conn->query($sql) == TRUE) {
         echo json_encode(array('response' => 1, 'message' => 'Article mise jour dans le catalogue !' ));
         exit;
@@ -111,15 +111,14 @@ if (isset($_GET['gencode'])) {
 ?>
 
     <!--Etiquette template-->
-    <div class="etiquette" style="width: 200px;height: 140px;margin: auto">
-    <div>
-        <p id="titleEtiquette" class="title"></p>
-        <p id="colisage"></p>
-        <p id="prixEntier" class="price"><span id="prixDecimal"></span></p>
-        <svg id="barcode2" jsbarcode-textmargin="1"></svg>
-    </div>
+    <div class="etiquette" style="width: 500px;height: 300px;margin: auto">
+        <div>
+            <p id="titleEtiquette" class="title"></p>
+            <p id="prixEntier" class="price"><span id="prixDecimal"></span></p>
+            <svg id="barcode2" jsbarcode-textmargin="1"></svg>
+        </div>
 
-</div>
+    </div>
     <!--Fin etiquette template -->
 
     <div class="content-wrapper" style="min-height: 823px;">
@@ -209,9 +208,9 @@ if (isset($_GET['gencode'])) {
                                         <select class="form-control" size="0" name="code_tva" id="codetva">
                                             <option value="null">Choisir</option>
                                             <option value="0" <?php echo $article['code_tva'] == 0 ? "selected" : "" ?>>0.0 % Exo</option>
-                                            <option value="1" <?php echo $article['code_tva'] == 1 ? "selected" : "" ?>>1.5 %</option>
-                                            <option value="2" <?php echo $article['code_tva'] == 2 ? "selected" : "" ?>>2.1 %</option>
-                                            <option value="8" <?php echo $article['code_tva'] == 8 ? "selected" : "" ?>>8.5 %</option>
+                                            <option value="1.05" <?php echo $article['code_tva'] == 1 ? "selected" : "" ?>>1.5 %</option>
+                                            <option value="2.1" <?php echo $article['code_tva'] == 2 ? "selected" : "" ?>>2.1 %</option>
+                                            <option value="8.5" <?php echo $article['code_tva'] == 8 ? "selected" : "" ?>>8.5 %</option>
                                         </select>
                                     </div>
                                 </div>
@@ -280,7 +279,7 @@ if (isset($_GET['gencode'])) {
 
                                     </div>
                                     <div class="col-lg-4">
-                                        <input type="text"  style="border: 1px solid #ced4da;
+                                        <input type="text" style="border: 1px solid #ced4da;
 													border-radius: 0.25rem;
 													box-shadow: inset 0 0 0 transparent;margin: 0 0 10px 0;" name="mode_prix_1_achat_ht" id="mode_prix_1_achat_ht" value="<?php echo $article['mode_prix_1_achat_ht'] ?>"> <span style="font-weight: 600;">€ HT</span>
                                         <input type="text" style="border: 1px solid #ced4da;
@@ -300,13 +299,13 @@ if (isset($_GET['gencode'])) {
 													box-shadow: inset 0 0 0 transparent;margin: 0 0 10px 0;" type="radio" name="mode" id="mode2" aria-label="..." <?php echo $article['mode_prix_2_fixe_ht'] != 0.00 ?  "checked" : ""  ?>>
                                             <label class="form-check-label" for="mode1" style="margin-left: 15px;font-weight: 600;font-size: 17px;">
                                                 Fixée en € HT:
-                                                <span style="font-weight:normal;font-size: 14px;">Le calcul € TTC se fait automatiquement <br>avec le code TVA</span>
+                                                <span style="font-weight:normal;font-size: 14px;">Le calcul € TTC se fait automatiquement avec le code TVA</span>
                                             </label>
                                         </div>
 
                                     </div>
                                     <div class="col-lg-4">
-                                        <input type="text"  name="mode_prix_2_achat_ht" id="mode_prix_2_achat_ht" style="border: 1px solid #ced4da;
+                                        <input type="text" name="mode_prix_2_achat_ht" id="mode_prix_2_achat_ht" style="border: 1px solid #ced4da;
 													border-radius: 0.25rem;
 													box-shadow: inset 0 0 0 transparent;margin: 0 0 10px 0;" value="<?php echo $article['mode_prix_2_fixe_ht'] ?>"> <span style="font-weight: 600;">€ HT</span>
                                     </div>
@@ -328,7 +327,7 @@ if (isset($_GET['gencode'])) {
 
                                     </div>
                                     <div class="col-lg-4">
-                                        <input type="text"  name="mode_prix_3_achat_ht" id="mode_prix_3_achat_ht" value="<?php echo $article['mode_prix_3_fixe_ttc'] ?>"> <span style="font-weight: 600;">€ TTC</span>
+                                        <input type="text" name="mode_prix_3_achat_ht" id="mode_prix_3_achat_ht" value="<?php echo $article['mode_prix_3_fixe_ttc'] ?>"> <span style="font-weight: 600;">€ TTC</span>
                                     </div>
                                 </div>
                             </div>
@@ -369,20 +368,20 @@ if (isset($_GET['gencode'])) {
                             </div>
                         </div>
 
-<div class="card card-olive">
-                                                <div class="card-header" style="text-align: center;">
-                                                    <h3 class="mb-0">IMPRIMER ETIQUETTE</h3>
-                                                </div>
-                                                    <div class="row" style="padding: 20px 0;margin-left: 20px">
-                                                        <div class="col-lg-6">
-                                                            <input type="checkbox"  name="print_prix_normal" checked value="0.00" id="prixNormal"> Imprimer l'étiquette <span style="font-weight: 600;">prix normal</span>
-                                                            
-                                                        </div>
-                                                        <div class="col-lg-6">
-                                                            <input type="checkbox" name="print_prix_promo" id="prixPromo"> Imprimer l'étiquette <span style="font-weight: 600;">prix promo</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
+<!--                        <div class="card card-outline-secondary">-->
+<!--                            <div class="card-body" style="text-align: center;">-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-lg-9">-->
+<!--                                        <ul style="list-style:none;">-->
+<!--                                            <li><span style="font-weight: 600;font-size: 20px;">Imprimer</span> <input type="number" style="width:50px" name="exemplare" value="1"> <span style="font-weight: 600;font-size: 20px;"> examplaire(s) </span></li>-->
+<!--                                            <li><input type="checkbox" name="print_prix_normal" value="0.00"> Imprimer l'étiquette <span style="font-weight: 600;">prix normal</span></li>-->
+<!--                                            <li><input type="checkbox" name="print_prix_promo" checked> Imprimer l'étiquette <span style="font-weight: 600;">prix promo</span></li>-->
+<!--                                        </ul>-->
+<!---->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
 
                         <div class="form-groupt row" style="padding: 30px 0;justify-content: space-around;">
 <!--                            <div class="col-md-4">-->
@@ -391,7 +390,7 @@ if (isset($_GET['gencode'])) {
 <!--                            </div>-->
                             <div class="col-md-4 mx-auto">
                                 <button type="button" onClick="window.location.href='articles.php';" class="btn btn-danger btn-lg">Annuler</button>
-                                <button type="submit" class="btn btn-primary btn-lg" id="editBtn"  name="save">Enregistrer</button>
+                                <button type="submit" class="btn btn-primary btn-lg" id="editBtn" onclick="imprimeEtiquettes('<?php echo $article['ref'] ?>','<?php echo $article['titre'] ?>',<?php echo $article['prixttc_euro'] ?>);return false;" name="save">Enregistrer</button>
                             </div>
                         </div>
                     </form>
@@ -528,24 +527,13 @@ if (isset($_GET['gencode'])) {
 								}
 								else if(response.response === 1){
 								 // $('#'+type).addClass('swalDefaultSuccess');
-
-                                 var prix = (mode_prix_3 > 0 ? mode_prix_3 : (mode_prix_2 > 0 ? mode_prix_2 : (mode_prix_1_achat > 0 ?  mode_prix_1_achat : 0 )))
-
-                                 var prix = parseFloat(prix);
-                                 if($('#prixNormal').is(':checked')){
-                                    imprimeEtiquettes(gencode,designation,prix) 
-                                 }
-                                 else if($('#prixPromo').is(':checked')){
-                                    promottc = parseFloat(promottc)
-                                    imprimeEtiquettes(gencode,designation,promottc)     
-                                 }
 								 Toast.fire({
 								 	icon: 'success',
 								 	title: response.message
 								 })
-								 // window.setTimeout( function(){
-								 // 	window.location = "articles.php";
-								 // }, 1000 );
+								 window.setTimeout( function(){
+								 	window.location = "articles.php";
+								 }, 1000 );
 								}
 								else {
 									$("#creerFamille").addClass("swalDefaultError");
