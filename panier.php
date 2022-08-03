@@ -11,6 +11,7 @@ $postdata = file_get_contents('php://input');
 $response = array();
 if (isset($postdata)) {
 	$request = json_decode($postdata);
+
 	if (isset($request->article)) {
 		$id_produit = $request->article->id;;
 		$ref = $request->article->ref;
@@ -116,20 +117,26 @@ if (isset($postdata)) {
 	else if(isset($request->ajoutRemise)){
 		$remise = $request->ajoutRemise;
 		$ref = $request->refRemise;
-		$sql = "UPDATE table_client_panier SET remise = $remise WHERE ref = $ref";
+		$session = $request->session;
+		$sql = "UPDATE table_client_panier SET remise = $remise WHERE ref = $ref AND session = $session";
 		$ajoutRemise = $conn->query($sql);
 		if($ajoutRemise){
 			echo $remise;
+			$sql = "SELECT * FROM table_client_panier";
+			regenerePanier($conn,$sql,"jsons/panier.json");
 			die();
 		}
 	}
 	else if(isset($request->updateQTE)){
 		$qte = $request->updateQTE;
 		$ref = $request->refQte;
-		$sql = "UPDATE table_client_panier SET qte = $qte WHERE ref = $ref";
+		$session  = $request->session;
+		$sql = "UPDATE table_client_panier SET qte = $qte WHERE ref = $ref AND session = $session";
 		$updateQte = $conn->query($sql);
 		if($updateQte){
 			echo $qte;
+			$sql = "SELECT * FROM table_client_panier";
+			regenerePanier($conn,$sql,"jsons/panier.json");
 			die();
 		}
 	}

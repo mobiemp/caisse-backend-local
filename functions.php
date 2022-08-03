@@ -18,7 +18,6 @@ function regenerePanier($conn,$sql,$jsonfile){
         return $json;
     }
 
-
 }
 
 function response($json,$res){
