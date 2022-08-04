@@ -167,7 +167,7 @@
                         </button>
                     </div>
                     <div class="col-md-6">
-                        <button type="button" class="btn btn-block btn-primary btn-lg btnCaisse" style="background-color: #0a001f" data-toggle="modal"
+                        <button type="button" class="btn btn-block btn-primary btn-lg btnCaisse" style="background-color: " data-toggle="modal"
                                 data-target="#modal-cb" id="paiementEspece">
                             CB
                         </button>
