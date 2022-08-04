@@ -14,10 +14,10 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" href="../template/style.css"/>
 </head>
-<body style="height: 100%;background-color: rgb(242, 242, 242);">
+<body style="background-color: rgb(242, 242, 242);">
 <!--<div class="container">-->
-<div class="row">
-    <div class="col-md-1" style="height: 100vh;width: 7%!important;background-color: rgb(48, 52, 86);">
+<div class="row" style="height: 100vh;overflow: hidden">
+    <div class="col-md-1" style="background-color: rgb(48, 52, 86);">
 
     </div>
     <div class="col-md-8 " style="padding: 30px;">
@@ -78,7 +78,10 @@
                     <div class="callout callout-info" style="margin:15px 30px 0 30px">
                         <div class="row">
                             <div class="col-md-4">
-                                <p style="font-family: " Tahoma"><?php echo strtoupper($article['titre']) ?><i class="fa fa-trash text-red" style="cursor:pointer;" onclick="deleteArticle(this.id)" id="deleteProduit-<?php echo $article['ref'] ?>"></i></p>
+                                <p style="font-family: " Tahoma"><?php echo strtoupper($article['titre']) ?><i
+                                        class="fa fa-trash text-red" style="cursor:pointer;"
+                                        onclick="deleteArticle(this.id)"
+                                        id="deleteProduit-<?php echo $article['ref'] ?>"></i></p>
                             </div>
                             <div class="col-md-2">
                                 <input type="text" style="width: 50px;" name="quantiteProduit"
@@ -86,10 +89,11 @@
                                        value="<?php echo $article['qte'] ?>"/>
                             </div>
                             <div class="col-md-1"><p
-                                        id="pu_euro-<?php echo $article['ref'] ?>"><?php echo $article['pu_euro'] ?>
+                                        id="pu_euro-<?php echo $article['ref'] ?>">
+                                    <?php echo $article['remise'] > 0 ? $article['pu_euro'] - ($article['pu_euro']  * ($article['remise']/100)) :  $article['pu_euro']   ?>
                                     €</p></div>
                             <div class="col-md-1" id="montantEuro-<?php echo $article['ref'] ?>"><p
-                                        class="montantEuro"><?php echo $article['pu_euro'] * $article['qte'] ?>€</p>
+                                        class="montantEuro"><?php echo $article['remise'] > 0 ? $article['pu_euro'] * $article['qte'] - ($article['pu_euro'] * $article['qte'] * ($article['remise']/100)) :  $article['pu_euro'] * $article['qte']  ?>€</p>
                             </div>
                             <div class="col-md-2">
                                 <input type="text" style="width: 50px;" name="remiseProduit"
@@ -296,18 +300,23 @@
             }
         })
     }
-
+    function getTotal(){
+        var total = $('#total').text()
+        total = total.replace(/\s/g, '');
+        total = total.replace('€', '');
+        return total;
+    }
 
     // PAIEMENTS ESPECE
     $('#paiementEspece').click(function () {
-        var total = calculTotal()
-        $('#inputMontantEspece').val(total.toFixed(2))
-        $('#montantEspece').html(total.toFixed(2))
+        var total = getTotal();
+        $('#inputMontantEspece').val(total)
+        $('#montantEspece').html(total)
     })
 
     $('#btnPaiementEspece').click(function () {
         var montantEspece = $('#inputMontantEspece').val();
-        console.log(montantEspece == total)
+        var total = getTotal()
         if (montantEspece == total) {
             $.ajax({
                 url: "../panier/panier_temp.php",
@@ -318,7 +327,7 @@
                     "cb": 0,
                     "cheques": 0,
                     "ticket_restaurant": 0,
-                    "totalTemp": total.toFixed(2)
+                    "totalTemp": total
                 }),
                 success: function (data) {
                     console.log(data)
@@ -347,67 +356,63 @@
                     data: JSON.stringify({"search": ref, "session": 1}),
                     success: function (data) {
                         var result = JSON.parse(data)
-                        $('#total').html(result.total + " €")
+                        $('#total').html(result.total.toFixed(2) + " €")
                         $('#searchArticle').val("")
                         // GENERE PRODUIT
                         var increment = false;
-                        $("input[name='quantiteProduit']").each(function() {
-                             var id = $(this).attr('id');
-                             var refForm = id.split('-')[1]
-                            console.log(refForm,result.data.ref)
-                            if(refForm === result.data.ref){
+                        $("input[name='quantiteProduit']").each(function () {
+                            var id = $(this).attr('id');
+                            var refForm = id.split('-')[1]
+                            if (refForm === result.data.ref) {
                                 increment = true;
                                 return false;
                             }
                         });
-                        var remise = parseInt(result.data.remise) > 0 ? parseFloat(result.data.pu_euro) * parseFloat(result.data.qte) * (parseInt(result.data.remise) / 100) :  "0.00€"
-                        if(increment === false){
+
+                        var remise = parseInt(result.data.remise) > 0 ? parseFloat(result.data.pu_euro) * parseFloat(result.data.qte) * (parseInt(result.data.remise) / 100) : "0.00€"
+                        if (increment === false) {
                             $('#produits').append(
                                 '<div class="callout callout-info" style="margin:15px 30px 0 30px">\n' +
                                 '<div class="row">' +
                                 '<div class="col-md-4">' +
-                                '<p>'+
+                                '<p>' +
                                 result.data.titre +
-                                '<i class="fa fa-trash text-red" style="cursor:pointer;" onclick="deleteArticle(this.id)" id="deleteProduit-'+result.data.ref+'"></i>'+
-                                '</p>'+
-                                '</div>'+
-                                '<div class="col-md-2">'+
-                                '<input type="text" style="width: 50px;" name="quantiteProduit" id="quantiteProduit-'+result.data.ref+'" value="'+qte+'" />'+
+                                '<i class="fa fa-trash text-red" style="cursor:pointer;" onclick="deleteArticle(this.id)" id="deleteProduit-' + result.data.ref + '"></i>' +
+                                '</p>' +
+                                '</div>' +
+                                '<div class="col-md-2">' +
+                                '<input type="text" style="width: 50px;" name="quantiteProduit" id="quantiteProduit-' + result.data.ref + '" value="' + result.data.qte + '" />' +
                                 '</div>' +
                                 '<div class="col-md-1">' +
-                                '<p>'+
+                                '<p>' +
                                 result.data.pu_euro +
-                                '</p>'+
-                                '</div>'+
-                                '<div class="col-md-1">' +
-                                '<p>'+
-                                parseFloat(result.data.pu_euro) * parseFloat(result.data.qte) +
-                                '</p>'+
-                                 '</div>'+
-                                '<div class="col-md-2">'+
-                                '<input type="text" style="width: 50px;" name="remiseProduit" id="remiseProduit-'+ref+'" value="'+result.data.remise+'" /><span>%</span>'+
+                                '€</p>' +
                                 '</div>' +
                                 '<div class="col-md-1">' +
-                                '<p>'+
+                                '<p>' +
+                                parseFloat(result.data.pu_euro) * parseFloat(result.data.qte) +
+                                '€</p>' +
+                                '</div>' +
+                                '<div class="col-md-2">' +
+                                '<input type="text" style="width: 50px;" name="remiseProduit" id="remiseProduit-' + result.data.ref + '" value="' + result.data.remise + '" /><span>%</span>' +
+                                '</div>' +
+                                '<div class="col-md-1">' +
+                                '<p>' +
                                 remise +
-                                '</p>'+
-                                '</div>'+
+                                '</p>' +
+                                '</div>' +
                                 '</div>' +
                                 '</div>'
-
                             )
-                        }else{
-                            var newQte = parseInt($('#quantiteProduit-'+result.data.ref).val())
+                        } else {
+                            var newQte = parseInt($('#quantiteProduit-' + result.data.ref).val())
                             var updatedQTE = parseInt(result.data.qte)
-                            var actualMontantEuro = $('#montantEuro-'+result.data.ref).text()
+                            var actualMontantEuro = $('#montantEuro-' + result.data.ref).text()
                             actualMontantEuro = parseFloat(actualMontantEuro)
-                            var newMontantEuro = parseFloat(result.data.pu_euro) * updatedQTE + actualMontantEuro ;
-                            $('#montantEuro-'+result.data.ref).html(newMontantEuro.toFixed(2) + "€")
-                            console.log(newMontantEuro)
-                            $('#quantiteProduit-'+result.data.ref).val(newQte+updatedQTE)
+                            var newMontantEuro = parseFloat(result.data.pu_euro) * updatedQTE + actualMontantEuro;
+                            $('#montantEuro-' + result.data.ref).html(newMontantEuro.toFixed(2) + "€")
+                            $('#quantiteProduit-' + result.data.ref).val(newQte + updatedQTE)
                         }
-
-
 
 
                     }
@@ -416,24 +421,25 @@
             }
         });
     });
-    function deleteArticle(id){
+
+    function deleteArticle(id) {
         var ref = id.split('-')[1]
 
         $.ajax({
             url: "../panier.php",
             type: "POST",
             contentType: "application/json",
-            data: JSON.stringify({"deleteArticle": ref,"session":1}),
+            data: JSON.stringify({"deleteArticle": ref, "session": 1}),
             success: function (data) {
 
                 var result = JSON.parse(data)
                 console.log(result)
-                if(result.response !== 1){
+                if (result.response !== 1) {
                     Toast.fire({
                         icon: 'error',
                         title: result.message
                     })
-                }else{
+                } else {
                     Toast.fire({
                         icon: 'success',
                         title: "Article supprimé du panier"
@@ -473,7 +479,41 @@
 
     });
 
+$(document).ajaxComplete(function(){
+    $("input[type=text][name=remiseProduit]").on("keypress", function (e) {
+        if (e.which == 13) {
+            var newRemise = $(this).val()
+            var id = $(this).attr('id')
+            var ref = id.split('-')[1]
 
+            $.ajax({
+                url: "../panier.php",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({"ajoutRemise": newRemise, "refRemise": ref, "session": 1}),
+                success: function (data) {
+                    console.log(data)
+                    window.location.reload()
+                    // var remise = data;
+                    // var pu_euro = $('#pu_euro-'+ref).text()
+                    // var qte = $('#quantiteProduit-'+ref).val()
+                    // pu_euro = parseFloat(pu_euro)
+                    // remise = parseInt(remise)
+                    // var montantRemise = pu_euro * qte * (remise / 100)
+                    // $('#montantRemise-'+ref).html("<p>"+montantRemise.toFixed(2)+" €</p>")
+
+                    // pu_euro = pu_euro - (pu_euro * (remise/100))
+                    // montantEuro = pu_euro*qte;
+                    // $('#pu_euro-'+ref).html("<p>"+pu_euro.toFixed(2)+"</p>")
+                    // $('#montantEuro-'+ref).html("<p>"+montantEuro.toFixed(2)+"</p>")
+
+                }
+            })
+        }
+
+
+    });
+})
     $("input[type=text][name=remiseProduit]").on("keypress", function (e) {
         if (e.which == 13) {
             var newRemise = $(this).val()
@@ -508,25 +548,5 @@
 
     });
 
-    function calculTotal() {
-        // var textValues = $('.montantEuro').map((i, el) => el.innerText.trim()).get();
-        // var total = 0
-        // textValues.forEach(function (item, index) {
-        //     var montant = item.split(' ')[0]
-        //     montant = parseFloat(montant)
-        //     total += montant
-        // });
-        // return total;
-        var total = 0;
-        $.ajax({
-            url: "../panier.php",
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({"getTotalPanier": true}),
-            success: function (data) {
-                total = 0;
-            }
-        })
-    }
 </script>
 </html>

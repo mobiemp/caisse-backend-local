@@ -79,13 +79,17 @@ if (isset($postdata)) {
 			$sql = "SELECT * FROM table_client_panier";
 
 			$result = $conn->query($sql);
-
+            $total = 0;
+            $i = 0;
 			if ($result->num_rows > 0) {
-                $total = 0;
 				while ($row[] = $result->fetch_assoc()) {
-                    $total += $row[0]['remise'] > 0 ? $row[0]['pu_euro'] * $row[0]['qte'] * ($row[0]['remise'] / 100 ) : $row[0]['pu_euro'] * $row[0]['qte']  ;
+                    if($result->num_rows > $i){
+                        $total += $row[$i]['pu_euro'] * $row[$i]['qte'];
+                        $i++;
+                    }
                     $tem = $row;
                     $json = $tem;
+
 				}
 				echo json_encode(array("total" => round($total,2), "data" => $data ));
 

@@ -24,6 +24,14 @@ function regenerePanier($conn,$sql,$jsonfile){
 
 }
 
+function calculTotal($conn,$sql){
+    $total = 0;
+    $result = $conn->query($sql);
+    while($row = $result->fetch_assoc()){
+        $total += $row['pu_euro'] * $row['qte'];
+    }
+}
+
 function response($json,$res){
     return array('json'=>$json,'result'=>$res);
 }
