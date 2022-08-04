@@ -106,6 +106,8 @@
                                     <?php echo $article['remise'] > 0 ? $article['pu_euro'] * $article['qte'] * ($article['remise'] / 100) . " €" : "0.00€"; ?>
                                 </p>
                             </div>
+
+
                         </div>
                     </div>
 
