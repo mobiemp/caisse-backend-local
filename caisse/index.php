@@ -102,7 +102,7 @@
                             </div>
                             <div class="col-md-1">
                                 <p id="montantRemise-<?php echo $article['ref'] ?>">
-                                    <?php echo $article['remise'] > 0 ? $article['pu_euro'] * $article['qte'] * ($article['remise'] / 100) . " €" : "0.00€"; ?>
+                                    <?php echo $article['remise'] > 0 ? $article['pu_euro'] / $article['qte'] * ($article['remise'] / 100) . " €" : "0.00€"; ?>
                                 </p>
                             </div>
                         </div>
@@ -163,7 +163,7 @@
                     <div class="col-md-6">
                         <button type="button" class="btn btn-block btn-primary btn-lg btnCaisse" data-toggle="modal"
                                 data-target="#modal-espece" id="paiementEspece">
-                            Espècesfuhuhio
+                            Espèces
                         </button>
                     </div>
                     <div class="col-md-6">
