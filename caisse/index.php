@@ -100,9 +100,10 @@
                                        id="remiseProduit-<?php echo $article['ref'] ?>"
                                        value="<?php echo $article['remise'] ?>"/> %
                             </div>
+
                             <div class="col-md-1">
                                 <p id="montantRemise-<?php echo $article['ref'] ?>">
-                                    <?php echo $article['remise'] > 0 ? $article['pu_euro'] / $article['qte'] * ($article['remise'] / 100) . " €" : "0.00€"; ?>
+                                    <?php echo $article['remise'] > 0 ? $article['pu_euro'] * $article['qte'] * ($article['remise'] / 100) . " €" : "0.00€"; ?>
                                 </p>
                             </div>
                         </div>
