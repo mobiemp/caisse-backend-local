@@ -6,7 +6,6 @@ header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Authorization');
 
 $postdata = file_get_contents('php://input');
-
 if (isset($postdata)) {
     $request  = json_decode($postdata);
     $espece = $request->espece;

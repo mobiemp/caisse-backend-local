@@ -14,6 +14,7 @@ if (isset($postdata)) {
 	$request = json_decode($postdata);
 	$search = $request->search;
 	$check = explode('*',$search);
+	$qte = 1;
 	if(count($check) == 1 ){
 	    $qte = 1;
     }
@@ -54,6 +55,7 @@ if (isset($postdata)) {
 			$titre = $catalogue['titre'];
 			$date = time();
 			$id_produit = $catalogue['id'];
+                $data = array('titre'=>$titre,'pu_euro'=>$pu_euro,'remise'=>$remise,'session'=>$session,'qte'=>1,'ref'=>$ref,"qte"=>$qte);
 			$sql = "INSERT INTO table_client_panier (`session`,`id_produit`,`ref`, `qte`, `credit`, `pu_euro`, `promo`, `retour`, `famille`, `titre`, `taux_tva`,`date`, `remise`) VALUES ($session,'" . $id_produit . "','" . $ref . "', $qte, 0 , $pu_euro, 0, 'false',0,'" . $titre . "',$taux_tva,$date, $remise)";
 				if (!$checkIfInPanier) {
 					$ajout = $conn->query($sql);
@@ -79,14 +81,13 @@ if (isset($postdata)) {
 			$result = $conn->query($sql);
 
 			if ($result->num_rows > 0) {
-
+                $total = 0;
 				while ($row[] = $result->fetch_assoc()) {
-
-					$tem = $row;
-
-					$json = $tem;
+                    $total += $row[0]['remise'] > 0 ? $row[0]['pu_euro'] * $row[0]['qte'] * ($row[0]['remise'] / 100 ) : $row[0]['pu_euro'] * $row[0]['qte']  ;
+                    $tem = $row;
+                    $json = $tem;
 				}
-				echo json_encode(response($json,$reponse));
+				echo json_encode(array("total" => round($total,2), "data" => $data ));
 
 				$fp = fopen('jsons/panier.json', 'w');
 				fwrite($fp, json_encode($json));

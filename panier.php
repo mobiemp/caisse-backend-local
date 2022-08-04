@@ -102,14 +102,17 @@ if (isset($postdata)) {
 
 		
 	} else if (isset($request->deleteArticle)) {
-		$num = $request->deleteArticle;
-		$sql = "DELETE FROM table_client_panier WHERE num = $num";
+		$ref = $request->deleteArticle;
+		$session = $request->session;
+		$sql = "DELETE FROM table_client_panier WHERE ref = $ref AND session = $session";
 		$delete = $conn->query($sql);
 		if ($delete == TRUE) {
 			$sql = "SELECT * FROM table_client_panier";
-			$query = $conn->query($sql);
-			$nbligne = $query->num_rows;
-			$response['response'] = $nbligne > 0 ? 1 : 0;
+
+			$response['response'] = 1;
+			regenerePanier($conn,$sql,'jsons/panier.json');
+			echo json_encode($response);
+			die();
 		} else {
 			echo json_encode(array('response' => 0, 'message' => 'Échec de la suppresion du fichier'));
 		}
@@ -172,6 +175,22 @@ if (isset($postdata)) {
 	        die();
         }
 
+    }
+	else if(isset($request->getTotalPanier)){
+	    $getotal = $request->getTotalPanier;
+	    if($getotal){
+            $sql = "SELECT * FROM table_client_panier";
+
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                $total = 0;
+                while ($row[] = $result->fetch_assoc()) {
+                    $total += $row[0]['remise'] > 0 ? $row[0]['pu_euro'] * $row[0]['qte'] * ($row[0]['remise'] / 100 ) : $row[0]['pu_euro'] * $row[0]['qte']  ;
+                }
+                echo round($total,2);
+            }
+        }
     }
 	
 

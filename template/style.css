@@ -70,3 +70,18 @@ th,td {
 
 }
 /*Fin etiquette style*/
+hr {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: steelblue !important;
+}
+
+.btnCaisse{
+    padding:20px 0 ;
+    margin-bottom: 15px;
+}

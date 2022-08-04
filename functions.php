@@ -16,6 +16,10 @@ function regenerePanier($conn,$sql,$jsonfile){
         fclose($fp);
 
         return $json;
+    }else{
+        $fp = fopen($jsonfile, 'w');
+        fwrite($fp, json_encode([]));
+        fclose($fp);
     }
 
 }
