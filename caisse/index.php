@@ -163,7 +163,7 @@
                     <div class="col-md-6">
                         <button type="button" class="btn btn-block btn-primary btn-lg btnCaisse" data-toggle="modal"
                                 data-target="#modal-espece" id="paiementEspece">
-                            Espèces
+                            Espècesfuhuhio
                         </button>
                     </div>
                     <div class="col-md-6">
