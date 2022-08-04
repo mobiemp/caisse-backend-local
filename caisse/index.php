@@ -16,7 +16,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-8">
-				<form action="../searchProduit.php" id="formSearchProduit" >
+<!--				<form action="../searchProduit.php" id="formSearchProduit" >-->
 					<div class="input-group">
 						<input type="search" class="form-control form-control-lg" id="searchArticle" placeholder="Type your keywords here">
 						<div class="input-group-append">
@@ -25,7 +25,7 @@
 							</button>
 						</div>
 					</div>
-				</form>
+<!--				</form>-->
 
 				<div id="produits">
 					<?php
@@ -114,41 +114,67 @@
 <script type="text/javascript">
 	var textValues = $('.montantEuro').map((i, el) => el.innerText.trim()).get();
 	var total = 0
-	// textValues.forEach(function (item, index) {
-	// 	var montant = item.split(' ')[0]
-	// 	montant = parseFloat(montant)
-	// 	total += montant
-	// });
-	// $('#total').html(total.toFixed(2) + "€")
-	$('#searchArticle').keypress(function (e) {
-				// $('#print-button').css('display','none');
-				e.preventDefault()
-				if (e.which == 13) {
-					var ref = $(this).val();
-					var qte = 1
-					console.log(ref)
-					$.ajax({
-						url:"../searchProduit.php",
-						type:"POST",
-						contentType: "application/json",
-						data: JSON.stringify({"search": ref,"session":1}),
-						success:function(data){
-							$(document).ready(function(){
-								$("#produits").load(location.href + " #produits");
-								textValues.forEach(function (item, index) {
-									var montant = item.split(' ')[0]
-									montant = parseFloat(montant)
-									total += montant
-								});
-								$('#total').html(total.toFixed(2) + "€")
-							})
+	textValues.forEach(function (item, index) {
+		var montant = item.split(' ')[0]
+		montant = parseFloat(montant)
+		total += montant
+	});
+	$('#total').html(total.toFixed(2) + "€")
 
-							// window.location.reload
-						}
-					})
+    $(document).ready(function()
+    {
 
-				}
-			});
+        $('#searchArticle').keydown(function (e) {
+            // $('#print-button').css('display','none');
+            if (e.which == 13) {
+                var ref = $(this).val();
+                var qte = 1
+                console.log(ref)
+                $.ajax({
+                    url:"../searchProduit.php",
+                    type:"POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({"search": ref,"session":1}),
+                    success:function(data){
+                        $(document).ready(function(){
+                            $("#produits").load(location.href + " #produits");
+                            textValues.forEach(function (item, index) {
+                                var montant = item.split(' ')[0]
+                                montant = parseFloat(montant)
+                                total += montant
+                            });
+                            $('#total').html(total.toFixed(2) + "€")
+                            $('#searchArticle').val("")
+                        })
+
+                        // window.location.reload
+                    }
+                })
+
+            }
+        });
+        // var barcode="";
+        // $('#searchArticle').keydown(function(e)
+        // {
+        //     var code = (e.keyCode ? e.keyCode : e.which);
+        //     if(code==13)// Enter key hit
+        //     {
+        //         alert(barcode);
+        //     }
+        //     else if(code==9)// Tab key hit
+        //     {
+        //         alert(barcode);
+        //     }
+        //     else
+        //     {
+        //         barcode=barcode+String.fromCharCode(code);
+        //     }
+        // });
+    });
+
+
+
+
 
 
 	$("input[type=text][name=quantiteProduit]").on("keypress", function(e) {
