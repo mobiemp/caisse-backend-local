@@ -66,7 +66,7 @@ if(isset($_POST['famille']) && isset($_POST['designation'])){
 		}
 	}
 	if ($mode == 1) {
-		if($mode_prix_1 == 0 or $mode_prix_1 == '' ){
+		if($mode_prix_1_achat == 0 or $mode_prix_1_achat == '' ){
 			echo json_encode(array('response'=>3,'message' => 'Vous devez indiquer un prix', 'type' => 'mode_prix_1_achat_ht' ));
 			exit;
 		}
@@ -79,9 +79,14 @@ if(isset($_POST['famille']) && isset($_POST['designation'])){
 
 	$sql = "INSERT INTO table_client_catalogue(`cath`,`id`,`ref`,`titre`,`prixttc_euro`,`prixttc_promo_euro`,`code_tva`,`promo_debut`,`promo_fin`,`choix_mode_prix`,`mode_prix_1_achat_ht`,`mode_prix_1_marge`,`mode_prix_2_fixe_ht`,`mode_prix_3_fixe_ttc`,`dateajout`,`datemodif`,`accueil`,`stock`,`stock_alerte`,`unite`,`qte_unite`,`package`,`prix_variable`,`img`,`send_web`) 
 	VALUES($famille,'$id_produit','$gencode','$designation',$prix,$promottc,$codetva,'$promo_debut','$promo_fin',$mode,$mode_prix_1_achat,$marge,$mode_prix_2,$mode_prix_3,'$dateajout','1000-01-01 00:00:00',0,$stock_actuel,$stock_alerte,$unite,$quantite,'',$prix_variable,'',1)";
-	if ($conn->query($sql) == TRUE) {
-		echo json_encode(array('response' => 1, 'message' => 'Nouvel article enregistré !' , 'prix' => $prix ));
-		exit;
+	$ajoutArticle = $conn->query($sql);
+	if ($ajoutArticle) {
+	    $sql = "UPDATE table_client_variable SET modif_serveur_ajout_catalogue = '$dateajout' WHERE num = 1";
+	    $updateSync = $conn->query($sql);
+	    if($updateSync){
+            echo json_encode(array('response' => 1, 'message' => 'Nouvel article enregistré !' , 'prix' => $prix ));
+            exit;
+        }
 	}
 	else{
 		echo json_encode(array('response' => 2, 'message' => 'Une erreur c\'est produite.' , 'prix' => $sql ));
