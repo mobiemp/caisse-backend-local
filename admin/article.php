@@ -82,9 +82,14 @@ if(isset($_POST['famille']) && isset($_POST['designation'])){
     `prix_variable`=$prix_variable,
     `img` = NULL,
     `send_web` = 1 WHERE ref = '$gencode' " ;
-    if ($conn->query($sql) == TRUE) {
-        echo json_encode(array('response' => 1, 'message' => 'Article mise jour dans le catalogue !' ));
-        exit;
+    $updateArticle = $conn->query($sql);
+    if ($updateArticle) {
+        $sql = "UPDATE table_client_variable SET modif_serveur_modif_catalogue = '$dateajout' WHERE num = 1";
+        $updateSync = $conn->query($sql);
+        if($updateSync){
+            echo json_encode(array('response' => 1, 'message' => 'Article mise jour dans le catalogue !' ));
+            exit;
+        }
     }
     else{
         // echo json_encode(array('response' => 2, 'message' => 'Une erreur c\'est produite.' , 'error' => $sql ));

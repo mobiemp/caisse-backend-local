@@ -7,7 +7,7 @@ header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Autho
 include 'DBConfig.php';
 include 'functions.php';
 
-$postdata = file_get_contents('php://input');
-
-echo json_encode($postdata);
+if (isset($_GET['catalogue_ajout'])){
+    var_dump($_GET['catalogue_ajout']);
+}
  ?>

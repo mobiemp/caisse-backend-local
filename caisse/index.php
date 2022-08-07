@@ -14,7 +14,9 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" href="../template/style.css"/>
 </head>
-<body style="background-color: rgb(242, 242, 242);">
+<body style="background-color: rgb(242, 242, 242); min-height: 100vh;
+      margin: 0;
+      overflow: hidden;">
 <!--<div class="container">-->
 <div class="row" style="height: 100vh;overflow: hidden">
     <div class="col-md-1" style="background-color: rgb(48, 52, 86);">
