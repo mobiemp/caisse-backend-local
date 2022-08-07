@@ -87,3 +87,18 @@ hr {
     padding:20px 0 ;
     margin-bottom: 15px;
 }
+
+.modal-body{
+    padding-bottom: 30px;
+}
+.text-paiement{
+    padding-bottom: 20px;
+}
+.btnPaiement{
+    margin-left: 15px;
+    width: 100px;
+}
+.resteAPayer{
+    font-weight: 600;
+    font-size: 24px;
+}

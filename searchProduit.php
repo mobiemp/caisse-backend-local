@@ -38,10 +38,13 @@ if (isset($postdata)) {
 		if($conn->query($sql)->num_rows > 0){
 			$catalogue = $conn->query($sql)->fetch_assoc();
 			/* Verifie si deja dans panier */
-			$sql2 = "SELECT ref,session FROM table_client_panier WHERE ref=" . $ref;
+			$session = $request->session;
+			$id_caisse = $request->id_caisse;
+			$sql2 = "SELECT ref,session,num FROM table_client_panier WHERE ref='$ref' AND id_caisse = $id_caisse AND session = $session";
+			
 			$query2 = mysqli_query($conn, $sql2);
 
-
+			$nbrow = $query2->num_rows;
 			$checkIfInPanier = $conn->query($sql2)->fetch_assoc();
 			$ref =  $catalogue['ref'];
 			$pu_euro = $catalogue['prixttc_euro'];
@@ -55,13 +58,16 @@ if (isset($postdata)) {
 			$titre = $catalogue['titre'];
 			$date = time();
 			$id_produit = $catalogue['id'];
-                $data = array('titre'=>$titre,'pu_euro'=>$pu_euro,'remise'=>$remise,'session'=>$session,'qte'=>1,'ref'=>$ref,"qte"=>$qte);
-			$sql = "INSERT INTO table_client_panier (`session`,`id_produit`,`ref`, `qte`, `credit`, `pu_euro`, `promo`, `retour`, `famille`, `titre`, `taux_tva`,`date`, `remise`) VALUES ($session,'" . $id_produit . "','" . $ref . "', $qte, 0 , $pu_euro, 0, 'false',0,'" . $titre . "',$taux_tva,$date, $remise)";
-				if (!$checkIfInPanier) {
+			$remise_euro = 0;
+            $data = array('titre'=>$titre,'pu_euro'=>$pu_euro,'remise'=>$remise,'remise_euro'=>$remise_euro,'session'=>$session,'qte'=>1,'ref'=>$ref,"qte"=>$qte);
+			$sql = "INSERT INTO table_client_panier (`session`,`id_produit`,`ref`, `qte`, `id_caisse`, `pu_euro`, `remise_euro`, `retour`, `famille`, `titre`, `taux_tva`,`date`, `remise`) VALUES ($session,'" . $id_produit . "','" . $ref . "', $qte, $id_caisse , $pu_euro, $remise_euro, 'false',0,'" . $titre . "',$taux_tva,$date, $remise)";
+
+				if (!$nbrow>0) {
 					$ajout = $conn->query($sql);
 				} else {
 					if($session == $checkIfInPanier['session']){
-						$sql = "UPDATE table_client_panier SET qte = qte + $qte WHERE ref=" . $ref;
+						$num = $checkIfInPanier['num'];
+						$sql = "UPDATE table_client_panier SET qte = qte + $qte WHERE num = $num" ;
 						$update = $conn->query($sql);
 					}
 					else{
@@ -76,7 +82,7 @@ if (isset($postdata)) {
 				$reponse = 0;
 			}
 
-			$sql = "SELECT * FROM table_client_panier";
+			$sql = "SELECT * FROM table_client_panier ORDER BY num DESC";
 
 			$result = $conn->query($sql);
             $total = 0;
@@ -135,8 +141,7 @@ if (isset($postdata)) {
 					if (!$checkIfInPanier) {
 						$ref = $ref_1;
 						$pu_euro = $pv_valeur;
-						$session = "127.0.0.1/1";
-						$credit = 0;
+						$session = $session;
 						$tva = $row['code_tva'];
 						$taux_tva = ($tva == 8 ? 8.5 : ($tva == 2 ? 2.1 : ($tva == 1 ? 1.05 : 0)));
 						$remise = 0;
@@ -144,8 +149,10 @@ if (isset($postdata)) {
 						$titre = $row['titre'];
 						$date = time();
 						$id_produit = $row['id'];
-						$sql = "INSERT INTO table_client_panier (`session`,`id_produit`,`ref`, `qte`, `credit`, `pu_euro`, `promo`, `retour`, `famille`, `titre`, `taux_tva`,`date`, `remise`) 
-						VALUES ('" . $session . "','" . $id_produit . "','" . $ref . "', $qte, 0 , $pu_euro, 0, 'false',0,'" . $titre . "',$taux_tva,$date, $remise)";
+						$id_caisse = $row['id_caisse'];
+						$remise_euro = 0;
+						$sql = "INSERT INTO table_client_panier (`session`,`id_produit`,`ref`, `qte`, `id_caisse`, `pu_euro`, `remise_euro`, `retour`, `famille`, `titre`, `taux_tva`,`date`, `remise`) 
+						VALUES ('" . $session . "','" . $id_produit . "','" . $ref . "', $qte, $id_caisse , $pu_euro, $remise_euro, 'false',0,'" . $titre . "',$taux_tva,$date, $remise)";
 							$ajout = $conn->query($sql);
 						} else {
 							$sql = "UPDATE table_client_panier SET qte = qte + 1 WHERE ref=" . $ref_1;
@@ -154,7 +161,7 @@ if (isset($postdata)) {
 					}
 				}
 
-				$sql = "SELECT * FROM table_client_panier";
+				$sql = "SELECT * FROM table_client_panier ORDER BY num DESC";
 
 				$result = $conn->query($sql);
 
@@ -167,7 +174,7 @@ if (isset($postdata)) {
 						$json = $tem;
 					}
 
-					echo json_encode($json);
+					// echo json_encode($json);
 
 					$fp = fopen('jsons/panier.json', 'w');
 					fwrite($fp, json_encode($json));

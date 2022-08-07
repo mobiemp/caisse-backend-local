@@ -2,7 +2,7 @@
 
 function regenerePanier($conn,$sql,$jsonfile){
 
-    $result = $conn->query($sql);
+    $result = $conn->query($sql." ORDER BY num DESC");
     if ($result->num_rows > 0) {
 
         while ($row[] = $result->fetch_assoc()) {
