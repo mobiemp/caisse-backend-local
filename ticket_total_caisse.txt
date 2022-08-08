@@ -1,13 +1,13 @@
 
-		CAISSE 1
-		DATE : 21/07/2022 13:46:29
+		CAISSE 3
+		DATE : 08/08/2022 17:59:13
 		-----------------------------
 
-		TOTAL ESPECE : 30.6 €
-		TOTAL CB : 0 €
-		TOTAL CHEQUE: 0 €
+		TOTAL ESPECE : 438.00 €
+		TOTAL CB : 10.00 €
+		TOTAL CHEQUE: 0.00 €
 
 		-----------------------------
 
-		TOTAL TTC : 30.6
+		TOTAL TTC : 438.00 €
 	

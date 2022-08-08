@@ -82,7 +82,7 @@ if (isset($postdata)) {
 				$reponse = 0;
 			}
 
-			$sql = "SELECT * FROM table_client_panier ORDER BY num DESC";
+			$sql = "SELECT * FROM table_client_panier WHERE session = $session AND id_caisse = $id_caisse ORDER BY num DESC";
 
 			$result = $conn->query($sql);
             $total = 0;
