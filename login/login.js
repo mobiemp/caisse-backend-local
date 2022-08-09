@@ -15,9 +15,10 @@ $("#formLogin").submit(function(e) {
             console.log(data)
             var result = JSON.parse(data)
             if(result.response === 1 ){
-                $('#msgLogin').addClass('text-success text-center').text(result.message)
-                $('#formLogin').hide()
-                $('#chooseCaisse').show()
+                window.location.reload()
+                // $('#msgLogin').addClass('text-success text-center').text(result.message)
+                // $('#formLogin').hide()
+                // $('#chooseCaisse').show()
             }
             else{
                 $('#msgLogin').text(result.message).addClass('text-danger text-center')

@@ -1,4 +1,8 @@
-<?php session_start();
+<?php
+session_start();
+if(!isset($_SESSION['loggedin'])){ //if login in session is not set
+    header("Location: ../login/");
+}
 
 ?>
 <!DOCTYPE html>
@@ -25,8 +29,9 @@ overflow: hidden;">
     <div class="col-md-1" style="background-color: rgb(48, 52, 86);">
         <p class="text-center text-white"
            style="margin-top: 30px;font-size: 22px"><?php echo isset($_SESSION['id_caisse']) ? "Caisse n° " . $_SESSION['id_caisse'] : "" ?></p>
-        <p class="margin:auto" style="position:absolute;bottom: 20px;left: 38px"><a href="../login/logout.php"
-                                                                                    class="text-danger text-center">Déconnexion</a>
+        <p class="margin:auto" style="position:absolute;bottom: 20px;left: 38px">
+            <a href="../login/logout.php?id_caisse=<?php echo $_SESSION['id_caisse'] ?>&userid=<?php echo $_SESSION['id'] ?>"
+            class="text-danger text-center">Déconnexion</a>
         </p>
     </div>
     <div class="col-md-8 " style="padding: 30px;">
@@ -568,7 +573,6 @@ overflow: hidden;">
                     contentType: "application/json",
                     data: JSON.stringify({"search": ref, "session": session, "id_caisse": id_caisse}),
                     success: function (data) {
-                        console.log(data)
                         var result = JSON.parse(data)
                         $('#total').html(result.total.toFixed(2) + " €")
                         $('#searchArticle').val("")

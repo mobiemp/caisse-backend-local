@@ -1,5 +1,5 @@
 <?php
-
+include('dbconfig.php');
 include('authenticate.php');
 
 ?>
@@ -16,6 +16,7 @@ include('authenticate.php');
 <div class="login">
     <h1>Caisse Connexion</h1>
     <p id="msgLogin" style="text-align:center"></p>
+    <?php if(!isset($_SESSION['loggedin'])){ ?>
     <form action="authenticate.php" id="formLogin">
         <label for="username">
             <i class="fas fa-user"></i>
@@ -27,11 +28,13 @@ include('authenticate.php');
         <input type="password" name="password" value="test" placeholder="Password" id="password" required>
         <input type="submit" value="Connexion">
     </form>
-    <div id="chooseCaisse" style="display: none;padding:20px">
+
+    <?php
+    } else { ?>
+    <div id="chooseCaisse" style="padding:20px">
         <p class="text-center">Choisir une caisse</p>
         <?php
-        include('dbconfig.php');
-        if (isset($_SESSION['client_id'])) {
+        if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
             $client_id = $_SESSION['client_id'];
             $sql = "SELECT nbcaisse FROM clients WHERE $client_id";
             $caisses = $con->query($sql);
@@ -44,6 +47,7 @@ include('authenticate.php');
                 for ($x = 1; $x <= $nbcaisse; $x++) {
                     $sql = "SELECT * FROM id_caisse_used WHERE id_caisse = $x";
                     $check = $con->query($sql);
+
                     if ($check->num_rows == 1) {
                         ?>
                         <button type="button" class="btn btn-block btn-dark" disabled
@@ -61,6 +65,7 @@ include('authenticate.php');
         }
         ?>
     </div>
+    <?php }  ?>
 </div>
 </body>
 <script src="../lib/dist/js/jquery.js"></script>
