@@ -1,0 +1,6 @@
+#fichier config
+DBConfig.php
+/jsons/panier.json
+/login/dbconfig.php
+/tickets/ticket.txt
+ticket_total_caisse.txt

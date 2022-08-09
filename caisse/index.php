@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(!isset($_SESSION['loggedin'])){ //if login in session is not set
+if (!isset($_SESSION['loggedin'])) { //if login in session is not set
     header("Location: ../login/");
 }
 
@@ -31,7 +31,7 @@ overflow: hidden;">
            style="margin-top: 30px;font-size: 22px"><?php echo isset($_SESSION['id_caisse']) ? "Caisse n° " . $_SESSION['id_caisse'] : "" ?></p>
         <p class="margin:auto" style="position:absolute;bottom: 20px;left: 38px">
             <a href="../login/logout.php?id_caisse=<?php echo $_SESSION['id_caisse'] ?>&userid=<?php echo $_SESSION['id'] ?>"
-            class="text-danger text-center">Déconnexion</a>
+               class="text-danger text-center">Déconnexion</a>
         </p>
     </div>
     <div class="col-md-8 " style="padding: 30px;">
@@ -96,19 +96,26 @@ overflow: hidden;">
                 <?php
                 $json = file_get_contents('../jsons/panier.json');
                 $parsedJson = json_decode($json, true);
+                include('../functions.php');
                 if (count($parsedJson) > 0) {
                     $session = isset($_SESSION['session']) ? $_SESSION['session'] : "";
                     $id_caisse = isset($_SESSION['id_caisse']) ? $_SESSION['id_caisse'] : "";
                     foreach ($parsedJson as $article) {
                         if ($session == $article['session'] and $id_caisse == $article['id_caisse']) {
+
                             ?>
                             <div class="callout callout-info" style="margin:15px 30px 0 30px">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <p style="font-family: " Tahoma"><?php echo strtoupper($article['titre']) ?><i
-                                                class="fa fa-trash text-red" style="cursor:pointer;"
-                                                onclick="deleteArticle(this.id,'<?php echo $_SESSION['session'] ?>','<?php echo $_SESSION['id_caisse'] ?>')"
-                                                id="deleteProduit-<?php echo $article['ref'] ?>"></i></p>
+                                        <p style="font-family: " Tahoma"><?php echo strtoupper($article['titre']) ?>
+                                        <i class="fa fa-trash text-red" style="cursor:pointer;"
+                                           onclick="deleteArticle(this.id,'<?php echo $_SESSION['session'] ?>','<?php echo $_SESSION['id_caisse'] ?>')"
+                                           id="deleteProduit-<?php echo $article['ref'] ?>"></i>
+                                        <?php echo $article['remise'] > 0 ? "<span style='margin-left:15px;'> Remise de (<span class='text-danger' style='font-weight: 600'>" . $article['remise'] . "%</span>)</span>" : "" ?>
+                                        <?php
+                                        echo $article['promo'] > 0 ? "<br><span class='text-gray remise-caddie'>Remise de -" . formatNumber((float)$article['pu_euro'] - (float)$article['promo']) . " €</span>" : "";
+                                        ?>
+                                        </p>
                                     </div>
                                     <div class="col-md-2">
                                         <input type="text" style="width: 50px;" name="quantiteProduit"
@@ -116,22 +123,24 @@ overflow: hidden;">
                                                id="quantiteProduit-<?php echo $article['ref'] ?>"
                                                value="<?php echo $article['qte'] ?>"/>
                                     </div>
+                                    <?php $article['pu_euro'] = $article['promo'] > 0 ? $article['promo'] : $article['pu_euro']; ?>
                                     <div class="col-md-1"><p
                                                 id="pu_euro-<?php echo $article['ref'] ?>">
                                             <?php if ($article['retour'] == "false"): ?>
-                                                <?php echo $article['remise'] > 0 ? $article['pu_euro'] - ($article['pu_euro'] * ($article['remise'] / 100)) : $article['pu_euro'] ?>
+
+                                                <?php echo $article['remise'] > 0 ? formatNumber($article['pu_euro'] - ($article['pu_euro'] * ($article['remise'] / 100))) : formatNumber($article['pu_euro']) ?>
                                             <?php else: ?>
-                                                <?php echo $article['remise'] > 0 ? -$article['pu_euro'] - ($article['pu_euro'] * ($article['remise'] / 100)) : -$article['pu_euro'] ?>
+                                                <?php echo $article['remise'] > 0 ? -formatNumber($article['pu_euro'] - ($article['pu_euro'] * ($article['remise'] / 100))) : -formatNumber($article['pu_euro']) ?>
                                             <?php endif; ?>
 
                                             €</p></div>
                                     <div class="col-md-1" id="montantEuro-<?php echo $article['ref'] ?>"><p
                                                 class="montantEuro">
                                             <?php if ($article['retour'] == "false"): ?>
-                                            <?php echo $article['remise'] > 0 ? $article['pu_euro'] * $article['qte'] - ($article['pu_euro'] * $article['qte'] * ($article['remise'] / 100)) : $article['pu_euro'] * $article['qte'] ?>
+                                            <?php echo $article['remise'] > 0 ? formatNumber($article['pu_euro'] * $article['qte'] - ($article['pu_euro'] * $article['qte'] * ($article['remise'] / 100))) : formatNumber($article['pu_euro'] * $article['qte']) ?>
                                             €</p>
                                         <?php else: ?>
-                                            <?php echo $article['remise'] > 0 ? -$article['pu_euro'] * $article['qte'] - ($article['pu_euro'] * $article['qte'] * ($article['remise'] / 100)) : -$article['pu_euro'] * $article['qte'] ?>€</p>
+                                            <?php echo $article['remise'] > 0 ? -formatNumber($article['pu_euro'] * $article['qte'] - ($article['pu_euro'] * $article['qte'] * ($article['remise'] / 100))) : -formatNumber($article['pu_euro'] * $article['qte']) ?>€</p>
                                         <?php endif; ?>
                                     </div>
                                     <div class="col-md-2">
@@ -246,7 +255,9 @@ overflow: hidden;">
                         </button>
                     </div>
                     <div class="col-md-6">
-                        <button type="button" class="btn btn-block btn-primary btn-lg btnCaisse" onclick="viderPanier('<?php echo $_SESSION['id_caisse'] ?>')">Vider</button>
+                        <button type="button" class="btn btn-block btn-primary btn-lg btnCaisse"
+                                onclick="viderPanier('<?php echo $_SESSION['id_caisse'] ?>')">Vider
+                        </button>
                     </div>
                 </div>
 
@@ -258,7 +269,9 @@ overflow: hidden;">
                         </button>
                     </div>
                     <div class="col-md-6">
-                        <button type="button" class="btn btn-block btn-primary btn-lg btnCaisse" onclick="totalCaisse('<?php echo $_SESSION['id_caisse'] ?>')">Total caisse</button>
+                        <button type="button" class="btn btn-block btn-primary btn-lg btnCaisse"
+                                onclick="totalCaisse('<?php echo $_SESSION['id_caisse'] ?>')">Total caisse
+                        </button>
                     </div>
                 </div>
 
@@ -283,13 +296,13 @@ overflow: hidden;">
                 <p class="text-center text-paiement" style="font-size: 18px"> Choisir le montant ou payer <span
                             style="font-weight: 600;" id="montantEspece"></span> € en espèce</p>
                 <div class="col-md-12 text-center inputPaiement">
-                    <input type="text" id="inputMontantEspece" onClick="this.select();"
+                    <input type="text" id="inputMontantEspece"
                            style="width:100px;font-size:24px;"/> <span> €</span>
                 </div>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-primary" id="btnPaiementEspece">Confirmer</button>
+                <button type="button" class="btn btn-primary" id="btnPaiementEspece" onclick="paiementEspece()">Confirmer</button>
             </div>
         </div>
 
@@ -311,13 +324,13 @@ overflow: hidden;">
                 <p class="text-center text-paiement" style="font-size: 18px"> Choisir le montant ou payer <span
                             style="font-weight: 600;" id="montantCB"></span> € en cb</p>
                 <div class="col-md-12 text-center inputPaiement">
-                    <input type="text" id="inputMontantCB" onClick="this.select();"
+                    <input type="text" id="inputMontantCB"
                            style="width:100px;font-size:24px;"/> <span> €</span>
                 </div>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-primary" id="btnPaiementCB">Confirmer</button>
+                <button type="button" class="btn btn-primary" id="btnPaiementCB" onclick="paiementCB()">Confirmer</button>
             </div>
         </div>
 
@@ -413,8 +426,7 @@ overflow: hidden;">
                         </button>
                     </div>
                     <div class="col-md-6">
-                        <button type="button" class="btn btn-block btn-dark" id="showRetArticleCatalogue">Article dans
-                            Catalogue
+                        <button type="button" class="btn btn-block btn-dark" id="showRetArticleCatalogue">Article avec codebarre
                         </button>
                     </div>
                 </div>
@@ -453,6 +465,100 @@ overflow: hidden;">
     </div>
 </div>
 
+<!-- MODAL NOUVEAU PRODUIT  -->
+
+<div class="modal fade" id="modal-nouveau-produit" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Ajouter un article</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card card-primary">
+<!--                    <div class="card-header">-->
+<!--                        <h3 class="card-title">Quick Example</h3>-->
+<!--                    </div>-->
+                    <form action="../catalogue.php" id="formAjoutArticle">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Catégorie</label>
+                                <select class="form-control" name="famille">
+                                    <?php
+                                    $sql = "SELECT *  FROM table_client_categorie";
+                                    $categories = $conn->query($sql);
+                                    if($categories->num_rows > 0){
+                                        while($categorie = $categories->fetch_assoc()){
+                                            ?>
+                                            <option value="<?php echo $categorie['id_categorie'] ?>" ><?php echo htmlspecialchars($categorie['nomcategorie'], ENT_QUOTES, 'UTF-8'); ?></option>
+                                            <?php
+                                        }
+                                    }
+
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Nom de l'article</label>
+                                <input type="text" class="form-control" id="ajoutArticle" name="ajoutArticle">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="taux_tva">Taux tva</label>
+                                        <input type="text" class="form-control" onclick="this.select()" value="8.5" id="newTauxTva" name="newTauxTva">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="taux_tva">Quantité</label>
+                                        <input type="number" class="form-control" onclick="this.select()" value="1" id="newQte" name="newQte">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="taux_tva">Prix Unitaire</label>
+                                        <input type="number" class="form-control" value="0.00" onclick="this.select()" id="newPu" name="newPu">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="taux_tva">Prix Promo</label>
+                                        <input type="number" class="form-control" value="0.00" onclick="this.select()" id="newPromo" name="newPromo">
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="newRef" id="newRef" />
+                            <input type="hidden" name="newSession" id="newSession" value="<?php echo $_SESSION['session'] ?>" />
+                            <input type="hidden" name="newIdcaisse" id="newIdcaisse" value="<?php echo $_SESSION['id_caisse'] ?>" />
+<!--                            <div class="form-check">-->
+<!--                                <input type="checkbox" class="form-check-input" id="exampleCheck1">-->
+<!--                                <label class="form-check-label" for="exampleCheck1">Check me out</label>-->
+<!--                            </div>-->
+                        </div>
+
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+<!--                <button type="button" class="btn btn-primary">Confirmer</button>-->
+            </div>
+        </div>
+
+    </div>
+</div>
+
 
 <!--</div>-->
 </body>
@@ -460,10 +566,10 @@ overflow: hidden;">
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>
+<script src="../lib/dist/js/jquery.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
         crossorigin="anonymous"></script>
-<script src="../lib/dist/js/jquery.js"></script>
 <script src="../lib/dist/plugins/moment/moment.min.js"></script>
 <script src="../lib/dist/plugins/daterangepicker/daterangepicker.js"></script>
 <script src="../lib/dist/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
@@ -482,6 +588,8 @@ overflow: hidden;">
     //     total += montant
     // });
     // $('#total').html(total.toFixed(2) + "€")
+
+
 
     function clientSuivant() {
         var actuelSession = '<?php echo isset($_SESSION['session']) ? $_SESSION['session'] : exit("Vous n'êtes pas connecté ! ") ?>';
@@ -558,6 +666,8 @@ overflow: hidden;">
     }
 
 
+
+
     $(document).ready(function () {
 
         $('#searchArticle').keydown(function (e) {
@@ -566,72 +676,93 @@ overflow: hidden;">
                 var ref = $(this).val();
                 var qte = 1
                 var session = '<?php echo $_SESSION['session'] ?>';
-                var id_caisse =  '<?php echo $_SESSION['id_caisse'] ?>';
+                var id_caisse = '<?php echo $_SESSION['id_caisse'] ?>';
                 $.ajax({
                     url: "../searchProduit.php",
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify({"search": ref, "session": session, "id_caisse": id_caisse}),
                     success: function (data) {
+                        console.log(data)
                         var result = JSON.parse(data)
-                        $('#total').html(result.total.toFixed(2) + " €")
-                        $('#searchArticle').val("")
-                        // GENERE PRODUIT
-                        var increment = false;
-                        $("input[name='quantiteProduit']").each(function () {
-                            var id = $(this).attr('id');
-                            var refForm = id.split('-')[1]
-                            if (refForm === result.data.ref) {
-                                increment = true;
-                                return false;
+
+                        if (result.result === 2) {
+                            Toast.fire({
+                                icon: 'error',
+                                title: "Erreur code barre invalide "
+                            })
+                            $('#searchArticle').val('')
+                        } else if (result.result === 1) {
+                            $('#total').html(result.total.toFixed(2) + " €")
+                            $('#searchArticle').val("")
+                            // GENERE PRODUIT
+                            var increment = false;
+                            $("input[name='quantiteProduit']").each(function () {
+                                var id = $(this).attr('id');
+                                var refForm = id.split('-')[1]
+                                if (refForm === result.data.ref) {
+                                    increment = true;
+                                    return false;
+                                }
+                            });
+
+                            var remise = parseInt(result.data.remise) > 0 ? parseFloat(result.data.pu_euro) * parseFloat(result.data.qte) * (parseInt(result.data.remise) / 100) : "0.00€"
+                            var promo = parseFloat(result.data.promo) > 0 ? parseFloat(result.data.pu_euro) - parseFloat(result.data.promo) : 0;
+                            var promo = parseFloat(result.data.promo) > 0 ? "<br><span class='text-gray remise-caddie' >Remise de - <span > " + promo.toFixed(2) + " €</span></span>" : "";
+                            var pu_euro = parseFloat(result.data.promo) > 0 ? parseFloat(result.data.promo) : parseFloat(result.data.pu_euro)
+                            if (increment === false) {
+                                $('#caddie').prepend(
+                                    '<div class="callout callout-info" style="margin:15px 30px 0 30px">\n' +
+                                    '<div class="row">' +
+                                    '<div class="col-md-4">' +
+                                    '<p>' +
+                                    result.data.titre +
+                                    '<i class="fa fa-trash text-red" style="cursor:pointer;" onclick="deleteArticle(this.id,'+session+','+id_caisse+')" id="deleteProduit-' + result.data.ref + '"></i>' +
+                                    promo +
+                                    '</p>' +
+                                    '</div>' +
+                                    '<div class="col-md-2">' +
+                                    '<input type="text" onclick="this.select()" style="width: 50px;" name="quantiteProduit" id="quantiteProduit-' + result.data.ref + '" value="' + result.data.qte + '" />' +
+                                    '</div>' +
+                                    '<div class="col-md-1">' +
+                                    '<p>' +
+                                    pu_euro.toFixed(2) +
+                                    '€</p>' +
+                                    '</div>' +
+                                    '<div class="col-md-1">' +
+                                    '<p>' +
+                                    parseFloat(pu_euro) * parseFloat(result.data.qte) +
+                                    '€</p>' +
+                                    '</div>' +
+                                    '<div class="col-md-2">' +
+                                    '<input type="text" style="width: 50px;" onclick="this.select()" name="remiseProduit" id="remiseProduit-' + result.data.ref + '" value="' + result.data.remise + '" /><span>%</span>' +
+                                    '</div>' +
+                                    '<div class="col-md-2">' +
+                                    '<p>' +
+                                    '<input type="text" style="width: 50px;" onclick="this.select()" name="remiseEuro" id="remiseEuro-' + result.data.ref + '" value="' + result.data.remise_euro + '" /><span>€</span>' +
+                                    '</p>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>'
+                                )
+                            } else {
+                                var newQte = parseInt($('#quantiteProduit-' + result.data.ref).val())
+                                var updatedQTE = parseInt(result.data.qte)
+                                var actualMontantEuro = $('#montantEuro-' + result.data.ref).text()
+                                actualMontantEuro = parseFloat(actualMontantEuro)
+                                var newMontantEuro = parseFloat(pu_euro) * updatedQTE + actualMontantEuro;
+                                $('#montantEuro-' + result.data.ref).html(newMontantEuro.toFixed(2) + "€")
+                                $('#quantiteProduit-' + result.data.ref).val(newQte + updatedQTE)
                             }
-                        });
+                        }else if(result.result === 0){
 
-                        var remise = parseInt(result.data.remise) > 0 ? parseFloat(result.data.pu_euro) * parseFloat(result.data.qte) * (parseInt(result.data.remise) / 100) : "0.00€"
-                        if (increment === false) {
-                            $('#caddie').prepend(
-                                '<div class="callout callout-info" style="margin:15px 30px 0 30px">\n' +
-                                '<div class="row">' +
-                                '<div class="col-md-4">' +
-                                '<p>' +
-                                result.data.titre +
-                                '<i class="fa fa-trash text-red" style="cursor:pointer;" onclick="deleteArticle(this.id,"+session+","+id_caisse+")" id="deleteProduit-' + result.data.ref + '"></i>' +
-                                '</p>' +
-                                '</div>' +
-                                '<div class="col-md-2">' +
-                                '<input type="text" onclick="this.select()" style="width: 50px;" name="quantiteProduit" id="quantiteProduit-' + result.data.ref + '" value="' + result.data.qte + '" />' +
-                                '</div>' +
-                                '<div class="col-md-1">' +
-                                '<p>' +
-                                result.data.pu_euro +
-                                '€</p>' +
-                                '</div>' +
-                                '<div class="col-md-1">' +
-                                '<p>' +
-                                parseFloat(result.data.pu_euro) * parseFloat(result.data.qte) +
-                                '€</p>' +
-                                '</div>' +
-                                '<div class="col-md-2">' +
-                                '<input type="text" style="width: 50px;" onclick="this.select()" name="remiseProduit" id="remiseProduit-' + result.data.ref + '" value="' + result.data.remise + '" /><span>%</span>' +
-                                '</div>' +
-                                '<div class="col-md-2">' +
-                                '<p>' +
-                                '<input type="text" style="width: 50px;" onclick="this.select()" name="remiseEuro" id="remiseEuro-' + result.data.ref + '" value="' + result.data.remise_euro + '" /><span>€</span>' +
-                                '</p>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>'
-                            )
-                        } else {
-                            var newQte = parseInt($('#quantiteProduit-' + result.data.ref).val())
-                            var updatedQTE = parseInt(result.data.qte)
-                            var actualMontantEuro = $('#montantEuro-' + result.data.ref).text()
-                            actualMontantEuro = parseFloat(actualMontantEuro)
-                            var newMontantEuro = parseFloat(result.data.pu_euro) * updatedQTE + actualMontantEuro;
-                            $('#montantEuro-' + result.data.ref).html(newMontantEuro.toFixed(2) + "€")
-                            $('#quantiteProduit-' + result.data.ref).val(newQte + updatedQTE)
+                            if (confirm(result.message) == true) {
+                                $('#modal-nouveau-produit').modal('show')
+                                $('#newRef').val(result.ref)
+                            }
+
+
                         }
-
 
                     }
                 })
@@ -640,14 +771,14 @@ overflow: hidden;">
         });
     });
 
-    function deleteArticle(id,session,id_caisse) {
+    function deleteArticle(id, session, id_caisse) {
         var ref = id.split('-')[1]
 
         $.ajax({
             url: "../panier.php",
             type: "POST",
             contentType: "application/json",
-            data: JSON.stringify({"deleteArticle": ref, "session": session, "id_caisse":id_caisse}),
+            data: JSON.stringify({"deleteArticle": ref, "session": session, "id_caisse": id_caisse}),
             success: function (data) {
 
                 var result = JSON.parse(data)
@@ -680,7 +811,7 @@ overflow: hidden;">
                 url: "../panier.php",
                 type: "POST",
                 contentType: "application/json",
-                data: JSON.stringify({"updateQTE": newQte, "refQte": ref, "session": session , 'id_caisse':id_caisse}),
+                data: JSON.stringify({"updateQTE": newQte, "refQte": ref, "session": session, 'id_caisse': id_caisse}),
                 success: function (data) {
                     window.location.reload()
                     // var qte = data;
@@ -711,7 +842,12 @@ overflow: hidden;">
                     url: "../panier.php",
                     type: "POST",
                     contentType: "application/json",
-                    data: JSON.stringify({"ajoutRemise": newRemise, "refRemise": ref, "session": session,"id_caisse":id_caisse}),
+                    data: JSON.stringify({
+                        "ajoutRemise": newRemise,
+                        "refRemise": ref,
+                        "session": session,
+                        "id_caisse": id_caisse
+                    }),
                     success: function (data) {
                         console.log(data)
                         window.location.reload()
@@ -747,7 +883,12 @@ overflow: hidden;">
                 url: "../panier.php",
                 type: "POST",
                 contentType: "application/json",
-                data: JSON.stringify({"ajoutRemise": newRemise, "refRemise": ref, "session": session, "id_caisse":id_caisse}),
+                data: JSON.stringify({
+                    "ajoutRemise": newRemise,
+                    "refRemise": ref,
+                    "session": session,
+                    "id_caisse": id_caisse
+                }),
                 success: function (data) {
                     console.log(data)
                     window.location.reload()

@@ -164,11 +164,11 @@ $barcode = $_GET['gencode'];
 											}
 											foreach ($parent as $cat) {
 												?>
-												<option class="optionGroup" value="<?php echo $cat['id_categorie']; ?>"><?php echo utf8_encode($cat['nomcategorie']); ?></option>
+												<option class="optionGroup" value="<?php echo $cat['id_categorie']; ?>"><?php echo htmlspecialchars($cat['nomcategorie'], ENT_QUOTES, 'UTF-8'); ?></option>
 												<?php
 												foreach ($child as $subcat) {
 													if ($subcat['id_parent'] == $cat['id_categorie']) {
-														?><option value="<?php echo	$subcat['id'] ?>">&nbsp;&nbsp;&nbsp;&nbsp;<?php echo utf8_encode($subcat['nomcategorie']); ?></option><?php }
+														?><option value="<?php echo	$subcat['id'] ?>">&nbsp;&nbsp;&nbsp;&nbsp;<?php echo  htmlspecialchars($subcat['nomcategorie'], ENT_QUOTES, 'UTF-8');  ?></option><?php }
 													}
 												}
 												?>
@@ -305,7 +305,7 @@ $barcode = $_GET['gencode'];
 													<div class="form-check">
 														<input class="form-check-input position-static" style="border: 1px solid #ced4da;
 													border-radius: 0.25rem;
-													box-shadow: inset 0 0 0 transparent;margin: 0 0 10px 0;" type="radio" name="mode" id="mode2" aria-label="...">
+													box-shadow: inset 0 0 0 transparent;margin: 0 0 10px 0;" type="radio" name="mode" id="mode2" aria-label="..." onclick="this.select()">
 														<label class="form-check-label" for="mode1" style="margin-left: 15px;font-weight: 600;font-size: 17px;">
 															Fixée en € HT:
 															<span style="font-weight:normal;font-size: 14px;">Le calcul € TTC se fait automatiquement avec le code TVA</span>
@@ -316,7 +316,7 @@ $barcode = $_GET['gencode'];
 												<div class="col-lg-4">
 													<input type="text" name="mode_prix_2_achat_ht" id="mode_prix_2_achat_ht" style="border: 1px solid #ced4da;
 													border-radius: 0.25rem;
-													box-shadow: inset 0 0 0 transparent;margin: 0 0 10px 0;" value="0.00"> <span style="font-weight: 600;">€ HT</span>
+													box-shadow: inset 0 0 0 transparent;margin: 0 0 10px 0;" value="0.00"  onclick="this.select()"> <span style="font-weight: 600;">€ HT</span>
 												</div>
 											</div>
 											<hr style="margin-top: 1rem;
@@ -328,7 +328,7 @@ $barcode = $_GET['gencode'];
 													<div class="form-check">
 														<input class="form-check-input position-static" style="border: 1px solid #ced4da;
 													border-radius: 0.25rem;
-													box-shadow: inset 0 0 0 transparent;margin: 0 0 10px 0;" type="radio" name="mode" id="mode3" aria-label="..." checked>
+													box-shadow: inset 0 0 0 transparent;margin: 0 0 10px 0;" type="radio" name="mode" id="mode3" aria-label="..." checked  onclick="this.select()" >
 														<label class="form-check-label" for="mode1" style="margin-left: 15px;font-weight: 600;font-size: 17px;" >
 															Fixée en € TTC:
 														</label>
@@ -336,7 +336,7 @@ $barcode = $_GET['gencode'];
 
 												</div>
 												<div class="col-lg-4">
-													<input type="text" name="mode_prix_3_achat_ht" id="mode_prix_3_achat_ht" value="0.00" > <span style="font-weight: 600;" >€ TTC</span>
+													<input type="text" name="mode_prix_3_achat_ht" id="mode_prix_3_achat_ht" value="0.00"  onclick="this.select()" > <span style="font-weight: 600;" >€ TTC</span>
 												</div>
 											</div>
 										</div>

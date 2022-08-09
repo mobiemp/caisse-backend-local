@@ -1,9 +1,26 @@
+$('#modal-espece').on('shown.bs.modal', function() {
+    $('#inputMontantEspece').select();
+})
+
+$('#modal-cb').on('shown.bs.modal', function() {
+    $('#inputMontantCB').select();
+})
+
+$('#modal-cheque').on('shown.bs.modal', function() {
+    $('#inputMontantCheque').select();
+})
+
+
+
+
 function getTotal() {
     var total = $('#total').text()
     total = total.replace(/\s/g, '');
     total = total.replace('€', '');
     return total;
 }
+
+
 
 function totalCaisse(id_caisse){
     $.ajax({
@@ -91,6 +108,43 @@ function paiementSuite(typeSuite, typePaiement, montantPaiement, resteAPayer) {
 
 }
 
+// AJOUT ARTICLE DEPUIS CAISSE
+$("#formAjoutArticle").submit(function(e) {
+
+    e.preventDefault();
+
+    var form = $(this);
+    var actionUrl = form.attr('action');
+
+    $.ajax({
+        type: "POST",
+        url: actionUrl,
+        data: form.serialize(), // serializes the form's elements.
+        success: function(data)
+        {
+            console.log(data)
+            var result = JSON.parse(data);
+            if(result.response === 1){
+                Toast.fire({
+                    icon: 'success',
+                    title: "Article ajouté avec succès !"
+                })
+                window.setTimeout(function () {
+                    window.location.reload();
+                }, 500);
+            }else{
+                Toast.fire({
+                    icon: 'error',
+                    title: "Une erreur c'est produite...Veuillez recommencer."
+                })
+            }
+        }
+    });
+
+});
+
+
+
 // PAIEMENTS ESPECE
 $('#paiementEspece').click(function () {
     var total = getTotal();
@@ -98,14 +152,17 @@ $('#paiementEspece').click(function () {
     $('#inputMontantEspece').val(total)
     $('#montantEspece').html(total)
 
+
 })
 
-$('#btnPaiementEspece').click(function () {
+
+
+
+function paiementEspece(){
     var montantEspece = parseFloat($('#inputMontantEspece').val());
     var total = parseFloat(getTotal());
 
-    console.log(montantEspece < total, montantEspece == total)
-    if (montantEspece == total) {
+    if (montantEspece == total && montantEspece > 0) {
         $.ajax({
             url: "../tickets/ajoutTicket.php",
             type: "POST",
@@ -155,8 +212,19 @@ $('#btnPaiementEspece').click(function () {
             }
         })
     }
-})
+    else if(total === 0){
+        Toast.fire({
+            icon: 'error',
+            title: "Impossible d'encaisser un panier à 0 €"
+        })
+    }
+}
 
+$("#inputMontantEspece").on('keyup', function (e) {
+    if (e.key === 'Enter' || e.keyCode === 13) {
+       paiementEspece()
+    }
+});
 
 // PAIEMENT CB 
 $('#paiementCB').click(function () {
@@ -167,12 +235,13 @@ $('#paiementCB').click(function () {
 
 })
 
-$('#btnPaiementCB').click(function () {
+
+function paiementCB(){
     var montantCB = $('#inputMontantCB').val();
     var total = parseFloat(getTotal());
 
     console.log(montantCB, total)
-    if (montantCB == total) {
+    if (montantCB == total  && montantCB > 0 ) {
         $.ajax({
             url: "../tickets/ajoutTicket.php",
             type: "POST",
@@ -199,7 +268,19 @@ $('#btnPaiementCB').click(function () {
         $('#modal-cb > .modal-dialog > .modal-content > .modal-body > .inputPaiement')
             .html("<button type='button' class='btn btn-success btnPaiement' onClick='paiementSuite(1,2," + montantCB + "," + resteAPayer + ")' id='btnPaiementSuiteCB'>Espece</button><button type='button' class='btn btn-info btnPaiement' onClick='paiementSuite(2,1," + montantCB + "," + resteAPayer + ")' id='btnPaiementSuiteCB'>CB</button><button type='button' onClick='paiementSuite(3,1," + montantCB + "," + resteAPayer + ")' class='btn btn-warning btnPaiement' id='btnPaiementSuiteCheques'>Cheque</button>");
     }
-})
+    else if(total === 0){
+        Toast.fire({
+            icon: 'error',
+            title: "Impossible d'encaisser un panier à 0 €"
+        })
+    }
+}
+
+$("#inputMontantCB").on('keyup', function (e) {
+    if (e.key === 'Enter' || e.keyCode === 13) {
+        paiementCB()
+    }
+});
 
 
 // PAIEMENT CHEQUES
@@ -211,11 +292,11 @@ $('#paiementCheque').click(function () {
 
 })
 
-$('#btnPaiementCheque').click(function () {
+function paiementCheque(){
     var montantCheque = $('#inputMontantCheque').val();
     var total = getTotal();
 
-    if (montantCheque == total) {
+    if (montantCheque == total  && montantCheque > 0) {
         $.ajax({
             url: "../tickets/ajoutTicket.php",
             type: "POST",
@@ -242,7 +323,13 @@ $('#btnPaiementCheque').click(function () {
         $('#modal-cheque > .modal-dialog > .modal-content > .modal-body > .inputPaiement')
             .html("<button type='button' class='btn btn-success btnPaiement' onClick='paiementSuite(1,2," + montantCheque + "," + resteAPayer + ")' id='btnPaiementSuiteCheque'>Espece</button><button type='button' class='btn btn-info btnPaiement' onClick='paiementSuite(2,1," + montantCheque + "," + resteAPayer + ")' id='btnPaiementSuiteCheque'>CB</button><button type='button' onClick='paiementSuite(3,1," + montantCheque + "," + resteAPayer + ")' class='btn btn-warning btnPaiement' id='btnPaiementSuiteCheques'>Cheque</button>");
     }
-})
+}
+
+$("#inputMontantCheque").on('keyup', function (e) {
+    if (e.key === 'Enter' || e.keyCode === 13) {
+        paiementCheque()
+    }
+});
 
 
 // PRODUIT DIVERS

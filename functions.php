@@ -24,6 +24,10 @@ function regenerePanier($conn,$sql,$jsonfile){
 
 }
 
+function formatNumber($value){
+    return number_format((float)$value, 2, '.', '');
+}
+
 // Method: POST, PUT, GET etc
 // Data: array("param" => "value") ==> index.php?param=value
 

@@ -39,6 +39,7 @@ if (isset($postdata)) {
             $deconsigne = 0;
             $qte = $ligne['qte'];
             $qte_total += $qte;
+            $promo =  $ligne['pu_euro'] - $ligne['promo'];
             $pu_euro = $ligne['pu_euro'];
             $taux_tva = (float)$ligne['taux_tva'];
             $idproduit = $ligne['id_produit'];
@@ -56,7 +57,7 @@ if (isset($postdata)) {
 
             // GENERATION DES COMMANDES
 
-            $commandes[] = (object) array('id_caisse' => $id_caisse, 'pu_euro' => $pu_euro , 'idproduit' => $idproduit, 'qte' => $qte, 'promo' => 0, 'remise' => $remise_euro + $remise_pourcents,  'taux_tva' => $taux_tva, 'famille' => $famille );
+            $commandes[] = (object) array('id_caisse' => $id_caisse, 'pu_euro' => $pu_euro , 'idproduit' => $idproduit, 'qte' => $qte, 'remise' => $remise_euro + $remise_pourcents,  'taux_tva' => $taux_tva, 'famille' => $famille, 'promo' => $promo );
             $prix_total = ($remise_pourcent > 0 ? $pu_euro * $qte * ($remise_pourcent / 100) : ($remise_euro > 0 ? $pu_euro*$qte - $remise_euro : $qte * $pu_euro));
             $prix_total_ticket = number_format((float)$prix_total, 2, '.', '');
             

@@ -42,7 +42,9 @@ if (isset($postdata)) {
             $conn->query($sql);
         }
 
-    } else if (isset($request->articleDivers)) {
+    }
+
+    else if (isset($request->articleDivers)) {
 
         $ref_inconnu = '164750';
         $session = $request->session;
@@ -249,7 +251,7 @@ if (isset($postdata)) {
 
             $json = $tem;
         }
-        echo json_encode($json);
+//        echo json_encode($json);
 
         $fp = fopen('jsons/panier.json', 'w');
         fwrite($fp, json_encode($json));

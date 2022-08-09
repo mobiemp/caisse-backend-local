@@ -12,12 +12,9 @@ Chemin LEFAGUYES La Cocoteraie BAT 3
 
  Qte*PU   Designation     Mttc   TVA
 --------------------------------------
-1*5.90   BOUQUET 12 ROS 5.90€     8.5%
-1*5.00   ACCESSOIRE PHO 5.00€     8.5%
-2*6.00   SAC CADEAU ANS 12.00€    8.5%
-4*10.00  TIGE FLEUR  PC 40.00€    8.5%
+1*10.00  TIGE FLEUR  PC 10.00€    8.5%
 
-62.9€
+10€
       MERCI DE VOTRE VISITE
         ET A TRES BIENTOT
 ------------------------------------------
