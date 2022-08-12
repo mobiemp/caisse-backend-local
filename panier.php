@@ -69,7 +69,7 @@ if (isset($postdata)) {
 
         $sql = "INSERT INTO table_client_panier 
     (`session`,`id_produit`,`ref`, `qte`, `id_caisse`, `pu_euro`, `remise_euro`, `retour`, `famille`, `titre`, `taux_tva`,`date`, `remise`) 
-    VALUES ('" . $session . "','" . $id_produit . "' ,'" . $ref . "', $qte,  $id_caisse ,$pu_euro, $remise_euro, $retour ,$famille,'" . $titre . "',$taux_tva,$date, $remise)";
+    VALUES ( $session,'$id_produit' ,'$ref', $qte,  $id_caisse ,$pu_euro, $remise_euro, 'false' ,$famille,'$titre',$taux_tva,$date, $remise)";
         $insertDivers = $conn->query($sql);
         if ($insertDivers) {
             $conn->query("UPDATE table_counter SET count = count + 1 WHERE type = 'produit_divers'");
@@ -77,7 +77,26 @@ if (isset($postdata)) {
             echo json_encode(array('response' => 1, 'json' => $json));
             die();
         }
-    } else if (isset($request->retourArticle)) {
+    }
+    else if(isset($request->remisePanier)){
+        $remisePanier = $request->remisePanier;
+        $session = $request->session;
+        $id_caisse = $request->idcaisse;
+        $totalPanier = $request->totalPanier;
+        $montant = $totalPanier * ($remisePanier / 100);
+        $titre = "Remise Exceptionnelle de " . $remisePanier . "%";
+        $date = time();
+        $sql = "INSERT INTO table_client_panier 
+    (`session`,`id_produit`,`ref`, `qte`, `id_caisse`, `pu_euro`, `remise_euro`, `retour`, `famille`, `titre`, `taux_tva`,`date`, `remise`) 
+    VALUES ( $session,'remise','remise',1,  $id_caisse ,$montant, 0, 'true' ,0,'$titre',0,$date, 0)";
+        $insertRemisePanier = $conn->query($sql);
+        if ($insertRemisePanier) {
+            $json = regenerePanier($conn, "SELECT * FROM table_client_panier", 'jsons/panier.json');
+            echo json_encode(array('response' => 1));
+            die();
+        }
+    }
+    else if (isset($request->retourArticle)) {
 
         $id_caisse = $request->idcaisse;
         $session = $request->session;
@@ -171,7 +190,8 @@ if (isset($postdata)) {
         $remise = $request->ajoutRemise;
         $ref = $request->refRemise;
         $session = $request->session;
-        $sql = "UPDATE table_client_panier SET remise = $remise WHERE ref = $ref AND session = $session";
+        $id_caisse = $request->id_caisse;
+        $sql = "UPDATE table_client_panier SET remise = $remise WHERE ref = $ref AND session = $session AND id_caisse = $id_caisse";
         $ajoutRemise = $conn->query($sql);
         if ($ajoutRemise) {
             echo $remise;
@@ -179,7 +199,22 @@ if (isset($postdata)) {
             regenerePanier($conn, $sql, "jsons/panier.json");
             die();
         }
-    } else if (isset($request->updateQTE)) {
+    }
+    else if (isset($request->ajoutRemiseEuro)) {
+        $remise_euro = $request->ajoutRemiseEuro;
+        $ref = $request->refRemiseEuro;
+        $session = $request->session;
+        $id_caisse = $request->id_caisse;
+        $sql = "UPDATE table_client_panier SET remise_euro = $remise_euro WHERE ref = $ref AND session = $session AND id_caisse = $id_caisse";
+        $ajoutRemiseEuro = $conn->query($sql);
+        if ($ajoutRemiseEuro) {
+            echo $remise_euro;
+            $sql = "SELECT * FROM table_client_panier";
+            regenerePanier($conn, $sql, "jsons/panier.json");
+            die();
+        }
+    }
+    else if (isset($request->updateQTE)) {
         $qte = $request->updateQTE;
         $ref = $request->refQte;
         $session = $request->session;

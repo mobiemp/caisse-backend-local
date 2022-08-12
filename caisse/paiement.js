@@ -1,3 +1,18 @@
+
+function update() {
+    $.ajax({
+        url: 'synchronysation.php?action=update', //php   
+        type:"GET",       
+        dataType: 'json', //data format   
+        success: function (data) {
+            //on receive of reply
+            console.log(data)
+        }
+    });
+}
+$(document).ready(update); // Call on page load
+setInterval(update, 10000); //every 10 secs
+
 $('#modal-espece').on('shown.bs.modal', function() {
     $('#inputMontantEspece').select();
 })

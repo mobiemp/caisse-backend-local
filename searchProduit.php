@@ -194,18 +194,4 @@ if (isset($postdata)) {
     } else {
         echo json_encode(response("", 2));
     }
-//			else{
-//				$sql = "SELECT * FROM table_client_catalogue WHERE titre LIKE '%$search%' ";
-//				$result = $conn->query($sql);
-//				if($result->num_rows > 0){
-//					while($row[] = $result->fetch_assoc()){
-//						$item = $row;
-//						$json = $item;
-//					}
-//					echo json_encode($json);
-//				}
-//				else{
-//					echo 0;
-//				}
-//			}
 }

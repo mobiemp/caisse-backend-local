@@ -10,6 +10,8 @@ include 'functions.php';
 include 'DBConfig.php';
 
 
+
+
 $HostName = $ip_serveur;
 $DatabaseName = "mobipos";
 $HostUser = "root";

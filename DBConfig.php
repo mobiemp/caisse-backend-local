@@ -6,10 +6,10 @@ $HostName = "localhost";
 $DatabaseName = "mobipos";
  
 //Define your database username here.
-$HostUser = "root";
+$HostUser = "caisse";
  
 //Define your database password here.
-$HostPass = "";
+$HostPass = "za2xY+MM1d_5fy#s";
 
 $conn = new mysqli($HostName, $HostUser, $HostPass, $DatabaseName);
 
