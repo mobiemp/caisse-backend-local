@@ -66,7 +66,7 @@ overflow: hidden;">
                     <div class="col-md-<?php echo isset($_SESSION['session']) && $_SESSION['session'] > 1 ? "8" : "10" ?>">
                         <h2 style="font-size: 25px;" class="card-title">
                             <i class="fas fa-shopping-cart"></i>
-                            CADDIE <?php echo isset($_SESSION['session']) ? $_SESSION['session'] : "" ?>
+                            CADDIES <?php echo isset($_SESSION['session']) ? $_SESSION['session'] : "" ?>
 
                         </h2>
                     </div>
