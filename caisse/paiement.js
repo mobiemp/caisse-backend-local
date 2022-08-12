@@ -1,7 +1,7 @@
 
 function update() {
     $.ajax({
-        url: 'synchronysation.php?action=update', //php   
+        url: '../synchronisation.php?action=update', //php
         type:"GET",       
         dataType: 'json', //data format   
         success: function (data) {
