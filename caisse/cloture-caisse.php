@@ -31,46 +31,46 @@ margin: 0;
                             <hr>
                             <div class="form-group">
                                 <label for="cent2">1 cents</label>
-                                <input type="number" class="form-control" value="0" id="cent-1" name="calcul" placeholder="1 cents">
+                                <input type="number" class="form-control" value="0" id="cent-1" name="calcul" onclick="this.select()" placeholder="1 cents">
                             </div>
 
                             <div class="form-group">
                                 <label for="cent2">2 cents</label>
-                                <input type="number" class="form-control" value="0" id="cent-2" name="calcul" placeholder="2 cents">
+                                <input type="number" class="form-control" value="0" id="cent-2" name="calcul"   onclick="this.select()"placeholder="2 cents">
                             </div>
 
                             <div class="form-group">
                                 <label for="cent5">5 cents</label>
-                                <input type="number" class="form-control" value="0" id="cent-5" name="calcul" placeholder="5 cents">
+                                <input type="number" class="form-control" value="0" id="cent-5" name="calcul"  onclick="this.select()" placeholder="5 cents">
                             </div>
 
                             <div class="form-group">
                                 <label for="cent10">10 cents</label>
-                                <input type="number" class="form-control" value="0" id="cent-10" name="calcul"
-                                       placeholder="10 cents">
+                                <input type="number" class="form-control" value="0" id="cent-10"  onclick="this.select()" name="calcul"
+                                placeholder="10 cents">
                             </div>
 
                             <div class="form-group">
                                 <label for="cent20">20 cents</label>
-                                <input type="number" class="form-control" value="0" id="cent-20" name="calcul"
-                                       placeholder="20 cents">
+                                <input type="number" class="form-control" value="0" id="cent-20"  onclick="this.select()" name="calcul"
+                                placeholder="20 cents">
                             </div>
 
                             <div class="form-group">
                                 <label for="cent50">50 cents</label>
-                                <input type="number" class="form-control" value="0" id="cent-50" name="calcul"
-                                       placeholder="50 cents">
+                                <input type="number" class="form-control" value="0" id="cent-50"  onclick="this.select()" name="calcul"
+                                placeholder="50 cents">
                             </div>
 
 
                             <div class="form-group">
                                 <label for="1euro">1 euro</label>
-                                <input type="number" class="form-control" value="0" id="euro-1" name="calcul" placeholder="1 euro">
+                                <input type="number" class="form-control" value="0" id="euro-1"  onclick="this.select()" name="calcul" placeholder="1 euro">
                             </div>
 
                             <div class="form-group">
                                 <label for="2euro">2 euros</label>
-                                <input type="number" class="form-control" value="0" id="euro-2" name="calcul" placeholder="2 euros">
+                                <input type="number" class="form-control" value="0" id="euro-2"  onclick="this.select()" name="calcul" placeholder="2 euros">
                             </div>
 
                         </div>
@@ -79,45 +79,45 @@ margin: 0;
                             <hr>
                             <div class="form-group">
                                 <label for="5euros">5 euros</label>
-                                <input type="number" class="form-control" value="0" id="euros-5" name="calcul"
-                                       placeholder="5 euros">
+                                <input type="number" class="form-control" value="0" id="euros-5"  onclick="this.select()" name="calcul"
+                                placeholder="5 euros">
                             </div>
 
                             <div class="form-group">
                                 <label for="10euros">10 euros</label>
-                                <input type="number" class="form-control" value="0" id="euros-10" name="calcul"
-                                       placeholder="10 euros">
+                                <input type="number" class="form-control" value="0" id="euros-10"  onclick="this.select()" name="calcul"
+                                placeholder="10 euros">
                             </div>
 
                             <div class="form-group">
                                 <label for="20euros">20 euros</label>
-                                <input type="number" class="form-control" value="0" id="euros-20" name="calcul"
-                                       placeholder="20 euros">
+                                <input type="number" class="form-control" value="0" id="euros-20"   onclick="this.select()"name="calcul"
+                                placeholder="20 euros">
                             </div>
 
                             <div class="form-group">
                                 <label for="50euros">50 euros</label>
-                                <input type="number" class="form-control" value="0" id="euros-50" name="calcul"
-                                       placeholder="50 euros">
+                                <input type="number" class="form-control" value="0" id="euros-50"  onclick="this.select()" name="calcul"
+                                placeholder="50 euros">
                             </div>
 
                             <div class="form-group">
                                 <label for="100euros">100 euros</label>
-                                <input type="number" class="form-control" value="0" id="euros-100" name="calcul"
-                                       placeholder="100 euros">
+                                <input type="number" class="form-control" value="0" id="euros-100"   onclick="this.select()"name="calcul"
+                                placeholder="100 euros">
                             </div>
 
                             <div class="form-group">
                                 <label for="200euros">200 euros</label>
                                 <input type="number" class="form-control" value="0" id="euros-200" name="calcul"
-                                       placeholder="200 euros">
+                                placeholder="200 euros">
                             </div>
 
 
                             <div class="form-group">
                                 <label for="500euros">500 euros</label>
-                                <input type="number" class="form-control" value="0" id="euros-500" name="calcul"
-                                       placeholder="1 euro">
+                                <input type="number" class="form-control" value="0" id="euros-500"   onclick="this.select()"name="calcul"
+                                placeholder="1 euro">
                             </div>
 
 
@@ -141,18 +141,15 @@ margin: 0;
 </div>
 </div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
+
 <script src="../lib/dist/js/jquery.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
-        crossorigin="anonymous"></script>
+<script src="../lib/dist/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../lib/dist/plugins/moment/moment.min.js"></script>
 <script src="../lib/dist/plugins/daterangepicker/daterangepicker.js"></script>
 <script src="../lib/dist/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 <script src="../lib/dist/plugins/sweetalert2/sweetalert2.min.js"></script>
 <script src="../lib/dist/js/adminlte.min.js?v=3.2.0"></script>
+<script src="https://parzibyte.github.io/plugin-ticket-js/Impresora.js"></script>
 <script src="paiement.js"></script>
 <script type="text/javascript">
     // $("#myTextBox").on("input", function() {
@@ -164,9 +161,16 @@ margin: 0;
         $('input[type=number][name=calcul]').each(function() {
             var id = $(this).attr('id')
             var montant = id.split('-')[1]
+            var type = id.split('-')[0]
             var val = $(this).val()
             if(val > 0){
-                sum += val * parseInt(montant)
+                if(type == "cent"){
+                    val = val/100
+                    sum += val * parseInt(montant)
+                }else{
+                    sum += val * parseInt(montant)
+                }
+                
             }
         });
         $('#calculTotal').val(sum)
@@ -190,8 +194,8 @@ margin: 0;
                     'totalCaculCaisse':totalCaculCaisse
                 }),
                 success: function (data) {
-                    // var result = JSON.parse(data)
-                    console.log(data)
+                    var result = JSON.parse(data)
+                    console.log(result.message)
 
                 }
             })

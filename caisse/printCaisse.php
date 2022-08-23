@@ -9,7 +9,10 @@ include '../DBConfig.php';
 include '../functions.php';
 // EN LOCAL
 include '../infos.php';
+require '../vendor/autoload.php';
 
+use Mike42\Escpos\Printer;
+use Mike42\Escpos\PrintConnectors\CupsPrintConnector;
 // SUR CONTABO
 session_start();
 $postdata = file_get_contents('php://input');
@@ -26,21 +29,33 @@ if(isset($postdata)){
             $newKey = $keySplitted[1] . " " . $keySplitted[0];
             $ticket_body .= $newKey  . " : " . $monnaie . "\n";
         }
-        var_dump($ticket_body);
         $date_sortie_ticket = date('d/m/Y H:s:i');
-        $ticket = "
-CAISSE n° $id_caisse
+        $ticket = "CAISSE numero $id_caisse
 DATE : $date_sortie_ticket
 ------------------
 $ticket_body
 
 ------------------
-TOTAL : $totalCaisse €
-        ";
-        var_dump($ticket);die();
+TOTAL : $totalCaisse EUR
+
+";
+
+        try {
+            $connector = null;
+            $connector = new CupsPrintConnector($imprimantes_ticket);
+
+            $printer = new Printer($connector);
+            $printer -> text($ticket);
+            $printer -> cut();
+                
+            
+        $printer->close();
+
+        } catch (Exception $e) {
+            echo json_encode("Impossible d'imprimer sur cette imprimante: " . $e->getMessage() . "\n");
+        }
         file_put_contents('ticket_calcul_caisse.txt', $ticket);
-        echo successResponse('Page imprimé avec succès ! ', 1);
-        die();
+        echo successResponse($ticket, 1);
     }
 }
 
