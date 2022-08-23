@@ -18,7 +18,7 @@ $_SESSION['session'] = 1;
     <link rel="stylesheet" href="../lib/dist/fontawesome-6/css/all.min.css" />
     <link rel="stylesheet" href="../template/style.css"/>
 </head>
-<body style="background-color: rgb(242,242,242);
+<body style="background-color: green;
 margin: 0;
 overflow: hidden;">
 <!--<div class="container">-->
