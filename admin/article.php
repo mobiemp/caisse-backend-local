@@ -214,7 +214,7 @@ if (isset($_GET['gencode'])) {
                                         <select class="form-control" size="0" name="code_tva" id="codetva">
                                             <option value="null">Choisir</option>
                                             <option value="0" <?php echo $article['code_tva'] == 0 ? "selected" : "" ?>>0.0 % Exo</option>
-                                            <option value="1" <?php echo $article['code_tva'] == 1 ? "selected" : "" ?>>1.5 %</option>
+                                            <option value="1" <?php echo $article['code_tva'] == 1 ? "selected" : "" ?>>1.05 %</option>
                                             <option value="2" <?php echo $article['code_tva'] == 2 ? "selected" : "" ?>>2.1 %</option>
                                             <option value="8" <?php echo $article['code_tva'] == 8 ? "selected" : "" ?>>8.5 %</option>
                                         </select>

@@ -1,4 +1,8 @@
 <?php
+
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
 header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Credentials: true");
 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
@@ -39,7 +43,7 @@ if (isset($postdata)) {
             /* Verifie si deja dans panier */
             $session = $request->session;
             $id_caisse = $request->id_caisse;
-            $sql2 = "SELECT ref,session,num FROM table_client_panier WHERE ref='$ref' AND id_caisse = $id_caisse AND session = $session";
+            $sql2 = "SELECT ref,session,num,retour FROM table_client_panier WHERE ref='$ref' AND id_caisse = $id_caisse AND session = $session";
 
             $query2 = mysqli_query($conn, $sql2);
 
@@ -53,7 +57,7 @@ if (isset($postdata)) {
             $tva = $catalogue['code_tva'];
             $taux_tva = ($tva == 8 ? 8.5 : ($tva == 2 ? 2.1 : ($tva == 1 ? 1.05 : 0)));
             $remise = 0;
-//			$qte = 1;
+//          $qte = 1;
             $titre = $catalogue['titre'];
             $date = time();
             $id_produit = $catalogue['id'];
@@ -78,8 +82,14 @@ if (isset($postdata)) {
             } else {
                 if ($session == $checkIfInPanier['session']) {
                     $num = $checkIfInPanier['num'];
-                    $sql = "UPDATE table_client_panier SET qte = qte + $qte WHERE num = $num";
-                    $update = $conn->query($sql);
+                    if($checkIfInPanier['retour'] == 1){
+                        $ajout = $conn->query($sql);
+                        
+                    }else{
+                        $sql = "UPDATE table_client_panier SET qte = qte + $qte WHERE num = $num";
+                        $update = $conn->query($sql);
+                    }
+                    
                 } else {
                     $ajout = $conn->query($sql);
                 }
@@ -99,15 +109,30 @@ if (isset($postdata)) {
         $i = 0;
         if ($result->num_rows > 0) {
             while ($row[] = $result->fetch_assoc()) {
-                if ($result->num_rows > $i) {
-                    $total += $row[$i]['pu_euro'] * $row[$i]['qte'];
-                    $i++;
+               
+                if($row[$i]['promo']>0){
+                    if($row[$i]['retour'] == 1){
+                        $total += $row[$i]['promo'] *  - $row[$i]['qte'];
+                    }else{
+                        $total += $row[$i]['promo']*$row[$i]['qte'];
+                    }
+                    
+                }else{
+                     if($row[$i]['retour'] != 1){
+                        $total += $row[$i]['pu_euro'] * $row[$i]['qte'];
+                    }
+                    else{
+                        
+                        $total += $row[$i]['pu_euro'] * -$row[$i]['qte'];
+                    }
                 }
+                $i++;
                 $tem = $row;
                 $json = $tem;
 
             }
-            echo json_encode(array("total" => round($total, 2), "data" => $data, "result" => 1));
+            echo json_encode(array("total" => $total, "data" => $data, "result" => 1));
+            // echo json_encode(array("total" => round($total, 2), "data" => $data, "result" => 1));
 
             $fp = fopen('jsons/panier.json', 'w');
             fwrite($fp, json_encode($json));
@@ -163,7 +188,7 @@ if (isset($postdata)) {
                     $remise_euro = 0;
 
                     $sql = "INSERT INTO table_client_panier (`session`,`id_produit`,`ref`, `qte`, `id_caisse`, `pu_euro`, `remise_euro`, `retour`, `promo`, `titre`, `taux_tva`,`date`, `remise`, `famille`) 
-						VALUES ('" . $session . "','" . $id_produit . "','" . $ref . "', $qte, $id_caisse , $pu_euro, $remise_euro, 'false',$promo,'" . $titre . "',$taux_tva,$date, $remise,$famille)";
+                        VALUES ('" . $session . "','" . $id_produit . "','" . $ref . "', $qte, $id_caisse , $pu_euro, $remise_euro, 'false',$promo,'" . $titre . "',$taux_tva,$date, $remise,$famille)";
                     $ajout = $conn->query($sql);
                 } else {
                     $sql = "UPDATE table_client_panier SET qte = qte + 1 WHERE ref=" . $ref_1;
@@ -194,4 +219,18 @@ if (isset($postdata)) {
     } else {
         echo json_encode(response("", 2));
     }
+//          else{
+//              $sql = "SELECT * FROM table_client_catalogue WHERE titre LIKE '%$search%' ";
+//              $result = $conn->query($sql);
+//              if($result->num_rows > 0){
+//                  while($row[] = $result->fetch_assoc()){
+//                      $item = $row;
+//                      $json = $item;
+//                  }
+//                  echo json_encode($json);
+//              }
+//              else{
+//                  echo 0;
+//              }
+//          }
 }

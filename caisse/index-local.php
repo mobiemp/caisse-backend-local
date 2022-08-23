@@ -1,8 +1,15 @@
 <?php
+// session_start();
+// if (!isset($_SESSION['loggedin'])) { //if login in session is not set
+//     header("Location: ../login/");
+// }
+
+
 include '../infos.php';
 session_start();
 $_SESSION['id_caisse'] = $id_caisse;
 $_SESSION['session'] = 1;
+// var_dump($_SESSION);
 ?>
 <!DOCTYPE html>
 <html>
@@ -15,10 +22,12 @@ $_SESSION['session'] = 1;
     <link rel="stylesheet" href="../lib/dist/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css"/>
     <link rel="stylesheet" href="../lib/dist/plugins/chart.js/Chart.min.css"/>
     <link rel="stylesheet" href="../lib/dist/css/adminlte.min.css"/>
-    <link rel="stylesheet" href="../lib/dist/fontawesome-6/css/all.min.css" />
+    <link rel="stylesheet" href="../lib/dist/fontawesome-6/css/all.min.css"
+          
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" href="../template/style.css"/>
 </head>
-<body style="background-color: rgb(242,242,242);
+<body style="background-color: rgb(242, 242, 242);
 margin: 0;
 overflow: hidden;">
 <!--<div class="container">-->
@@ -26,13 +35,13 @@ overflow: hidden;">
     <div class="col-md-1" style="background-color: rgb(48, 52, 86);padding-right: 0;position: relative">
         <p class="text-center text-white"
            style="margin-top: 30px;font-size: 22px ;border-bottom: solid;
-            border-color: #fff;
-            border-width: 1px;
-            padding-bottom: 25px;"><?php echo isset($_SESSION['id_caisse']) ? "Caisse n° " . $_SESSION['id_caisse'] : "" ?></p>
+    border-color: #fff;
+    border-width: 1px;
+    padding-bottom: 25px;"><?php echo isset($_SESSION['id_caisse']) ? "Caisse n° " . $_SESSION['id_caisse'] : "" ?></p>
         <p onclick="window.location.href='cloture-caisse.php'" class="text-center text-white" style="margin-top: 50px;font-size: 16px;border-bottom: solid;
-            border-color: #fff;
-            border-width: 1px;
-            padding-bottom: 50px;cursor:pointer;"><i
+    border-color: #fff;
+    border-width: 1px;
+    padding-bottom: 50px;cursor:pointer;"><i
                     class="fas fa-cash-register fa-3x"></i></p>
         <p class="text-center" style="position:absolute;bottom:0;margin: auto;width: 95%">
             <a  class="btn btn-block btn-danger"   href="../login/logout.php?id_caisse=<?php echo $_SESSION['id_caisse'] ?>&userid=<?php echo $_SESSION['id'] ?>"
@@ -59,7 +68,7 @@ overflow: hidden;">
                     <div class="col-md-<?php echo isset($_SESSION['session']) && $_SESSION['session'] > 1 ? "8" : "10" ?>">
                         <h2 style="font-size: 25px;" class="card-title">
                             <i class="fas fa-shopping-cart"></i>
-                            CADDIE <?php echo isset($_SESSION['session']) ? $_SESSION['session'] : "" ?>
+                            CADDIES <?php echo isset($_SESSION['session']) ? $_SESSION['session'] : "" ?>
 
                         </h2>
                     </div>
@@ -152,11 +161,12 @@ overflow: hidden;">
                                             <?php endif; ?>
 
                                             €</p></div>
+                                    <!-- MONTANT EURO  -->
                                     <div class="col-md-1" id="montantEuro-<?php echo $article['ref'] ?>"><p
                                                 class="montantEuro">
                                             <?php if ($article['retour'] == "false"): ?>
 
-                                                <?php
+                                                <?php 
                                                 if ($article['remise'] > 0) {
                                                     echo formatNumber((float)$article['pu_euro'] * $article['qte'] - ((float)$article['pu_euro'] * $article['qte'] * ((float)$article['remise'] / 100)));
                                                 } elseif ($article['remise_euro'] > 0) {
@@ -167,21 +177,12 @@ overflow: hidden;">
                                                     echo formatNumber($article['pu_euro']);
                                                 }
                                                 ?>
-                                                <!-- <?php echo $article['remise'] > 0 ? formatNumber($article['pu_euro'] * $article['qte'] - ($article['pu_euro'] * $article['qte'] * ($article['remise'] / 100))) : formatNumber($article['pu_euro'] * $article['qte']) ?>
-                                        €</p> -->
-                                            <?php else: ?>
-                                            <?php echo $article['remise'] > 0 ? -formatNumber($article['pu_euro'] * $article['qte'] - ($article['pu_euro'] * $article['qte'] * ($article['remise'] / 100))) : -formatNumber($article['pu_euro'] * $article['qte']) ?>€</p>
-                                        <?php endif; ?>
-                                    </div>
-                                    <!-- <div class="col-md-1" id="montantEuro-<?php echo $article['ref'] ?>"><p
-                                                class="montantEuro">
-                                            <?php if ($article['retour'] == "false"): ?>
-                                            <?php echo $article['remise'] > 0 ? formatNumber($article['pu_euro'] * $article['qte'] - ($article['pu_euro'] * $article['qte'] * ($article['remise'] / 100))) : formatNumber($article['pu_euro'] * $article['qte']) ?>
-                                            €</p>
+                                            <!-- <?php echo $article['remise'] > 0 ? formatNumber($article['pu_euro'] * $article['qte'] - ($article['pu_euro'] * $article['qte'] * ($article['remise'] / 100))) : formatNumber($article['pu_euro'] * $article['qte']) ?>
+                                            €</p> -->
                                         <?php else: ?>
                                             <?php echo $article['remise'] > 0 ? -formatNumber($article['pu_euro'] * $article['qte'] - ($article['pu_euro'] * $article['qte'] * ($article['remise'] / 100))) : -formatNumber($article['pu_euro'] * $article['qte']) ?>€</p>
                                         <?php endif; ?>
-                                    </div> -->
+                                    </div>
                                     <div class="col-md-2">
                                         <input type="text" style="width: 50px;" name="remiseProduit"
                                                onclick="this.select()" id="remiseProduit-<?php echo $article['ref'] ?>"
@@ -223,13 +224,13 @@ overflow: hidden;">
             <!--                </div>-->
 
             <div class="card-body" style="border:3px solid #ffffff ;border-radius:10px; background-color: rgb(0, 0, 139);color:#ffffff;
-                    padding: 0 15px !important;">
+                        padding: 0 15px !important;">
                 <p id="total" class="float-right" style="font-size: 50px;font-weight:800;font-family: 'Tahoma' ">
                     <?php
                     include('../DBConfig.php');
                     $session = isset($_SESSION['session']) ? $_SESSION['session'] : "";
                     $id_caisse = isset($_SESSION['id_caisse']) ? $_SESSION['id_caisse'] : "";
-                    $sql = "SELECT pu_euro,qte,remise,ref,remise_euro,retour,promo FROM table_client_panier WHERE session = $session AND id_caisse = $id_caisse";
+                    $sql = "SELECT pu_euro,qte,remise,ref,remise_euro FROM table_client_panier WHERE session = $session AND id_caisse = $id_caisse";
                     $query = $conn->query($sql);
                     $total = 0;
                     if ($query->num_rows > 0) {
@@ -238,37 +239,21 @@ overflow: hidden;">
                             $qte = $row['qte'];
                             $remise = $row['remise'];
                             $remise_euro = $row['remise_euro'];
-                            $promo = $row['promo'];
-
-                            if($promo>0){
-                                if($row['retour'] == 1){
-                                    $total -= $promo;
-                                }else{
-                                    $total += $promo;
-                                }
-
-                            }
-                            elseif($row['ref'] == 'remise'){
+                            if($row['ref'] == 'remise'){
                                 $total -= $pu_euro;
-                            }
-                            else{
-                                if($row['retour'] == 1){
-                                    $total -= $pu_euro *$qte;
+                            }else{
+                                if($remise>0){
+                                    $total +=  $pu_euro * $qte - ($pu_euro * $qte * ($remise / 100));
+                                }
+                                elseif($remise_euro > 0 ){
+                                    $total += $pu_euro * $qte - $remise_euro;
                                 }else{
-                                    if($remise>0){
-                                        $total +=  $pu_euro * $qte - ($pu_euro * $qte * ($remise / 100));
-                                    }
-                                    elseif($remise_euro > 0 ){
-                                        $total += $pu_euro * $qte - $remise_euro;
-                                    }
-                                    else{
-                                        $total += $pu_euro * $qte;
-                                    }
+                                    $total += $pu_euro * $qte;
                                 }
                             }
                         }
 
-                        echo formatNumber($total) . "€";
+                        echo number_format((float)$total, 2, '.', '') . "€";
                     } else {
                         echo "0.00€";
                     }
@@ -285,7 +270,6 @@ overflow: hidden;">
             <!--                        TOTAL A PAYER-->
             <!--                    </h3>-->
             <!--                </div>-->
-
 
             <div class="card-body" style="border: 1px solid steelblue;border-radius: 10px">
                 <div class="row">
@@ -311,7 +295,7 @@ overflow: hidden;">
                             Chèques
                         </button>
                     </div>
-                    <div class="col-md-6">
+                   <div class="col-md-6">
                         <button type="button" class="btn btn-block btn-primary btn-lg btnCaisse" data-toggle="modal"
                                 data-target="#modal-retour" id="retourArticle" >Retour article
                         </button>
@@ -408,7 +392,7 @@ overflow: hidden;">
 
 
 <!-- MODAL ESPECE -->
-<div class="modal fade" id="modal-espece" style="display: none;" aria-hidden="true" >
+<div class="modal fade" id="modal-espece" style="display: none;" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -426,13 +410,12 @@ overflow: hidden;">
                 </div>
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.location.reload()">Annuler</button>
-                <button type="button" class="btn btn-primary"  onclick="paiementEspece()">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" id="btnPaiementEspece" onclick="paiementEspece()">
                     Confirmer
                 </button>
             </div>
         </div>
-
 
     </div>
 </div>
@@ -444,7 +427,7 @@ overflow: hidden;">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Paiement Carte Bancaire</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="window.location.reload()">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
@@ -457,7 +440,7 @@ overflow: hidden;">
                 </div>
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.location.reload()">Annuler</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
                 <button type="button" class="btn btn-primary" id="btnPaiementCB" onclick="paiementCB()">Confirmer
                 </button>
             </div>
@@ -473,7 +456,7 @@ overflow: hidden;">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Paiement Cheque</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="window.location.reload()">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
@@ -486,8 +469,8 @@ overflow: hidden;">
                 </div>
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.location.reload()">Annuler</button>
-                <button type="button" class="btn btn-primary" onclick="paiementCheque()">Confirmer</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" onclick="paiementCheque()" >Confirmer</button>
             </div>
         </div>
 
@@ -527,18 +510,10 @@ overflow: hidden;">
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-primary" id="btnRetDivers"
-                            onclick="retourArticleDivers('<?php echo $_SESSION['session']; ?>','<?php echo $_SESSION['id_caisse'] ?>',event)">
-                        Confirmer
-                    </button>
-                    <button type="button" class="btn btn-primary" id="btnRetCatalogue" style="display: none;"
-                            onclick="retourArticleCatalogue('<?php echo $_SESSION['session'] ?>','<?php echo $_SESSION['id_caisse'] ?>',event)">
-                        Confirmer
-                    </button>
-
-                </div>
+                <button type="button" class="btn btn-primary"
+                        onClick="addProduitDivers('<?php echo $_SESSION['session']; ?>','<?php echo isset($_SESSION['id_caisse']) ? $_SESSION['id_caisse'] : exit("Vous n'êtes pas connecté!") ?>')">
+                    Confirmer
+                </button>
             </div>
         </div>
 
@@ -576,7 +551,7 @@ overflow: hidden;">
                         <p style="padding:10px" class="text-danger" id="erreurRetArticleDivers"></p>
                     </div>
                     <div class="col-md-4">
-                        <input type="text" id="inputRetourPrixDivers" autofocus required onClick="this.select();"
+                        <input type="text" id="inputRetourPrixDivers" required onClick="this.select();"
                                placeholder="Prix" style="width:100px;font-size:24px;"/> <span> €</span>
                     </div>
                     <div class="col-md-4"><input type="text" id="inputRetourQTEDivers" required onClick="this.select();"
@@ -603,7 +578,7 @@ overflow: hidden;">
                         onclick="retourArticleCatalogue('<?php echo $_SESSION['session'] ?>','<?php echo $_SESSION['id_caisse'] ?>',event)">
                     Confirmer
                 </button>
-
+                
             </div>
         </div>
 
@@ -721,19 +696,12 @@ overflow: hidden;">
 <script src="../lib/dist/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 <script src="../lib/dist/plugins/sweetalert2/sweetalert2.min.js"></script>
 <script src="../lib/dist/js/adminlte.min.js?v=3.2.0"></script>
-<script src="paiement.js?random=<?php echo uniqid(); ?>"></script>
+<script src="paiement.js"></script>
 
 <script type="text/javascript">
 
-    // CALCUL DU TOTAL PANIER
-    // var textValues = $('.montantEuro').map((i, el) => el.innerText.trim()).get();
-    // var total = 0
-    // textValues.forEach(function (item, index) {
-    //     var montant = item.split(' ')[0]
-    //     montant = parseFloat(montant)
-    //     total += montant
-    // });
-    // $('#total').html(total.toFixed(2) + "€")
+    
+
     function remisePanier(session,idcaisse){
         var montantRemisePanier = $('#inputMontantRemisePanier').val();
         var totalPanier = $('#total').text()
@@ -767,7 +735,7 @@ overflow: hidden;">
     function clientSuivant() {
         var actuelSession = '<?php echo $_SESSION['session']  ?>';
         var id_caisse = '<?php echo $_SESSION['id_caisse'] ?>';
-
+        console.log(id_caisse)
         $.ajax({
             url: "changeSession.php",
             type: "POST",
@@ -784,7 +752,7 @@ overflow: hidden;">
     }
 
     function clientPrecedent() {
-        var actuelSession = '<?php echo $_SESSION['session']  ?>';
+        var actuelSession = '<?php echo $_SESSION['session'] ?>';
         var id_caisse = '<?php echo $_SESSION['id_caisse'] ?>';
         $.ajax({
             url: "changeSession.php",
@@ -818,9 +786,12 @@ overflow: hidden;">
             success: function (data) {
                 if (data == 1 && rendu == false) {
                     Toast.fire({
-                        icon: 'success',
+                       icon: 'success',
                         title: "Achat validé ! Ticket en cours d'impression..."
                     })
+                    window.setTimeout(function () {
+                        window.location.reload();
+                    }, 1000);
                     $('#caddie').html("")
 
                 } else {
@@ -829,16 +800,15 @@ overflow: hidden;">
                         title: "Achat validé ! Ticket en cours d'impression..."
                     })
 
-
-
                 }
-
+                
             }
         })
     }
 
 
     $(document).ready(function () {
+
 
         $('#searchArticle').keydown(function (e) {
             // $('#print-button').css('display','none');
@@ -847,6 +817,7 @@ overflow: hidden;">
                 var qte = 1
                 var session = '<?php echo $_SESSION['session'] ?>';
                 var id_caisse = '<?php echo $_SESSION['id_caisse'] ?>';
+                console.log(ref)
                 $.ajax({
                     url: "../searchProduit.php",
                     type: "POST",
@@ -864,11 +835,10 @@ overflow: hidden;">
                             $('body').css('background-color','red');
                             $('#searchArticle').val('')
                         } else if (result.result === 1) {
-                            console.log(result.total)
-                            $('body').css('background-color','rgb(242, 242, 242)');
                             $('#total').html(result.total.toFixed(2) + " €")
                             $('#searchArticle').val("")
                             // GENERE PRODUIT
+                            $('body').css('background-color','rgb(242, 242, 242)');
                             var increment = false;
                             $("input[name='quantiteProduit']").each(function () {
                                 var id = $(this).attr('id');
@@ -879,12 +849,11 @@ overflow: hidden;">
                                 }
                             });
 
-
                             var remise = parseInt(result.data.remise) > 0 ? parseFloat(result.data.pu_euro) * parseFloat(result.data.qte) * (parseInt(result.data.remise) / 100) : "0.00€"
                             var promo = parseFloat(result.data.promo) > 0 ? parseFloat(result.data.pu_euro) - parseFloat(result.data.promo) : 0;
                             var promo = parseFloat(result.data.promo) > 0 ? "<br><span class='text-gray remise-caddie' >Remise de - <span > " + promo.toFixed(2) + " €</span></span>" : "";
                             var pu_euro = parseFloat(result.data.promo) > 0 ? parseFloat(result.data.promo) : parseFloat(result.data.pu_euro)
-                            $('#rendu').text("")
+                            
                             if (increment === false) {
                                 $('#caddie').prepend(
                                     '<div class="callout callout-info" style="margin:15px 30px 0 30px">\n' +
@@ -975,7 +944,6 @@ overflow: hidden;">
         })
     }
 
-
     $("input[type=text][name=quantiteProduit]").on("keypress", function (e) {
         if (e.which == 13) {
             var newQte = $(this).val()
@@ -1007,7 +975,7 @@ overflow: hidden;">
     });
 
     $(document).ajaxComplete(function () {
-        $('#searchArticle').focus()
+
         $("input[type=text][name=remiseEuro]").on("keypress", function (e) {
             if (e.which == 13) {
                 var newRemise = $(this).val()
@@ -1120,6 +1088,7 @@ overflow: hidden;">
     })
 
     $("input[type=text][name=remiseEuro]").on("keypress", function (e) {
+        console.log($(this).val())
         if (e.which == 13) {
             var newRemise = $(this).val()
             var id = $(this).attr('id')
@@ -1196,3 +1165,4 @@ overflow: hidden;">
 
 </script>
 </html>
+

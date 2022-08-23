@@ -47,18 +47,18 @@ include('../DBConfig.php');
             <div class="col-md-8 offset-md-2">
                 <h2 style="text-align:center;padding:50px 0;">Calcul de la somme restant en espèce le <?php echo $date ?></h2>
 
-                <div class="card card-danger" id="stats">
+                <!-- <div class="card card-danger" id="stats">
                     <div class="card-header">
                         <h3 style="width:100%;text-align: center;">Encaissé hors de la webcaisse</h3>
                     </div>
                     <div class="card-body">
                         <div class="form-row mb-3 ">
                             <div class="col-4 text-right text-danger"><label for="cb-ca" style="font-size:17px;">Par carte bancaire : </label></div>
-                            <div class="col-6"><input type="number" name="cb-bancaire" value="<?php echo isset($total_cb) ?  - $total_cb : 0 ?>" /><span class="euro">€</span>  </div>
+                            <div class="col-6"><input type="number" name="cb-bancaire" /><span class="euro">€</span>  </div>
                         </div>
                         <div class="form-row" style="margin-bottom: 20px;">
                             <div class="col-4 text-right text-danger"><label for="cb-ca" style="font-size:17px;" >Par chèques : </label></div>
-                            <div class="col-6"><input type="number" name="cheque" value="<?php echo isset($total_cheques) ? - $total_cheques : 0 ?>" /><span class="euro">€</span>  </div>
+                            <div class="col-6"><input type="number" name="cheque" /><span class="euro">€</span>  </div>
                         </div>
 
                         <div class="form-row">
@@ -66,7 +66,7 @@ include('../DBConfig.php');
                             <div class="col-6"><input type="number" name="sous-total"/><span class="euro">€</span></div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="card card-navy" id="stats">
                     <div class="card-header">

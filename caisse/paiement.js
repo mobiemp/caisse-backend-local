@@ -1,17 +1,4 @@
 
-function update() {
-    $.ajax({
-        url: '../synchronisation.php?action=update', //php
-        type:"GET",       
-        dataType: 'json', //data format   
-        success: function (data) {
-            //on receive of reply
-            console.log(data)
-        }
-    });
-}
-$(document).ready(update); // Call on page load
-setInterval(update, 10000); //every 10 secs
 
 $('#modal-espece').on('shown.bs.modal', function() {
     $('#inputMontantEspece').select();
@@ -25,7 +12,20 @@ $('#modal-cheque').on('shown.bs.modal', function() {
     $('#inputMontantCheque').select();
 })
 
+$('#modal-divers').on('shown.bs.modal', function() {
+    $('#inputPrixDivers').focus();
+})
 
+$('#modal-remise').on('shown.bs.modal', function() {
+    $('#inputMontantRemisePanier').focus();
+})
+
+
+$('#modal-retour').on('shown.bs.modal', function() {
+    $('#inputRetourPrixDivers').focus();
+    $('#inputRetourArticleCatalogue').focus();
+    
+})
 
 
 function getTotal() {
@@ -52,6 +52,19 @@ function totalCaisse(id_caisse){
                     icon: 'success',
                     title: "Ticket du total caisse imprimé !"
                 })
+                let nombreImpresora = "lp0";
+                var impresora = new Impresora();
+                impresora.setEmphasize(0)
+                impresora.write(result.ticket)
+                impresora.feed(1)
+                impresora.cut()
+                impresora.imprimirEnImpresora(nombreImpresora)
+                .then(valor => {
+                    console.log("Resultat: " + valor);
+
+
+                });
+
                 // window.setTimeout(function () {
                 //     window.location.reload();
                 // }, 1000);
@@ -66,9 +79,9 @@ function viderPanier(id_caisse){
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify({
-           "videTout":true,
-            "id_caisse":id_caisse
-        }),
+         "videTout":true,
+         "id_caisse":id_caisse
+     }),
         success: function (data) {
             var result = JSON.parse(data)
             if (result.response === 1) {
@@ -115,6 +128,10 @@ function paiementSuite(typeSuite, typePaiement, montantPaiement, resteAPayer) {
         success: function (data) {
             var result = JSON.parse(data)
             if (result.response === 1) {
+                $('#modal-espece').modal('hide')
+                $('#modal-cheque').modal('hide')
+                $('#modal-cb').modal('hide')
+                $("#searchArticle").load(location.href + " #searchArticle");
                 clearPanier(result.session, result.id_caisse)
             }
         }
@@ -171,13 +188,11 @@ $('#paiementEspece').click(function () {
 })
 
 
-
-
 function paiementEspece(){
     var montantEspece = parseFloat($('#inputMontantEspece').val());
     var total = parseFloat(getTotal());
-
-    if (montantEspece == total && montantEspece > 0) {
+    console.log(montantEspece,total)
+    if (montantEspece == total) {
         $.ajax({
             url: "../tickets/ajoutTicket.php",
             type: "POST",
@@ -191,7 +206,9 @@ function paiementEspece(){
             }),
             success: function (data) {
                 var result = JSON.parse(data)
-                if (result.response === 1) {
+                if (result.response == 1) {
+                    $('#modal-espece').modal('hide')
+                    $("#searchArticle").load(location.href + " #searchArticle");
                     clearPanier(result.session, result.id_caisse)
                 }
             }
@@ -202,27 +219,33 @@ function paiementEspece(){
         $('#modal-espece > .modal-dialog > .modal-content > .modal-header > .modal-title').html("SUITE PAIEMENT");
         $('#modal-espece > .modal-dialog > .modal-content > .modal-body > .text-paiement').html("<p>Reste a payer:  <span class='resteAPayer'>" + resteAPayer + " €</span> </br>Choisir une méthode de paiement</p>");
         $('#modal-espece > .modal-dialog > .modal-content > .modal-body > .inputPaiement')
-            .html("<button type='button' class='btn btn-success btnPaiement' onClick='paiementSuite(1,1," + montantEspece + "," + resteAPayer + ")' id='btnPaiementSuiteCB'>Espece</button><button type='button' class='btn btn-info btnPaiement' onClick='paiementSuite(2,1," + montantEspece + "," + resteAPayer + ")' id='btnPaiementSuiteEspece'>CB</button><button type='button' onClick='paiementSuite(3,1," + montantEspece + "," + resteAPayer + ")' class='btn btn-warning btnPaiement' id='btnPaiementSuiteCheques'>Cheque</button>");
+        .html("<button type='button' class='btn btn-success btnPaiement' onClick='paiementSuite(1,1," + montantEspece + "," + resteAPayer + ")' id='btnPaiementSuiteCB'>Espece</button><button type='button' class='btn btn-info btnPaiement' onClick='paiementSuite(2,1," + montantEspece + "," + resteAPayer + ")' id='btnPaiementSuiteEspece'>CB</button><button type='button' onClick='paiementSuite(3,1," + montantEspece + "," + resteAPayer + ")' class='btn btn-warning btnPaiement' id='btnPaiementSuiteCheques'>Cheque</button>");
+        
     } else if (montantEspece > total) {
         var monnaieArendre = montantEspece - total;
-        $('#caddie').html("<h1>RENDU MONNAIE: " + monnaieArendre.toFixed(2) + " €</h1>")
+        // $('#caddie').html("<h1 id='rendu'>RENDU MONNAIE: " + monnaieArendre.toFixed(2) + " €</h1>")
         $.ajax({
             url: "../tickets/ajoutTicket.php",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
-                "espece": monnaieArendre,
+                "espece": montantEspece,
+                "arendre":monnaieArendre,
+                "rendu":"true",
                 "cb": 0,
                 "cheques": 0,
                 "ticket_restaurant": 0,
                 "total": total,
-                "id_caisse": id_caisse,
-                "session": session,
+                
             }),
             success: function (data) {
                 var result = JSON.parse(data)
                 if (result.response === 1) {
-                    clearPanier(session, id_caisse, true)
+                    $('#caddie').html('<h1 class="text-center" id="rendu" style="margin-top:50px;font-weight: 600">RENDU MONNAIE: ' + monnaieArendre.toFixed(2) + ' €</h1>')
+                    $('#total').text('0.00 €')
+                    $('#modal-espece').modal('hide')
+                    $("#searchArticle").load(location.href + " #searchArticle");
+                    clearPanier(result.session, result.id_caisse, true)
                 }
             }
         })
@@ -237,8 +260,8 @@ function paiementEspece(){
 
 $("#inputMontantEspece").on('keyup', function (e) {
     if (e.key === 'Enter' || e.keyCode === 13) {
-       paiementEspece()
-    }
+     paiementEspece()
+ }
 });
 
 // PAIEMENT CB 
@@ -249,6 +272,7 @@ $('#paiementCB').click(function () {
     $('#montantCB').html(total)
 
 })
+
 
 
 function paiementCB(){
@@ -271,6 +295,8 @@ function paiementCB(){
             success: function (data) {
                 var result = JSON.parse(data)
                 if (result.response === 1) {
+                    $('#modal-cb').modal('hide')
+                    $("#searchArticle").load(location.href + " #searchArticle");
                     clearPanier(result.session, result.id_caisse)
                 }
             }
@@ -281,7 +307,7 @@ function paiementCB(){
         $('#modal-cb > .modal-dialog > .modal-content > .modal-header > .modal-title').html("SUITE PAIEMENT");
         $('#modal-cb > .modal-dialog > .modal-content > .modal-body > .text-paiement').html("<p>Reste a payer:  <span class='resteAPayer'>" + resteAPayer + " €</span> </br>Choisir une méthode de paiement</p>");
         $('#modal-cb > .modal-dialog > .modal-content > .modal-body > .inputPaiement')
-            .html("<button type='button' class='btn btn-success btnPaiement' onClick='paiementSuite(1,2," + montantCB + "," + resteAPayer + ")' id='btnPaiementSuiteCB'>Espece</button><button type='button' class='btn btn-info btnPaiement' onClick='paiementSuite(2,1," + montantCB + "," + resteAPayer + ")' id='btnPaiementSuiteCB'>CB</button><button type='button' onClick='paiementSuite(3,1," + montantCB + "," + resteAPayer + ")' class='btn btn-warning btnPaiement' id='btnPaiementSuiteCheques'>Cheque</button>");
+        .html("<button type='button' class='btn btn-success btnPaiement' onClick='paiementSuite(1,2," + montantCB + "," + resteAPayer + ")' id='btnPaiementSuiteCB'>Espece</button><button type='button' class='btn btn-info btnPaiement' onClick='paiementSuite(2,1," + montantCB + "," + resteAPayer + ")' id='btnPaiementSuiteCB'>CB</button><button type='button' onClick='paiementSuite(3,1," + montantCB + "," + resteAPayer + ")' class='btn btn-warning btnPaiement' id='btnPaiementSuiteCheques'>Cheque</button>");
     }
     else if(total === 0){
         Toast.fire({
@@ -326,6 +352,8 @@ function paiementCheque(){
             success: function (data) {
                 var result = JSON.parse(data)
                 if (result.response === 1) {
+                    $('#modal-cheque').modal('hide')
+                    $("#searchArticle").load(location.href + " #searchArticle");
                     clearPanier(result.session, result.id_caisse)
                 }
             }
@@ -336,7 +364,7 @@ function paiementCheque(){
         $('#modal-cheque > .modal-dialog > .modal-content > .modal-header > .modal-title').html("SUITE PAIEMENT");
         $('#modal-cheque > .modal-dialog > .modal-content > .modal-body > .text-paiement').html("<p>Reste a payer:  <span class='resteAPayer'>" + resteAPayer + " €</span> </br>Choisir une méthode de paiement</p>");
         $('#modal-cheque > .modal-dialog > .modal-content > .modal-body > .inputPaiement')
-            .html("<button type='button' class='btn btn-success btnPaiement' onClick='paiementSuite(1,2," + montantCheque + "," + resteAPayer + ")' id='btnPaiementSuiteCheque'>Espece</button><button type='button' class='btn btn-info btnPaiement' onClick='paiementSuite(2,1," + montantCheque + "," + resteAPayer + ")' id='btnPaiementSuiteCheque'>CB</button><button type='button' onClick='paiementSuite(3,1," + montantCheque + "," + resteAPayer + ")' class='btn btn-warning btnPaiement' id='btnPaiementSuiteCheques'>Cheque</button>");
+        .html("<button type='button' class='btn btn-success btnPaiement' onClick='paiementSuite(1,2," + montantCheque + "," + resteAPayer + ")' id='btnPaiementSuiteCheque'>Espece</button><button type='button' class='btn btn-info btnPaiement' onClick='paiementSuite(2,1," + montantCheque + "," + resteAPayer + ")' id='btnPaiementSuiteCheque'>CB</button><button type='button' onClick='paiementSuite(3,1," + montantCheque + "," + resteAPayer + ")' class='btn btn-warning btnPaiement' id='btnPaiementSuiteCheques'>Cheque</button>");
     }
 }
 
@@ -375,16 +403,39 @@ function addProduitDivers(session, idcaisse) {
     })
 }
 
+$("#inputPrixDivers").on('keyup', function (e) {
+    if (e.key === 'Enter' || e.keyCode === 13) {
+        addProduitDivers($('#diversSession').val(), $('#diversIDCAISSE').val())
+    }
+});
+
+$("#inputQTEDivers").on('keyup', function (e) {
+    if (e.key === 'Enter' || e.keyCode === 13) {
+        addProduitDivers($('#diversSession').val(), $('#diversIDCAISSE').val())
+    }
+});
+
+$("#inputTvaDivers").on('keyup', function (e) {
+    if (e.key === 'Enter' || e.keyCode === 13) {
+        addProduitDivers($('#diversSession').val(), $('#diversIDCAISSE').val())
+    }
+});
+
 
 // RETOUR ARTICLE
 $('#showRetArticleCatalogue').click(function () {
     $('#retourArticleCatalogue').show()
+    $('#inputRetourArticleCatalogue').focus();
     $('#retourArticleDivers').hide()
     $('#retourArticleChoix').hide();
+    $('#btnRetCatalogue').show()
+    $('#btnRetDivers').hide()
 
 })
 
+
 function retourArticleCatalogue(session, idcaisse, event) {
+    console
     if (event.which == 13) {
         var ref = event.target.value;
         $.ajax({
@@ -410,8 +461,10 @@ function retourArticleCatalogue(session, idcaisse, event) {
 
 $('#showRetArticleDivers').click(function () {
     $('#retourArticleDivers').show()
+    $('#inputRetourPrixDivers').focus();
     $('#retourArticleCatalogueur').hide()
     $('#retourArticleChoix').hide()
+
 })
 
 function retourArticleDivers(session, idcaisse, event) {

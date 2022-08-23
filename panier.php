@@ -54,12 +54,10 @@ if (isset($postdata)) {
         $row = $counter->fetch_row();
         $count = $row[0];
         $ref = 'articleinconnu' . $ref_inconnu . $count;
-
         $credit = 0;
         $pu_euro = $request->articleDivers;
         $tva = $request->tvaDivers;
         $qte = $request->qteDivers;
-        $taux_tva = ($tva == 8 ? 8.5 : ($tva == 2 ? 2.1 : ($tva == 1 ? 1.05 : 0)));
         $remise = 0;
         $remise_euro = 0;
         $titre = "Divers";
@@ -69,7 +67,7 @@ if (isset($postdata)) {
 
         $sql = "INSERT INTO table_client_panier 
     (`session`,`id_produit`,`ref`, `qte`, `id_caisse`, `pu_euro`, `remise_euro`, `retour`, `famille`, `titre`, `taux_tva`,`date`, `remise`) 
-    VALUES ( $session,'$id_produit' ,'$ref', $qte,  $id_caisse ,$pu_euro, $remise_euro, 'false' ,$famille,'$titre',$taux_tva,$date, $remise)";
+    VALUES ( $session,'$id_produit' ,'$ref', $qte,  $id_caisse ,$pu_euro, $remise_euro, 'false' ,$famille,'$titre',$tva,$date, $remise)";
         $insertDivers = $conn->query($sql);
         if ($insertDivers) {
             $conn->query("UPDATE table_counter SET count = count + 1 WHERE type = 'produit_divers'");
@@ -191,10 +189,11 @@ if (isset($postdata)) {
         $ref = $request->refRemise;
         $session = $request->session;
         $id_caisse = $request->id_caisse;
-        $sql = "UPDATE table_client_panier SET remise = $remise WHERE ref = $ref AND session = $session AND id_caisse = $id_caisse";
+        
+        $sql = "UPDATE table_client_panier SET remise = $remise WHERE ref = '$ref' AND session = $session AND id_caisse = $id_caisse";
+        var_dump($sql);
         $ajoutRemise = $conn->query($sql);
         if ($ajoutRemise) {
-            echo $remise;
             $sql = "SELECT * FROM table_client_panier";
             regenerePanier($conn, $sql, "jsons/panier.json");
             die();
@@ -208,7 +207,6 @@ if (isset($postdata)) {
         $sql = "UPDATE table_client_panier SET remise_euro = $remise_euro WHERE ref = $ref AND session = $session AND id_caisse = $id_caisse";
         $ajoutRemiseEuro = $conn->query($sql);
         if ($ajoutRemiseEuro) {
-            echo $remise_euro;
             $sql = "SELECT * FROM table_client_panier";
             regenerePanier($conn, $sql, "jsons/panier.json");
             die();
