@@ -1,3 +1,24 @@
+function update() {
+    $.ajax({
+        url: '../synchronisation.php?action=update',
+        type:"GET",
+        dataType: 'json', //data format
+        success: function (data) {
+            console.log(data)
+            var result = JSON.parse(data)
+            if(result.response === 1){
+                if(result.message === 1) {
+                    Toast.fire({
+                    icon: 'success',
+                    title: "Mise à jour du serveur  !"
+                })
+                }
+            }
+        }
+    });
+}
+$(document).ready(update); // Call on page load
+setInterval(update, 180000);
 
 
 $('#modal-espece').on('shown.bs.modal', function() {
