@@ -106,7 +106,7 @@ if (isset($postdata)) {
 
             $commandes[] = (object) array('id_caisse' => $id_caisse, 'pu_euro' => $pu_euro , 'idproduit' => $idproduit, 'qte' => $qte, 'remise' => $remise_euro + $remise_pourcents,  'taux_tva' => $taux_tva, 'famille' => $famille, 'promo' => $promo );
             $prix_total = $pu_euro * $qte;
-            $prix_total_ticket = formatNumber(prix_total);
+            $prix_total_ticket = formatNumber($prix_total);
             
 //            $titre = $remise_pourcent > 0 ?  : $titre;
 //            $pu_euro = ($remise_pourcent > 0 ? $pu_euro - $pu_euro *  ($remise_pourcent / 100) : ($remise_euro > 0 ? $pu_euro - $remise_euro :  $pu_euro));
