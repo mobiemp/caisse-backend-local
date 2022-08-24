@@ -30,47 +30,7 @@ th,td {
     /*text-align: center;*/
 }
 
-@media print {
-    .content-wrapper,footer{
-        display: none;
-    }
-    @page { size: auto;  margin: 0mm; }
-    .etiquette {
-        display: block;
-        text-align: center;
-    }
-    svg{
-        position: absolute;
-        bottom: 1%;
-        left:-5px;
-    }
-    .title{
-        position: absolute;
-        top: 0px;
-        left: 5px;
-        margin-top:1px;
-        font-weight: 800;
-        font-size: 22px;
-        text-transform: uppercase;
-        font-family: 'Tahoma';
-        letter-spacing: 0;
-    }
-    .price{
-        position: absolute;
-        top: 20px;
-        left: 18%;
-        margin-top: 0px;
-        margin-left: 0px;
-        font-weight: 800;
-        font-size: 60px;
-    }
-    .price span{
-        font-size: 22px;
-        font-weight: 600;
-    }
 
-
-}
 /*Fin etiquette style*/
 hr {
     margin-top: 1rem;

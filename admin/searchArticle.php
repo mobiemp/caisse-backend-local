@@ -16,6 +16,61 @@ include('../template/header.php');
 
 
 ?>
+<style>
+@media print {
+    .content-wrapper,footer{
+        display: none;
+    }
+    @page { size: auto;  margin: 0mm; }
+    .etiquette {
+        display: block;
+        text-align: center;
+    }
+    svg{
+        position: absolute;
+        bottom: -10px;
+        left:0px;
+    }
+    .title{
+        position: absolute;
+        top: 0px;
+        left: 14px;
+        margin-top:1px;
+        font-weight: 800;
+        font-size: 22px;
+        text-transform: uppercase;
+        font-family: "Tahoma";
+        letter-spacing: -2px;
+    }
+    .price{
+        position: absolute;
+        top: 10px;
+        left: 18%;
+        margin-top: 0px;
+        margin-left: 0px;
+        font-weight: 800;
+        font-size: 60px;
+        letter-spacing: -2px;
+    }
+    .price span{
+        font-size: 25px;
+        font-weight: 600;
+    }
+
+
+}
+</style>
+<!--Etiquette template-->
+<div class="etiquette" style="width: 200px;height: 140px;margin: auto">
+    <div>
+        <p id="titleEtiquette" class="title"><br></p>
+        
+        <p id="prixEntier" class="price"><span id="prixDecimal"></span></p>
+        <svg id="barcode2" jsbarcode-textmargin="1"></svg>
+    </div>
+
+</div>
+<!--Fin etiquette template -->
 <div class="content-wrapper" style="min-height: 823px;">
     <?php include('../template/info-page.php') ?>
     <div class="content">
@@ -117,11 +172,11 @@ include('../template/header.php');
                                                             <td><?php echo $row['prixttc_euro'] ?></td>
                                                             <td><?php echo $row['prixttc_promo_euro'] ?></td>
                                                             <td style="text-align: center;">
-                                                                <a href="#" onclick="imprimeEtiquettes('<?php echo $row['ref'] ?>','<?php echo $row['titre'] ?>',<?php echo $row['prixttc_euro'] ?>);return false;">
-                                                                    <i class="fa fa-print"></i>
-                                                                </a>
+                                                            <a href="#" onclick="imprimeEtiquettes('<?php echo $row['ref'] ?>','<?php echo $row['titre'] ?>',<?php echo $row['prixttc_euro'] ?>,'<?php echo $row['package'] ?>');return false;">
+                                                                <i class="fa fa-print"></i>
+                                                            </a>
 
-                                                            </td>
+                                                        </td>
                                                         </tr>
                                                         <?php
                                                     }

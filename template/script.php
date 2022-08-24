@@ -1,7 +1,7 @@
 
 <script src="../lib/dist/js/jquery.slim.min.js" ></script> 
 <script src="../lib/dist/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="../lib/dist/plugins/js/jquery.js"  ></script>
+<!-- <script src="../lib/dist/js/jquery.js"  ></script> -->
 <script src="../lib/dist/plugins/moment/moment.min.js"></script>
 <script src="../lib/dist/plugins/daterangepicker/daterangepicker.js"></script>
 <script src="../lib/dist/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
@@ -14,7 +14,7 @@
     function imprimeEtiquettes(gencode,titre,prix,colisage){
         JsBarcode("#barcode2", gencode, {
             format:"EAN13",
-            width:1.5,
+            width:1.8,
             height:18,
             displayValue:true,
             fontSize:18,
@@ -27,9 +27,35 @@
         $('#titleEtiquette').html('') ;
         $('#prixEntier').text('');
 
+        if(titre.length<6){
+            $('#titleEtiquette').css('fontSize','26px')
+        }
+        if(titre.length>15 && titre.length<=20){
+            $('#titleEtiquette').css('fontSize','22px')
+        }
+        if(titre.length>20 && titre.length<=28){
+            $('#titleEtiquette').css('fontSize','20px')
+        }
+        if(titre.length>28){
+            $('#titleEtiquette').css('fontSize','18px')
+        }
+        console.log(prix.length)
+        if(prix.length==4){
+            $('.price').css('left','25%')
+        }
+        if(prix.length==5){
+            $('.price').css('left','20%')
+        }
+        if(prix.length==6){
+            $('.price').css('left','18%')
+        }
+
         $('#prixEntier').append(prixEntier).append('<span>.'+prixDecimal+'€</span>');
-        $('#titleEtiquette').append(titre);
-        $('#colisage').append(colisage)
+        if(colisage != ""){
+            $('#titleEtiquette').append(titre).append('<span style="position:absolute;left:0;top:0px;font-size:18px;font-weight:normal;letter-spacing:0"><br>'+colisage+'</span>')
+        }else{
+            $('#titleEtiquette').append(titre);
+        }
         window.print();
     }
 

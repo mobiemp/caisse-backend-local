@@ -22,12 +22,56 @@ include('../codebarre/barcode.php');
 
 
 ?>
+<style>
+@media print {
+    .content-wrapper,footer{
+        display: none;
+    }
+    @page { size: auto;  margin: 0mm; }
+    .etiquette {
+        display: block;
+        text-align: center;
+    }
+    svg{
+        position: absolute;
+        bottom: -10px;
+        left:0px;
+    }
+    .title{
+        position: absolute;
+        top: 0px;
+        left: 14px;
+        margin-top:1px;
+        font-weight: 800;
+        font-size: 22px;
+        text-transform: uppercase;
+        font-family: "Tahoma";
+        letter-spacing: -2px;
+    }
+    .price{
+        position: absolute;
+        top: 10px;
+        left: 18%;
+        margin-top: 0px;
+        margin-left: 0px;
+        font-weight: 800;
+        font-size: 60px;
+        letter-spacing: -2px;
+    }
+    .price span{
+        font-size: 25px;
+        font-weight: 600;
+    }
+
+
+}
+</style>
 
 <!--Etiquette template-->
 <div class="etiquette" style="width: 200px;height: 140px;margin: auto">
 	<div>
-		<p id="titleEtiquette" class="title"></p>
-		<p id="colisage"></p>
+		<p id="titleEtiquette" class="title"><br></p>
+		
 		<p id="prixEntier" class="price"><span id="prixDecimal"></span></p>
 		<svg id="barcode2" jsbarcode-textmargin="1"></svg>
 	</div>

@@ -8,7 +8,7 @@ if(isset($_POST['famille']) && isset($_POST['designation'])){
     $stock_actuel = (int) htmlspecialchars($_POST['stock_actuel']);
     $stock_alerte = (int) htmlspecialchars($_POST['stock_alerte']);
     $codetva = $_POST['codetva'];
-    $colisage = $_POST['colisage']  ;
+    $package = $_POST['package']  ;
     $quantite = (float) htmlspecialchars($_POST['quantite']);
     $unite = $_POST['unite'];
     $prix_variable = $_POST['prix_variable'];
@@ -78,7 +78,7 @@ if(isset($_POST['famille']) && isset($_POST['designation'])){
     `stock_alerte`=$stock_alerte,
     `unite`=$unite,
     `qte_unite`=$quantite,
-    `package`='$colisage',
+    `package`='$package',
     `prix_variable`=$prix_variable,
     `img` = NULL,
     `send_web` = 1 WHERE ref = '$gencode' " ;
@@ -108,15 +108,56 @@ if (isset($_GET['gencode'])) {
         $article = $resultat[0];
         $title = $page = $article['titre'];
     }
-    
-
     $accueil = 'index.php';
     include('../template/header.php');
 
 ?>
+<style type="text/css">
+    @media print {
+    .content-wrapper,footer{
+        display: none;
+    }
+    @page { size: auto;  margin: 0mm; }
+    .etiquette {
+        display: block;
+        text-align: center;
+    }
+    svg{
+        position: absolute;
+        bottom: 1%;
+        left:0px;
+    }
+    .title{
+        position: absolute;
+        top: -15px;
+        left: 16px;
+        margin-top:1px;
+        font-weight: 800;
+        font-size: 22px;
+        text-transform: uppercase;
+        font-family: "Tahoma";
+        letter-spacing: -2px;
+    }
+    .price{
+        position: absolute;
+        top: 10px;
+        left: 18%;
+        margin-top: 0px;
+        margin-left: 0px;
+        font-weight: 800;
+        font-size: 60px;
+        letter-spacing: -2px;
+    }
+    .price span{
+        font-size: 25px;
+        font-weight: 600;
+    }
 
+
+}
+</style>
     <!--Etiquette template-->
-    <div class="etiquette" style="width: 200px;height: 140px;margin: auto">
+    <div class="etiquette" style="width: 200px;height: 140px;margin: auto;">
     <div>
         <p id="titleEtiquette" class="title"></p>
         <p id="colisage"></p>
@@ -147,6 +188,7 @@ if (isset($_GET['gencode'])) {
                                             <?php
                                             $sql = 'SELECT * FROM table_client_categorie ORDER BY id ASC';
                                             $familles = $conn->query($sql);
+
                                             $nbligne = $familles->num_rows;
                                             $parent = [];
                                             $child = [];
@@ -160,16 +202,20 @@ if (isset($_GET['gencode'])) {
                                                 }
                                             }
                                             foreach ($parent as $cat) {
+
                                             ?>
                                                 <option class="optionGroup" value="<?php echo $cat['id_categorie']; ?>" 
                                                 <?php echo $article['cath'] == $cat['id_categorie'] ? "selected" : "" ?>
-                                                ><?php echo utf8_encode($cat['nomcategorie']); ?></option>
+                                                ><?php echo $cat['nomcategorie']; ?></option>
                                                 <?php
                                                 foreach ($child as $subcat) {
                                                     if ($subcat['id_parent'] == $cat['id_categorie']) {
-                                                ?><option value="<?php echo $subcat['id'] ?>" 
-                                                  <?php echo $article['cath'] == $subcat['id'] ? "selected" : "" ?>
-                                                >&nbsp;&nbsp;&nbsp;&nbsp;<?php echo utf8_encode($subcat['nomcategorie']); ?></option><?php }
+                                                ?><option value="<?php echo $subcat['id_categorie'] ?>" 
+                                                  <?php echo $article['cath'] == $subcat['id_categorie'] ? "selected" : "" ?>
+                                                >&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $subcat['nomcategorie']; ?></option>
+
+
+                                            <?php }
                                                                                                                                                                                 }
                                                                                                                                                                             }
                                                                                                                                                                                         ?>
@@ -223,7 +269,7 @@ if (isset($_GET['gencode'])) {
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label form-control-label">Colisage</label>
                                     <div class="col-lg-9">
-                                        <input class="form-control" type="text" name="colisage" id="colisage" value="<?php echo $article['package'] ?>">
+                                        <input class="form-control" type="text" name="colisage" id="package" value="<?php echo $article['package'] ?>">
                                     </div>
                                 </div>
 
@@ -461,7 +507,7 @@ if (isset($_GET['gencode'])) {
 						var stock_actuel = $('#stock_actuel').val();
 						var stock_alerte = $('#stock_alerte').val();
 						var codetva = $('#codetva').val();
-						var colisage = $('#colisage').val() == "" ? null : $('#colisage').val();
+						var package = $('#package').val() == "" ? null : $('#package').val();
 						var quantite = $('#quantite').val();
 						var unite = $('#unite').val();
 						var prix_variable = $('#prix_variable').val();
@@ -483,7 +529,7 @@ if (isset($_GET['gencode'])) {
 							stock_actuel:stock_actuel,
 							stock_alerte:stock_alerte,
 							codetva:codetva,
-							colisage:colisage,
+							package:package,
 							quantite:quantite,
 							unite:unite,
 							prix_variable:prix_variable,
@@ -538,11 +584,11 @@ if (isset($_GET['gencode'])) {
 
                                  var prix = parseFloat(prix);
                                  if($('#prixNormal').is(':checked')){
-                                    imprimeEtiquettes(gencode,designation,prix) 
+                                    imprimeEtiquettes(gencode,designation,prix,package) 
                                  }
                                  else if($('#prixPromo').is(':checked')){
                                     promottc = parseFloat(promottc)
-                                    imprimeEtiquettes(gencode,designation,promottc)     
+                                    imprimeEtiquettes(gencode,designation,promottc,package)     
                                  }
 								 Toast.fire({
 								 	icon: 'success',

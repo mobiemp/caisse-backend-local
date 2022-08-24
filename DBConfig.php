@@ -10,6 +10,7 @@ $HostUser = "caisse";
  
 //Define your database password here.
 $HostPass = "za2xY+MM1d_5fy#s";
+// $HostPass = "";
 
 $conn = new mysqli($HostName, $HostUser, $HostPass, $DatabaseName);
 

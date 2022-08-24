@@ -29,7 +29,7 @@ if(isset($_POST['famille']) && isset($_POST['designation'])){
 	$stock_actuel = (int) htmlspecialchars($_POST['stock_actuel']);
 	$stock_alerte = (int) htmlspecialchars($_POST['stock_alerte']);
 	$codetva = $_POST['codetva'];
-	$colisage =$_POST['colisage']  ;
+	$package =$_POST['package']  ;
 	$quantite = (float) htmlspecialchars($_POST['quantite']);
 	$unite = $_POST['unite'];
 	$prix_variable = $_POST['prix_variable'];
@@ -78,7 +78,7 @@ if(isset($_POST['famille']) && isset($_POST['designation'])){
 	$id_produit = random_strings(12);
 
 	$sql = "INSERT INTO table_client_catalogue(`cath`,`id`,`ref`,`titre`,`prixttc_euro`,`prixttc_promo_euro`,`code_tva`,`promo_debut`,`promo_fin`,`choix_mode_prix`,`mode_prix_1_achat_ht`,`mode_prix_1_marge`,`mode_prix_2_fixe_ht`,`mode_prix_3_fixe_ttc`,`dateajout`,`datemodif`,`accueil`,`stock`,`stock_alerte`,`unite`,`qte_unite`,`package`,`prix_variable`,`img`,`send_web`) 
-	VALUES($famille,'$id_produit','$gencode','$designation',$prix,$promottc,$codetva,'$promo_debut','$promo_fin',$mode,$mode_prix_1_achat,$marge,$mode_prix_2,$mode_prix_3,'$dateajout','1000-01-01 00:00:00',0,$stock_actuel,$stock_alerte,$unite,$quantite,'',$prix_variable,'',1)";
+	VALUES($famille,'$id_produit','$gencode','$designation',$prix,$promottc,$codetva,'$promo_debut','$promo_fin',$mode,$mode_prix_1_achat,$marge,$mode_prix_2,$mode_prix_3,'$dateajout','1000-01-01 00:00:00',0,$stock_actuel,$stock_alerte,$unite,$quantite,'$package',$prix_variable,'',1)";
 	$ajoutArticle = $conn->query($sql);
 	if ($ajoutArticle) {
 	    $sql = "UPDATE table_client_variable SET modif_serveur_ajout_catalogue = '$dateajout' WHERE num = 1";
@@ -115,7 +115,50 @@ $barcode = $_GET['gencode'];
 
 
 ?>
+<style type="text/css">
+    @media print {
+    .content-wrapper,footer{
+        display: none;
+    }
+    @page { size: auto;  margin: 0mm; }
+    .etiquette {
+        display: block;
+        text-align: center;
+    }
+    svg{
+        position: absolute;
+        bottom: 1%;
+        left:0px;
+    }
+    .title{
+        position: absolute;
+        top: -15px;
+        left: 16px;
+        margin-top:1px;
+        font-weight: 800;
+        font-size: 22px;
+        text-transform: uppercase;
+        font-family: "Tahoma";
+        letter-spacing: -2px;
+    }
+    .price{
+        position: absolute;
+        top: 10px;
+        left: 18%;
+        margin-top: 0px;
+        margin-left: 0px;
+        font-weight: 800;
+        font-size: 60px;
+        letter-spacing: -2px;
+    }
+    .price span{
+        font-size: 25px;
+        font-weight: 600;
+    }
 
+
+}
+</style>
 <!--Etiquette template-->
 <div class="etiquette" style="width: 200px;height: 140px;margin: auto">
 	<div>
@@ -222,7 +265,7 @@ $barcode = $_GET['gencode'];
 									<div class="form-group row">
 										<label class="col-lg-3 col-form-label form-control-label">Colisage</label>
 										<div class="col-lg-9">
-											<input class="form-control" type="text" name="colisage" id="colisage" value="">
+											<input class="form-control" type="text" name="package" id="package" value="">
 										</div>
 									</div>
 
@@ -468,7 +511,7 @@ $barcode = $_GET['gencode'];
 						var stock_actuel = $('#stock_actuel').val();
 						var stock_alerte = $('#stock_alerte').val();
 						var codetva = $('#codetva').val();
-						var colisage = $('#colisage').val() == "" ? null : $('#colisage').val();
+						var package = $('#package').val() == "" ? null : $('#package').val();
 						var quantite = $('#quantite').val();
 						var unite = $('#unite').val();
 						var prix_variable = $('#prix_variable').val();
@@ -489,7 +532,7 @@ $barcode = $_GET['gencode'];
 							stock_actuel:stock_actuel,
 							stock_alerte:stock_alerte,
 							codetva:codetva,
-							colisage:colisage,
+							package:package,
 							quantite:quantite,
 							unite:unite,
 							prix_variable:prix_variable,
@@ -543,11 +586,11 @@ $barcode = $_GET['gencode'];
 								 console.log($('input[name=print_prix_normal]:checked'))
 								 console.log($('input[name=print_prix_promo]:checked'))
 								 if($('#prixNormal').is(':checked')){
-									imprimeEtiquettes(gencode,designation,response.prix) 
+									imprimeEtiquettes(gencode,designation,response.prix,package) 
 								 }
                                  else if($('#prixPromo').is(':checked')){
                                  	promottc = parseFloat(promottc)
-                                 	imprimeEtiquettes(gencode,designation,promottc) 	
+                                 	imprimeEtiquettes(gencode,designation,promottc,package) 	
                                  }
 								 Toast.fire({
 								 	icon: 'success',
