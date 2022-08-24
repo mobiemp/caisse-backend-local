@@ -72,7 +72,9 @@ if (isset($postdata)) {
         if ($insertDivers) {
             $conn->query("UPDATE table_counter SET count = count + 1 WHERE type = 'produit_divers'");
             $json = regenerePanier($conn, "SELECT * FROM table_client_panier", 'jsons/panier.json');
-            echo json_encode(array('response' => 1, 'json' => $json));
+            $total = calculTotal($conn,$session,$id_caisse);
+            $data = array('titre' => $titre, 'pu_euro' => $pu_euro, 'remise' => $remise, 'remise_euro' => $remise_euro, 'session' => $session,  'ref' => $ref, "qte" => $qte, "promo" => $prixttc_promo_euro);
+            echo json_encode(array('response' => 1, 'data' => $data,'total' => $total));
             die();
         }
     }

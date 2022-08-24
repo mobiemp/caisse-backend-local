@@ -416,10 +416,48 @@ function addProduitDivers(session, idcaisse) {
         }),
         success: function (data) {
             var result = JSON.parse(data)
+            prixDivers = prixDivers.toString()
+            console.log(prixDivers)
             if (result.response === 1) {
-                window.location.reload()
+                var produit = result.data
+                var total = result.total
+                console.log(total)
+                $('#total').html(total.toFixed(2) + " €")
+                $('#caddie').prepend(
+                    '<div class="callout callout-info" style="margin:15px 30px 0 30px">\n' +
+                    '<div class="row">' +
+                    '<div class="col-md-4">' +
+                    '<p>' +
+                    produit.titre.toUpperCase() +
+                    '<i class="fa fa-trash text-red" style="cursor:pointer;" onclick="deleteArticle(this.id,' + session + ',' + idcaisse + ')" id="deleteProduit-' + produit.ref + '"></i>' +
+                    '</p>' +
+                    '</div>' +
+                    '<div class="col-md-2">' +
+                    '<input type="text" onclick="this.select()" style="width: 50px;" name="quantiteProduit" id="quantiteProduit-' + produit.ref + '" value="' + produit.qte + '" />' +
+                    '</div>' +
+                    '<div class="col-md-1">' +
+                    '<p>' +
+                    parseFloat(prixDivers) +
+                    '€</p>' +
+                    '</div>' +
+                    '<div class="col-md-1">' +
+                    '<p>' +
+                    parseFloat(prixDivers) * parseFloat(produit.qte) +
+                    '€</p>' +
+                    '</div>' +
+                    '<div class="col-md-2">' +
+                    '<input type="text" style="width: 50px;" onclick="this.select()" name="remiseProduit" id="remiseProduit-' + produit.ref + '" value="' + produit.remise + '" /><span>%</span>' +
+                    '</div>' +
+                    '<div class="col-md-2">' +
+                    '<p>' +
+                    '<input type="text" style="width: 50px;" onclick="this.select()" name="remiseEuro" id="remiseEuro-' + produit.ref + '-'+prixDivers+'" value="' + produit.remise_euro + '" /><span>€</span>' +
+                    '</p>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>')
+                    $('#modal-divers').modal('hide')
+                }
             }
-        }
 
     })
 }

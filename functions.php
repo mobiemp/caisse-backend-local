@@ -23,7 +23,35 @@ function regenerePanier($conn,$sql,$jsonfile){
     }
 
 }
+function calculTotal($conn,$session,$id_caisse){
+    $sql = "SELECT * FROM table_client_panier WHERE session = $session AND id_caisse = $id_caisse ORDER BY num DESC";
 
+    $result = $conn->query($sql);
+    $total = 0;
+    if ($result->num_rows > 0) {
+        while ($row= $result->fetch_assoc()) {
+
+            if($row['promo']>0){
+                if($row['retour'] == 1){
+                    $total += $row['promo'] *  - $row['qte'];
+                }else{
+                    $total += $row['promo']*$row['qte'];
+                }
+
+            }else{
+             if($row['retour'] != 1){
+                $total += $row['pu_euro'] * $row['qte'];
+            }
+            else{
+
+                $total += $row['pu_euro'] * -$row['qte'];
+            }
+        }
+    }
+
+}
+return $total;
+}
 function formatNumber($value){
     return number_format((float)$value, 2, '.', '');
 }

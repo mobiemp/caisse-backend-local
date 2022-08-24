@@ -73,7 +73,7 @@ if (isset($postdata)) {
 
                 }
             }
-            $data = array('titre' => $titre, 'pu_euro' => $pu_euro, 'remise' => $remise, 'remise_euro' => $remise_euro, 'session' => $session, 'qte' => 1, 'ref' => $ref, "qte" => $qte, "promo" => $prixttc_promo_euro);
+            $data = array('titre' => $titre, 'pu_euro' => $pu_euro, 'remise' => $remise, 'remise_euro' => $remise_euro, 'session' => $session, 'ref' => $ref, "qte" => $qte, "promo" => $prixttc_promo_euro);
             $sql = "INSERT INTO table_client_panier (`session`,`id_produit`,`ref`, `qte`, `id_caisse`, `pu_euro`, `remise_euro`, `retour`, `promo`, `titre`, `taux_tva`,`date`, `remise`, `famille`) 
             VALUES ($session,'" . $id_produit . "','" . $ref . "', $qte, $id_caisse , $pu_euro, $remise_euro, 'false',$prixttc_promo_euro,'" . $titre . "',$taux_tva,$date, $remise,$famille)";
 
