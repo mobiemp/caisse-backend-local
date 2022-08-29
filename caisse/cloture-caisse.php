@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="../lib/dist/plugins/chart.js/Chart.min.css"/>
     <link rel="stylesheet" href="../lib/dist/css/adminlte.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-          integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" href="../template/style.css"/>
 </head>
 <body style="background-color: rgb(242, 242, 242);
@@ -134,16 +134,20 @@ margin: 0;
                     <button type="button" id="btnPrintCaisse" class="btn btn-block btn-outline-success btn-lg" style="width: 300px;margin:20px auto">IMPRIMER LA PAGE</button>
                     <button type="button" onclick="history.back()" class="btn btn-block btn-outline-danger btn-lg" style="width: 300px;margin:20px auto">Retour</button>
                 </div>
-        </div>
+            </div>
         </form>
     </div>
 
 </div>
 </div>
 </body>
-
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+crossorigin="anonymous"></script>
 <script src="../lib/dist/js/jquery.js"></script>
-<script src="../lib/dist/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+crossorigin="anonymous"></script>
 <script src="../lib/dist/plugins/moment/moment.min.js"></script>
 <script src="../lib/dist/plugins/daterangepicker/daterangepicker.js"></script>
 <script src="../lib/dist/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
@@ -155,6 +159,19 @@ margin: 0;
     // $("#myTextBox").on("input", function() {
     //     alert($(this).val());
     // });
+    let imprimante = "lp2";
+    var imprime = new Impresora()
+    imprime.setEmphasize(0);
+    imprime.setAlign("left")
+    imprime.write('')
+    imprime.cash()
+    imprime.imprimirEnImpresora(imprimante)
+    .then(valor => {
+        console.log("Resultat: " + valor);
+
+
+    });
+
     $("input[type=number][name=calcul]").on("input", function (e) {
 
         var sum = 0
@@ -164,15 +181,14 @@ margin: 0;
             var type = id.split('-')[0]
             var val = $(this).val()
             if(val > 0){
-                if(type == "cent"){
-                    val = val/100
-                    sum += val * parseInt(montant)
-                }else{
-                    sum += val * parseInt(montant)
-                }
-                
+               if(type == "cent"){
+                val = val/100
+                sum += val * parseInt(montant)
+            }else{
+                sum += val * parseInt(montant)
             }
-        });
+        }
+    });
         $('#calculTotal').val(sum)
     })
 
@@ -195,7 +211,22 @@ margin: 0;
                 }),
                 success: function (data) {
                     var result = JSON.parse(data)
-                    console.log(result.message)
+                    if(result.response === 1){
+                        let nombreImpresora = "lp2";
+                        var impresora = new Impresora()
+                        impresora.setEmphasize(0);
+                        impresora.setAlign("left")
+                        impresora.write(result.message)
+                        impresora.feed(2)
+                        impresora.cut()
+                        impresora.imprimirEnImpresora(nombreImpresora)
+                        .then(valor => {
+                            console.log("Resultat: " + valor);
+
+
+                        });
+                    }
+                    
 
                 }
             })

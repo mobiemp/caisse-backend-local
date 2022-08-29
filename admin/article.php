@@ -8,7 +8,7 @@ if(isset($_POST['famille']) && isset($_POST['designation'])){
     $stock_actuel = (int) htmlspecialchars($_POST['stock_actuel']);
     $stock_alerte = (int) htmlspecialchars($_POST['stock_alerte']);
     $codetva = $_POST['codetva'];
-    $package = $_POST['package']  ;
+    $colisage = $_POST['colisage']  ;
     $quantite = (float) htmlspecialchars($_POST['quantite']);
     $unite = $_POST['unite'];
     $prix_variable = $_POST['prix_variable'];
@@ -51,7 +51,7 @@ if(isset($_POST['famille']) && isset($_POST['designation'])){
             exit;
         }
     }
-    
+
 
 
     $id_produit = random_strings(12);
@@ -78,7 +78,7 @@ if(isset($_POST['famille']) && isset($_POST['designation'])){
     `stock_alerte`=$stock_alerte,
     `unite`=$unite,
     `qte_unite`=$quantite,
-    `package`='$package',
+    `package`='$colisage',
     `prix_variable`=$prix_variable,
     `img` = NULL,
     `send_web` = 1 WHERE ref = '$gencode' " ;
@@ -96,7 +96,7 @@ if(isset($_POST['famille']) && isset($_POST['designation'])){
         echo $sql;
         exit;
     }
-    
+
     exit;
 }
 if (isset($_GET['gencode'])) {
@@ -108,64 +108,79 @@ if (isset($_GET['gencode'])) {
         $article = $resultat[0];
         $title = $page = $article['titre'];
     }
+
+
     $accueil = 'index.php';
     include('../template/header.php');
 
-?>
-<style type="text/css">
+    ?>
+   <style>
     @media print {
-    .content-wrapper,footer{
-        display: none;
-    }
-    @page { size: auto;  margin: 0mm; }
-    .etiquette {
-        display: block;
-        text-align: center;
-    }
-    svg{
-        position: absolute;
-        bottom: 1%;
-        left:0px;
-    }
-    .title{
-        position: absolute;
-        top: -15px;
-        left: 16px;
-        margin-top:1px;
-        font-weight: 800;
-        font-size: 22px;
-        text-transform: uppercase;
-        font-family: "Tahoma";
-        letter-spacing: -2px;
-    }
-    .price{
-        position: absolute;
-        top: 10px;
-        left: 18%;
-        margin-top: 0px;
-        margin-left: 0px;
-        font-weight: 800;
-        font-size: 60px;
-        letter-spacing: -2px;
-    }
-    .price span{
-        font-size: 25px;
-        font-weight: 600;
-    }
+        .content-wrapper, footer {
+            display: none;
+        }
+
+        @page {
+            size: auto;
+            margin: 0mm;
+        }
+
+        .etiquette {
+            display: block;
+            text-align: center;
+        }
+
+        svg {
+            position: absolute;
+            bottom: -5px;
+            left: 10px;
+        }
+
+        .title {
+            position: absolute;
+            top: 0px;
+            left: 14px;
+            margin-top: 1px;
+            font-weight: 800;
+            font-size: 22px;
+            text-transform: uppercase;
+            font-family: "Tahoma";
+            letter-spacing: -2px;
+        }
+
+        .price {
+            position: absolute;
+            top: 25%;
+            left:23%;
+            margin-top: 0px;
+            margin-left: 0px;
+            font-weight: 800;
+            font-size: 80px;
+
+            font-family: "PT Sans monospace";
+            letter-spacing: -5px;
+        }
+
+        .price span {
+            font-size: 30px;
+            letter-spacing: -2px;
+            font-weight: 600;
+            font-family: "Open Sans monospace";
+        }
 
 
-}
+    }
 </style>
     <!--Etiquette template-->
-    <div class="etiquette" style="width: 200px;height: 140px;margin: auto;">
-    <div>
-        <p id="titleEtiquette" class="title"></p>
-        <p id="colisage"></p>
-        <p id="prixEntier" class="price"><span id="prixDecimal"></span></p>
-        <svg id="barcode2" jsbarcode-textmargin="1"></svg>
-    </div>
+    <div class="etiquette" style="width: 200px;height: 140px;margin: auto">
+        <div>
+            <p id="titleEtiquette" class="title"></p>
+            <p id="colisage"></p>
+            <p id="prixEntier" class="price"><span id="prixDecimal"></span></p>
+            <svg id="barcode2" jsbarcode-textmargin="1"></svg>
+        </div>
 
-</div>
+    </div>
     <!--Fin etiquette template -->
 
     <div class="content-wrapper" style="min-height: 823px;">
@@ -188,7 +203,6 @@ if (isset($_GET['gencode'])) {
                                             <?php
                                             $sql = 'SELECT * FROM table_client_categorie ORDER BY id ASC';
                                             $familles = $conn->query($sql);
-
                                             $nbligne = $familles->num_rows;
                                             $parent = [];
                                             $child = [];
@@ -202,23 +216,19 @@ if (isset($_GET['gencode'])) {
                                                 }
                                             }
                                             foreach ($parent as $cat) {
-
-                                            ?>
-                                                <option class="optionGroup" value="<?php echo $cat['id_categorie']; ?>" 
-                                                <?php echo $article['cath'] == $cat['id_categorie'] ? "selected" : "" ?>
-                                                ><?php echo $cat['nomcategorie']; ?></option>
+                                                ?>
+                                                <option class="optionGroup" value="<?php echo $cat['id_categorie']; ?>"
+                                                    <?php echo $article['cath'] == $cat['id_categorie'] ? "selected" : "" ?>
+                                                ><?php echo utf8_encode($cat['nomcategorie']); ?></option>
                                                 <?php
                                                 foreach ($child as $subcat) {
                                                     if ($subcat['id_parent'] == $cat['id_categorie']) {
-                                                ?><option value="<?php echo $subcat['id_categorie'] ?>" 
-                                                  <?php echo $article['cath'] == $subcat['id_categorie'] ? "selected" : "" ?>
-                                                >&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $subcat['nomcategorie']; ?></option>
-
-
-                                            <?php }
-                                                                                                                                                                                }
-                                                                                                                                                                            }
-                                                                                                                                                                                        ?>
+                                                        ?><option value="<?php echo $subcat['id'] ?>"
+                                                        <?php echo $article['cath'] == $subcat['id_categorie'] ? "selected" : "" ?>
+                                                        >&nbsp;&nbsp;&nbsp;&nbsp;<?php echo utf8_encode($subcat['nomcategorie']); ?></option><?php }
+                                                }
+                                            }
+                                            ?>
                                         </select>
                                         <!-- <span class="text-muted mt-3" style="cursor:pointer;" onclick="toggleFamille()">Creer une famille</span>
                                         <div class="row famille" id="familleBlock" style="margin: 10px 0 0 2px;display: none;">
@@ -260,7 +270,7 @@ if (isset($_GET['gencode'])) {
                                         <select class="form-control" size="0" name="code_tva" id="codetva">
                                             <option value="null">Choisir</option>
                                             <option value="0" <?php echo $article['code_tva'] == 0 ? "selected" : "" ?>>0.0 % Exo</option>
-                                            <option value="1" <?php echo $article['code_tva'] == 1 ? "selected" : "" ?>>1.05 %</option>
+                                            <option value="1" <?php echo $article['code_tva'] == 1 ? "selected" : "" ?>>1.5 %</option>
                                             <option value="2" <?php echo $article['code_tva'] == 2 ? "selected" : "" ?>>2.1 %</option>
                                             <option value="8" <?php echo $article['code_tva'] == 8 ? "selected" : "" ?>>8.5 %</option>
                                         </select>
@@ -269,7 +279,7 @@ if (isset($_GET['gencode'])) {
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label form-control-label">Colisage</label>
                                     <div class="col-lg-9">
-                                        <input class="form-control" type="text" name="colisage" id="package" value="<?php echo $article['package'] ?>">
+                                        <input class="form-control" type="text" name="package" id="package" value="<?php echo $article['package'] ?>">
                                     </div>
                                 </div>
 
@@ -305,7 +315,7 @@ if (isset($_GET['gencode'])) {
                                 <!-- <div class="form-group row">
 											<label class="col-lg-3 col-form-label form-control-label"></label>
 											<div class="col-lg-9">
-												<input class="btn btn-secondary" type="reset" value="Cancel"> 
+												<input class="btn btn-secondary" type="reset" value="Cancel">
 												<input class="btn btn-primary" type="button" value="Save Changes">
 											</div>
 										</div> -->
@@ -420,29 +430,30 @@ if (isset($_GET['gencode'])) {
                             </div>
                         </div>
 
-<div class="card card-olive">
-                                                <div class="card-header" style="text-align: center;">
-                                                    <h3 class="mb-0">IMPRIMER ETIQUETTE</h3>
-                                                </div>
-                                                    <div class="row" style="padding: 20px 0;margin-left: 20px">
-                                                        <div class="col-lg-6">
-                                                            <input type="checkbox"  name="print_prix_normal" checked value="0.00" id="prixNormal"> Imprimer l'étiquette <span style="font-weight: 600;">prix normal</span>
-                                                            
-                                                        </div>
-                                                        <div class="col-lg-6">
-                                                            <input type="checkbox" name="print_prix_promo" id="prixPromo"> Imprimer l'étiquette <span style="font-weight: 600;">prix promo</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                        <div class="card card-olive">
+                            <div class="card-header" style="text-align: center;">
+                                <h3 class="mb-0">IMPRIMER ETIQUETTE</h3>
+                            </div>
+                            <div class="row" style="padding: 20px 0;margin-left: 20px">
+                                <div class="col-lg-6">
+                                    <input type="checkbox"  name="print_prix_normal" checked value="0.00" id="prixNormal"> Imprimer l'étiquette <span style="font-weight: 600;">prix normal</span>
+
+                                </div>
+                                <div class="col-lg-6">
+                                    <input type="checkbox" name="print_prix_promo" id="prixPromo"> Imprimer l'étiquette <span style="font-weight: 600;">prix promo</span>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="form-groupt row" style="padding: 30px 0;justify-content: space-around;">
-<!--                            <div class="col-md-4">-->
-<!--                                    <i class="fas fa-envelope"></i> Imprimer Étiquettes-->
-<!--                                </a>-->
-<!--                            </div>-->
-                            <div class="col-md-4 mx-auto">
-                                <button type="button" onClick="window.location.href='articles.php';" class="btn btn-danger btn-lg">Annuler</button>
+                            <!--                            <div class="col-md-4">-->
+                            <!--                                    <i class="fas fa-envelope"></i> Imprimer Étiquettes-->
+                            <!--                                </a>-->
+                            <!--                            </div>-->
+                            <div class="col-md-8 mx-auto">
+                                <button type="button" onClick="window.location.href='articles.php';" class="btn btn-dark btn-lg">Annuler</button>
                                 <button type="submit" class="btn btn-primary btn-lg" id="editBtn"  name="save">Enregistrer</button>
+                                <button type="button" class="btn btn-outline-danger btn-lg" onclick="deleteArticleAdmin('<?php echo $article['ref'] ?>','true')"  >Supprimer le produit</button>
                             </div>
                         </div>
                     </form>
@@ -460,193 +471,194 @@ if (isset($_GET['gencode'])) {
     <?php include('../template/footer.php') ?>
     <?php include('../template/script.php') ?>
     <script src="../lib/dist/JsBarcode.ean-upc.min.js"></script>
-<!--    <style type="text/css">-->
-<!--				@media print {-->
-<!--					@page { size: auto;  margin: 0mm; }-->
-<!--					.etiquette {-->
-<!--						display: block;-->
-<!--						size: 30mm 21mm;-->
-<!--						margin: auto;-->
-<!--						padding: 0;-->
-<!--						text-align: center;-->
-<!---->
-<!--					}-->
-<!--					svg{-->
-<!--						position: absolute;-->
-<!--						top: 25%;-->
-<!--						left: 17%;-->
-<!--					}-->
-<!--					h5{-->
-<!--						margin-right: 50px;-->
-<!--						font-weight: 800;-->
-<!--					}-->
-<!--					.margin {-->
-<!--						margin: 50px 0;-->
-<!--					}-->
-<!---->
-<!--					.optionGroup {-->
-<!--						font-weight: bold;-->
-<!--						font-style: italic;-->
-<!--					}-->
-<!---->
-<!--					.optionChild {-->
-<!--						padding-left: 15px;-->
-<!--					}-->
-<!--					#familleBlock {-->
-<!--						display:none;-->
-<!--					}-->
-<!--                }-->
-<!--				</style>-->
-				<script type="text/javascript">
+    <!--    <style type="text/css">-->
+    <!--				@media print {-->
+    <!--					@page { size: auto;  margin: 0mm; }-->
+    <!--					.etiquette {-->
+    <!--						display: block;-->
+    <!--						size: 30mm 21mm;-->
+    <!--						margin: auto;-->
+    <!--						padding: 0;-->
+    <!--						text-align: center;-->
+    <!---->
+    <!--					}-->
+    <!--					svg{-->
+    <!--						position: absolute;-->
+    <!--						top: 25%;-->
+    <!--						left: 17%;-->
+    <!--					}-->
+    <!--					h5{-->
+    <!--						margin-right: 50px;-->
+    <!--						font-weight: 800;-->
+    <!--					}-->
+    <!--					.margin {-->
+    <!--						margin: 50px 0;-->
+    <!--					}-->
+    <!---->
+    <!--					.optionGroup {-->
+    <!--						font-weight: bold;-->
+    <!--						font-style: italic;-->
+    <!--					}-->
+    <!---->
+    <!--					.optionChild {-->
+    <!--						padding-left: 15px;-->
+    <!--					}-->
+    <!--					#familleBlock {-->
+    <!--						display:none;-->
+    <!--					}-->
+    <!--                }-->
+    <!--				</style>-->
+    <script type="text/javascript">
 
-					$("#editBtn").click(function(event) {
-						event.preventDefault();
-						var famille = $('#famille').val();
-						var designation = $('#designation').val();
-						var gencode = $('#gencode').val();
-						var stock_actuel = $('#stock_actuel').val();
-						var stock_alerte = $('#stock_alerte').val();
-						var codetva = $('#codetva').val();
-						var package = $('#package').val() == "" ? null : $('#package').val();
-						var quantite = $('#quantite').val();
-						var unite = $('#unite').val();
-						var prix_variable = $('#prix_variable').val();
-						var mode_choice = $('input[type=radio][name=mode]:checked').attr('id');
-						var marge = $('#mode_prix_1_marge').val();
-						var mode_prix_3 = $('#mode_prix_3_achat_ht').val();
-						var mode_prix_2 = $('#mode_prix_2_achat_ht').val();
-						var mode_prix_1_achat = $('#mode_prix_1_achat_ht').val();
-						var promottc = $('#promottc').val();
-						var promo_debut = $('#promo_debut').val();
-						var promo_fin = $('#promo_fin').val();
-                        var dateajout = '<?php echo $article['dateajout'] ?>'
-						var submitData = {
-							promo_debut:promo_debut,
-							promo_fin:promo_fin,
-							famille:famille,
-							designation:designation,
-							gencode:gencode,
-							stock_actuel:stock_actuel,
-							stock_alerte:stock_alerte,
-							codetva:codetva,
-							package:package,
-							quantite:quantite,
-							unite:unite,
-							prix_variable:prix_variable,
-							marge:marge,
-							mode:mode_choice,
-							mode_prix_3:mode_prix_3,
-							mode_prix_2:mode_prix_2,
-							mode_prix_1_achat:mode_prix_1_achat,
-							promottc:promottc,
-                            dateajout:dateajout
-						};
-						$.ajax({
-                            url:'article.php',
-							type: "POST",
-							data: submitData,
-							success: function(result,statusText,jqXHR) {
-                                console.log(result);
-								var response = JSON.parse(result);
-								
-								if (response.response === 0 && response.element === 'famille') {
-									$('#famille').css('border-color','red');
-									document.getElementById("famille").scrollIntoView(); 
-									$("#famille").addClass("swalDefaultSuccess");
-									Toast.fire({
-										icon: 'error',
-										title: response.message
-									})
-								}
-								else if(response.response === 0 && response.element === 'designation'){
-									$('#designation').css('border-color','red');
-									document.getElementById("designation").scrollIntoView(); 
-									$("#designation").addClass("swalDefaultSuccess");
-									Toast.fire({
-										icon: 'error',
-										title: response.message
-									})
-								}
-								else if(response.response === 3){
-									var type = response.type;
-									$('#'+type).css('border-color','red');
-									document.getElementById(type).scrollIntoView();
-									$('#'+type).addClass('swalDefaultSuccess');
-									Toast.fire({
-										icon: 'error',
-										title: response.message
-									})
-								}
-								else if(response.response === 1){
-								 // $('#'+type).addClass('swalDefaultSuccess');
+        $("#editBtn").click(function(event) {
+            event.preventDefault();
+            var famille = $('#famille').val();
+            var designation = $('#designation').val();
+            var gencode = $('#gencode').val();
+            var stock_actuel = $('#stock_actuel').val();
+            var stock_alerte = $('#stock_alerte').val();
+            var codetva = $('#codetva').val();
+            var colisage = $('#colisage').val() == "" ? null : $('#colisage').val();
+            var quantite = $('#quantite').val();
+            var unite = $('#unite').val();
+            var prix_variable = $('#prix_variable').val();
+            var mode_choice = $('input[type=radio][name=mode]:checked').attr('id');
+            var marge = $('#mode_prix_1_marge').val();
+            var mode_prix_3 = $('#mode_prix_3_achat_ht').val();
+            var mode_prix_2 = $('#mode_prix_2_achat_ht').val();
+            var mode_prix_1_achat = $('#mode_prix_1_achat_ht').val();
+            var promottc = $('#promottc').val();
+            var promo_debut = $('#promo_debut').val();
+            var promo_fin = $('#promo_fin').val();
+            var dateajout = '<?php echo $article['dateajout'] ?>'
+            var submitData = {
+                promo_debut:promo_debut,
+                promo_fin:promo_fin,
+                famille:famille,
+                designation:designation,
+                gencode:gencode,
+                stock_actuel:stock_actuel,
+                stock_alerte:stock_alerte,
+                codetva:codetva,
+                colisage:colisage,
+                quantite:quantite,
+                unite:unite,
+                prix_variable:prix_variable,
+                marge:marge,
+                mode:mode_choice,
+                mode_prix_3:mode_prix_3,
+                mode_prix_2:mode_prix_2,
+                mode_prix_1_achat:mode_prix_1_achat,
+                promottc:promottc,
+                dateajout:dateajout
+            };
+            $.ajax({
+                url:'article.php',
+                type: "POST",
+                data: submitData,
+                success: function(result,statusText,jqXHR) {
+                    console.log(result);
+                    var response = JSON.parse(result);
 
-                                 var prix = (mode_prix_3 > 0 ? mode_prix_3 : (mode_prix_2 > 0 ? mode_prix_2 : (mode_prix_1_achat > 0 ?  mode_prix_1_achat : 0 )))
+                    if (response.response === 0 && response.element === 'famille') {
+                        $('#famille').css('border-color','red');
+                        document.getElementById("famille").scrollIntoView();
+                        $("#famille").addClass("swalDefaultSuccess");
+                        Toast.fire({
+                            icon: 'error',
+                            title: response.message
+                        })
+                    }
+                    else if(response.response === 0 && response.element === 'designation'){
+                        $('#designation').css('border-color','red');
+                        document.getElementById("designation").scrollIntoView();
+                        $("#designation").addClass("swalDefaultSuccess");
+                        Toast.fire({
+                            icon: 'error',
+                            title: response.message
+                        })
+                    }
+                    else if(response.response === 3){
+                        var type = response.type;
+                        $('#'+type).css('border-color','red');
+                        document.getElementById(type).scrollIntoView();
+                        $('#'+type).addClass('swalDefaultSuccess');
+                        Toast.fire({
+                            icon: 'error',
+                            title: response.message
+                        })
+                    }
+                    else if(response.response === 1){
+                        // $('#'+type).addClass('swalDefaultSuccess');
 
-                                 var prix = parseFloat(prix);
-                                 if($('#prixNormal').is(':checked')){
-                                    imprimeEtiquettes(gencode,designation,prix,package) 
-                                 }
-                                 else if($('#prixPromo').is(':checked')){
-                                    promottc = parseFloat(promottc)
-                                    imprimeEtiquettes(gencode,designation,promottc,package)     
-                                 }
-								 Toast.fire({
-								 	icon: 'success',
-								 	title: response.message
-								 })
-								 // window.setTimeout( function(){
-								 // 	window.location = "articles.php";
-								 // }, 1000 );
-								}
-								else {
-									$("#creerFamille").addClass("swalDefaultError");
-									Toast.fire({
-										icon: 'error',
-										title: response.message
-									})
-								}
+                        var prix = (mode_prix_3 > 0 ? mode_prix_3 : (mode_prix_2 > 0 ? mode_prix_2 : (mode_prix_1_achat > 0 ?  mode_prix_1_achat : 0 )))
+                        var package = $('#package').val()
+                        var prix = parseFloat(prix);
+                        if($('#prixNormal').is(':checked')){
+                            imprimeEtiquettes(gencode,designation,prix,package)
+                        }
+                        else if($('#prixPromo').is(':checked')){
+                            promottc = parseFloat(promottc)
+                            imprimeEtiquettes(gencode,designation,promottc,package)
 
-							}
-						});
-					});
+                        }
+                        Toast.fire({
+                            icon: 'success',
+                            title: response.message
+                        })
+                        // window.setTimeout( function(){
+                        // 	window.location = "articles.php";
+                        // }, 1000 );
+                    }
+                    else {
+                        $("#creerFamille").addClass("swalDefaultError");
+                        Toast.fire({
+                            icon: 'error',
+                            title: response.message
+                        })
+                    }
 
-			// JsBarcode("#barcode2", "9780199532179", {
-			// 	format:"EAN13",
-			// 	width:1.3,
-			// 	height:30,
-			// 	displayValue:true,
-			// 	fontSize:13,
-			// });
-			// window.print();
-			function toggleFamille() {
-				var x = document.getElementById("familleBlock");
-				if (x.style.display === "none") {
-					x.style.display = "block";
-				} else {
-					x.style.display = "none";
-				}
-			}
-			var Toast = Swal.mixin({
-				toast: true,
-				position: 'top-end',
-				showConfirmButton: false,
-				timer: 3000
-			});
+                }
+            });
+        });
+
+        // JsBarcode("#barcode2", "9780199532179", {
+        // 	format:"EAN13",
+        // 	width:1.3,
+        // 	height:30,
+        // 	displayValue:true,
+        // 	fontSize:13,
+        // });
+        // window.print();
+        function toggleFamille() {
+            var x = document.getElementById("familleBlock");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+        var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
 
 
 
-			$('.famille input').on('keyup', function() {
-				let empty = false;
+        $('.famille input').on('keyup', function() {
+            let empty = false;
 
-				$('').each(function() {
-					empty = $(this).val().length == 0;
-				});
+            $('').each(function() {
+                empty = $(this).val().length == 0;
+            });
 
-				if (empty)
-					$('.famille button').attr('disabled', 'disabled');
-				else
-					$('.famille button').attr('disabled', false);
-			});
+            if (empty)
+                $('.famille button').attr('disabled', 'disabled');
+            else
+                $('.famille button').attr('disabled', false);
+        });
 
-		</script>
+    </script>
 <?php } ?>

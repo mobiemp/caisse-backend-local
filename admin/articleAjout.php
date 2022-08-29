@@ -115,49 +115,62 @@ $barcode = $_GET['gencode'];
 
 
 ?>
-<style type="text/css">
+<style>
     @media print {
-    .content-wrapper,footer{
-        display: none;
-    }
-    @page { size: auto;  margin: 0mm; }
-    .etiquette {
-        display: block;
-        text-align: center;
-    }
-    svg{
-        position: absolute;
-        bottom: 1%;
-        left:0px;
-    }
-    .title{
-        position: absolute;
-        top: -15px;
-        left: 16px;
-        margin-top:1px;
-        font-weight: 800;
-        font-size: 22px;
-        text-transform: uppercase;
-        font-family: "Tahoma";
-        letter-spacing: -2px;
-    }
-    .price{
-        position: absolute;
-        top: 10px;
-        left: 18%;
-        margin-top: 0px;
-        margin-left: 0px;
-        font-weight: 800;
-        font-size: 60px;
-        letter-spacing: -2px;
-    }
-    .price span{
-        font-size: 25px;
-        font-weight: 600;
-    }
+        .content-wrapper, footer {
+            display: none;
+        }
+
+        @page {
+            size: auto;
+            margin: 0mm;
+        }
+
+        .etiquette {
+            display: block;
+            text-align: center;
+        }
+
+        svg {
+            position: absolute;
+            bottom: -5px;
+            left: 10px;
+        }
+
+        .title {
+            position: absolute;
+            top: 0px;
+            left: 14px;
+            margin-top: 1px;
+            font-weight: 800;
+            font-size: 22px;
+            text-transform: uppercase;
+            font-family: "Tahoma";
+            letter-spacing: -2px;
+        }
+
+        .price {
+            position: absolute;
+            top: 25%;
+            left:23%;
+            margin-top: 0px;
+            margin-left: 0px;
+            font-weight: 800;
+            font-size: 80px;
+
+            font-family: "PT Sans monospace";
+            letter-spacing: -5px;
+        }
+
+        .price span {
+            font-size: 30px;
+            letter-spacing: -2px;
+            font-weight: 600;
+            font-family: "Open Sans monospace";
+        }
 
 
-}
+    }
 </style>
 <!--Etiquette template-->
 <div class="etiquette" style="width: 200px;height: 140px;margin: auto">

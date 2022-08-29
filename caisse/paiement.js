@@ -1,24 +1,3 @@
-function update() {
-    $.ajax({
-        url: '../synchronisation.php?action=update',
-        type:"GET",
-        dataType: 'json', //data format
-        success: function (data) {
-            console.log(data)
-            var result = JSON.parse(data)
-            if(result.response === 1){
-                if(result.message === 1) {
-                    Toast.fire({
-                    icon: 'success',
-                    title: "Mise à jour du serveur  !"
-                })
-                }
-            }
-        }
-    });
-}
-$(document).ready(update); // Call on page load
-setInterval(update, 180000);
 
 
 $('#modal-espece').on('shown.bs.modal', function() {
@@ -41,6 +20,11 @@ $('#modal-remise').on('shown.bs.modal', function() {
     $('#inputMontantRemisePanier').focus();
 })
 
+$('#modal-facture').on('shown.bs.modal', function() {
+    $('#inputNumeroTicket').focus();
+})
+
+
 
 $('#modal-retour').on('shown.bs.modal', function() {
     $('#inputRetourPrixDivers').focus();
@@ -56,6 +40,41 @@ function getTotal() {
     return total;
 }
 
+function imprimeFacture(){
+    var numero_ticket = $('#inputNumeroTicket').val()
+    var client = $('#inputNomClient').val()
+    if(numero_ticket == "" && client == ""){
+        Toast.fire({
+            icon: 'error',
+            title: "Veuillez remplir les champs avant d'imprimer la facture"
+        })
+
+    }else{
+     $.ajax({
+        url: 'facture.php',
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+         numero_ticket: numero_ticket,
+         client:client,
+
+     }),
+        success: function (data) {
+        	console.log(data)
+            var result = JSON.parse(data)
+            if (result.response === 1) {
+                    imprimeTicket(result.ticket,result.ticket_part2,result.arendre,result.footer,parseFloat(result.espece),parseFloat(result.cb),parseFloat(result.cheque),result.ticket_pied,false,true,result.header,client)
+                    
+                    $('#modal-facture').modal('hide')
+                    $('#inputNumeroTicket').val('')
+                    $('#inputNomClient').val('')
+            }
+        }
+
+    })
+ }
+
+}
 
 
 function totalCaisse(id_caisse){
@@ -73,12 +92,13 @@ function totalCaisse(id_caisse){
                     icon: 'success',
                     title: "Ticket du total caisse imprimé !"
                 })
-                let nombreImpresora = "lp0";
+                let nombreImpresora = "lp2";
                 var impresora = new Impresora();
                 impresora.setEmphasize(0)
                 impresora.write(result.ticket)
                 impresora.feed(1)
                 impresora.cut()
+                impresora.cash()
                 impresora.imprimirEnImpresora(nombreImpresora)
                 .then(valor => {
                     console.log("Resultat: " + valor);
@@ -100,9 +120,9 @@ function viderPanier(id_caisse){
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify({
-         "videTout":true,
-         "id_caisse":id_caisse
-     }),
+           "videTout":true,
+           "id_caisse":id_caisse
+       }),
         success: function (data) {
             var result = JSON.parse(data)
             if (result.response === 1) {
@@ -147,12 +167,20 @@ function paiementSuite(typeSuite, typePaiement, montantPaiement, resteAPayer) {
             "total": total,
         }),
         success: function (data) {
+            console.log(data)
             var result = JSON.parse(data)
             if (result.response === 1) {
+                if(espece>0){
+
+                    imprimeTicket(result.ticket,result.ticket_part2,result.arendre,result.footer,result.espece,result.cb,result.cheque,result.ticket_pied,true)
+                }else{
+                    imprimeTicket(result.ticket,result.ticket_part2,result.arendre,result.footer,result.espece,result.cb,result.cheque,result.ticket_pied)
+                }
                 $('#modal-espece').modal('hide')
                 $('#modal-cheque').modal('hide')
                 $('#modal-cb').modal('hide')
                 $("#searchArticle").load(location.href + " #searchArticle");
+                $('#total').html('0.00 €')
                 clearPanier(result.session, result.id_caisse)
             }
         }
@@ -208,6 +236,94 @@ $('#paiementEspece').click(function () {
 
 })
 
+$('#clotureCaisse').click(function(){
+    window.location.href = "cloture-caisse.php";
+
+})
+
+
+function imprimeTicket(ticket,ticket_part2,arendre,footer,espece,cb,cheque,ticket_pied,cash=false,facture=false,ticketnum="",client=""){
+    Impresora.getImpresoras()
+    .then(listaDeImpresoras => {
+
+        var impresora = new Impresora();
+        let imprimante = "";
+        for (let i=0; i<listaDeImpresoras.length; i++) {
+            console.log(listaDeImpresoras[i])
+            if(listaDeImpresoras[i].search('EPSON TM') >= 0 || listaDeImpresoras[i].search('lp') >= 0 ){
+                imprimante = listaDeImpresoras[i]
+            }
+        }
+        console.log(typeof(cb))
+        arendre = parseFloat(arendre)
+        impresora.setEmphasize(0);
+        impresora.setAlign("center")
+        if(facture){
+            impresora.write('--------------------------------------')
+            impresora.write('\n')
+            impresora.write(ticketnum)
+            impresora.write('\n')
+            impresora.write('POUR '+client)
+            impresora.write('\n')
+            impresora.write('--------------------------------------')
+            impresora.write('\n')
+        }
+        impresora.write(ticket)
+        impresora.write("\n")
+        impresora.setAlign('left')
+        impresora.write(ticket_part2)
+        impresora.setAlign("center")
+        impresora.write('--------------------------------------')
+        impresora.write("\n")
+        
+        impresora.feed(1)
+        impresora.setAlign('left')
+        impresora.write('  Details du paiement:')
+        if(espece>0){
+            impresora.write("\n")
+            impresora.write("    > "+espece.toFixed(2)+" EUR EN ESPECES")
+        }
+        if(arendre>0){
+            impresora.write('\n')
+            impresora.write("    > MONNAIE RENDU "+arendre.toFixed(2)+" EUR")
+        }
+        if(cb>0){
+            impresora.write('\n')
+            impresora.write("    > "+cb.toFixed(2)+" EUR EN CB")
+        }
+        if(cheque>0){
+            impresora.write('\n')
+            impresora.write("    > "+cheque.toFixed(2)+" EUR EN CHEQUE")
+        }
+
+        impresora.write("\n")
+        impresora.feed(1)
+        impresora.setAlign("center")
+        impresora.write(ticket_pied)
+        impresora.write('\n')
+        impresora.feed(1)
+        impresora.write('======================================')
+        impresora.write('\n')
+        impresora.write(footer)
+        impresora.feed(1)
+    // imprimeTicket(ticket,num,ttc,total_ht,total_tva8,true)
+    impresora.cut();
+    // impresora.cutPartial();
+    if(cash){
+        impresora.cash()
+    }
+    impresora.imprimirEnImpresora(imprimante)
+    .then(valor => {
+        console.log("Resultat: " + valor);
+        
+
+    });
+});
+    
+    
+
+}
+
 
 function paiementEspece(){
     var montantEspece = parseFloat($('#inputMontantEspece').val());
@@ -228,7 +344,9 @@ function paiementEspece(){
             success: function (data) {
                 var result = JSON.parse(data)
                 if (result.response == 1) {
+                    imprimeTicket(result.ticket,result.ticket_part2,result.arendre,result.footer,result.espece,result.cb,result.cheque,result.ticket_pied,true)
                     $('#modal-espece').modal('hide')
+                    $('#total').html('0.00 €')
                     $("#searchArticle").load(location.href + " #searchArticle");
                     clearPanier(result.session, result.id_caisse)
                 }
@@ -262,6 +380,7 @@ function paiementEspece(){
             success: function (data) {
                 var result = JSON.parse(data)
                 if (result.response === 1) {
+                    imprimeTicket(result.ticket,result.ticket_part2,result.arendre,result.footer,result.espece,result.cb,result.cheque,result.ticket_pied,true)
                     $('#caddie').html('<h1 class="text-center" id="rendu" style="margin-top:50px;font-weight: 600">RENDU MONNAIE: ' + monnaieArendre.toFixed(2) + ' €</h1>')
                     $('#total').text('0.00 €')
                     $('#modal-espece').modal('hide')
@@ -281,8 +400,8 @@ function paiementEspece(){
 
 $("#inputMontantEspece").on('keyup', function (e) {
     if (e.key === 'Enter' || e.keyCode === 13) {
-     paiementEspece()
- }
+       paiementEspece()
+   }
 });
 
 // PAIEMENT CB 
@@ -316,7 +435,9 @@ function paiementCB(){
             success: function (data) {
                 var result = JSON.parse(data)
                 if (result.response === 1) {
+                    imprimeTicket(result.ticket,result.ticket_part2,result.arendre,result.footer,result.espece,result.cb,result.cheque,result.ticket_pied)
                     $('#modal-cb').modal('hide')
+                    $('#total').html('0.00 €')
                     $("#searchArticle").load(location.href + " #searchArticle");
                     clearPanier(result.session, result.id_caisse)
                 }
@@ -374,7 +495,9 @@ function paiementCheque(){
                 var result = JSON.parse(data)
                 if (result.response === 1) {
                     $('#modal-cheque').modal('hide')
+                    $('#total').text('0.00 €')
                     $("#searchArticle").load(location.href + " #searchArticle");
+                    imprimeTicket(result.ticket,result.ticket_part2,result.arendre,result.footer,result.espece,result.cb,result.cheque,result.ticket_pied)
                     clearPanier(result.session, result.id_caisse)
                 }
             }
@@ -422,12 +545,13 @@ function addProduitDivers(session, idcaisse) {
                 var produit = result.data
                 var total = result.total
                 console.log(total)
+                var montantDiver = parseFloat(prixDivers) * produit.qte
                 $('#total').html(total.toFixed(2) + " €")
                 $('#caddie').prepend(
                     '<div class="callout callout-info" style="margin:15px 30px 0 30px">\n' +
                     '<div class="row">' +
                     '<div class="col-md-4">' +
-                    '<p>' +
+                    '<p style="font-size:20px;font-weight:600;">' +
                     produit.titre.toUpperCase() +
                     '<i class="fa fa-trash text-red" style="cursor:pointer;" onclick="deleteArticle(this.id,' + session + ',' + idcaisse + ')" id="deleteProduit-' + produit.ref + '"></i>' +
                     '</p>' +
@@ -436,13 +560,13 @@ function addProduitDivers(session, idcaisse) {
                     '<input type="text" onclick="this.select()" style="width: 50px;" name="quantiteProduit" id="quantiteProduit-' + produit.ref + '" value="' + produit.qte + '" />' +
                     '</div>' +
                     '<div class="col-md-1">' +
-                    '<p>' +
+                    '<p style="font-size:22px;">' +
                     parseFloat(prixDivers) +
                     '€</p>' +
                     '</div>' +
                     '<div class="col-md-1">' +
-                    '<p>' +
-                    parseFloat(prixDivers) * parseFloat(produit.qte) +
+                    '<p style="font-size:22px;">' +
+                    montantDiver.toFixed(2) +
                     '€</p>' +
                     '</div>' +
                     '<div class="col-md-2">' +
@@ -455,9 +579,13 @@ function addProduitDivers(session, idcaisse) {
                     '</div>' +
                     '</div>' +
                     '</div>')
-                    $('#modal-divers').modal('hide')
-                }
+                $('#inputPrixDivers').val('')
+                $('#inputQTEDivers').val('1')
+                $('#inputTvaDivers').val('8.5')
+                $('#modal-divers').modal('hide')
+
             }
+        }
 
     })
 }

@@ -41,7 +41,6 @@ if (isset($_GET['startDate']) and isset($_GET['endDate'])) {
 }
 $query = $conn->query($sql);
 
-
 $mois_fr = array("", "janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août",
     "septembre", "octobre", "novembre", "décembre");
 list($annee, $mois, $jour) = explode('-', $date);
@@ -65,7 +64,6 @@ $cumul_tva = 0;
 $total_remise = 0;
 $total_tva0 = 0;
 $total_remise_tva = 0;
-
 
 while ($ticket = $query->fetch_assoc()) {
     $total_euro_du = $ticket['total_euro_du'];
@@ -134,7 +132,6 @@ while ($commande = $commandes->fetch_assoc()) {
     }
 
 }
-var_dump($total_remise_tva);
 if($total_remise_tva != 0){
     $cumul_tva = $total_tva8 + $total_tva2 + $total_tva1 +  $total_remise_tva;
     $ca_ht += $total_remise_tva;
@@ -194,10 +191,19 @@ $mdp = $logs['mdp'];
                             </div>
 
 
-                            <div class="mb-5"></div>
-                            <p style="font-size:24px;text-align: center;text-decoration:underline;font-weight: 600;"><a
-                                        href="cloture-caisse.php?date=<?php echo $dateFormated; ?>&qte=" target="_blank">Faire
-                                    la cloture de caisse du <?php echo $dateFormated ?></a></p>
+                            <?php
+                    $valeurcaisse = $conn->query("SELECT date FROM table_client_valeurcaisse WHERE date like '%$date%' ");
+                    if($valeurcaisse->num_rows>=1){
+                        ?>
+                        <p style="font-size:24px;text-align: center;text-decoration:underline;font-weight: 600;">La caisse est cloturé</p>
+
+                        <?php
+                    }else{
+                    ?>
+                    <p style="font-size:24px;text-align: center;text-decoration:underline;font-weight: 600;"><a href="cloture-caisse.php?date=<?php echo $dateFormated; ?>" target="_blank" >Faire la cloture de caisse du <?php echo $dateFormated ?></a></p>
+                    <?php
+                    }
+                    ?>
                         </div>
                         <div class="col-md-6 col-sm-6 offset-md-1">
                             <div class="card card-warning" id="stats">
@@ -621,11 +627,12 @@ $mdp = $logs['mdp'];
                 },
                 success: function (result) {
                     $('#stats').html('');
-
+                    console.log(result)
                     if (window.location.href.indexOf("startDate") > -1) {
                         window.location.href = "statistiques.php";
                     } else {
-                        var res = $(result).find('#stats').appendTo('#stats');
+                    	$("#stats").load(location.href + " #stats");
+                        // var res = $(result).find('#stats').appendTo('#stats');
                     }
 
                 }
